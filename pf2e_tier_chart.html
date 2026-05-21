@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PF2e Class Tier Chart</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #0b0d11;
+  --bg2:       #10131a;
+  --bg3:       #161b25;
+  --panel:     #1a2030;
+  --border:    #2a3348;
+  --border2:   #3a4a68;
+  --gold:      #c8972a;
+  --gold2:     #e8b84b;
+  --gold-dim:  #7a5a18;
+  --text:      #c8d0e0;
+  --text-dim:  #6a7a9a;
+  --text-head: #e8eaf0;
+  --red:       #8b1a1a;
+
+  /* Tier colors — bg / text */
+  --s-bg: #c8972a; --s-tx: #0b0d11;
+  --a-bg: #8b1a1a; --a-tx: #f0d0d0;
+  --b-bg: #1a4a7a; --b-tx: #c0d8f0;
+  --c-bg: #1a5a30; --c-tx: #b0e0c0;
+  --d-bg: #4a2a7a; --d-tx: #d0c0f0;
+  --e-bg: #7a3a10; --e-tx: #f0c8a0;
+  --f-bg: #2a2a2a; --f-tx: #909090;
+  --na-bg:#141820; --na-tx: #404860;
+
+  --col-min: 72px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(200,151,42,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(139,26,26,0.05) 0%, transparent 50%);
+}
+
+/* ── HEADER ── */
+.site-header {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  height: 56px;
+  max-width: 100%;
+}
+.site-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--gold2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.site-title span { color: var(--text-dim); font-weight: 400; }
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.search-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+.search-wrap svg {
+  position: absolute;
+  left: 8px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-dim);
+  pointer-events: none;
+}
+#search {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.88rem;
+  padding: 0.35rem 0.6rem 0.35rem 2rem;
+  border-radius: 3px;
+  width: 180px;
+  transition: border-color 0.2s;
+}
+#search:focus { outline: none; border-color: var(--gold); }
+#search::placeholder { color: var(--text-dim); }
+
+.tier-filter-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.tier-pills {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.tier-pill {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 2px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  user-select: none;
+}
+.tier-pill[data-tier="S"] { background: var(--s-bg); color: var(--s-tx); }
+.tier-pill[data-tier="A"] { background: var(--a-bg); color: var(--a-tx); }
+.tier-pill[data-tier="B"] { background: var(--b-bg); color: var(--b-tx); }
+.tier-pill[data-tier="C"] { background: var(--c-bg); color: var(--c-tx); }
+.tier-pill[data-tier="D"] { background: var(--d-bg); color: var(--d-tx); }
+.tier-pill[data-tier="E"] { background: var(--e-bg); color: var(--e-tx); }
+.tier-pill[data-tier="F"] { background: var(--f-bg); color: var(--f-tx); }
+.tier-pill.active { box-shadow: 0 0 0 2px var(--gold); }
+.tier-pill.inactive { opacity: 0.35; }
+
+.btn-clear {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text-dim);
+  padding: 3px 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-clear:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+.match-count {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+  margin-left: auto;
+}
+.match-count strong { color: var(--gold2); }
+
+/* ── HIGHLIGHT BADGE ── */
+.highlight-notice {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: var(--panel);
+  border: 1px solid var(--gold-dim);
+  border-radius: 4px;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.8rem;
+  color: var(--gold2);
+  z-index: 200;
+  display: none;
+  animation: fadeIn 0.2s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.highlight-notice.visible { display: block; }
+@keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }
+
+/* ── COLUMN GROUP CONTROLS ── */
+.group-controls {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  align-items: center;
+}
+.group-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-right: 0.25rem;
+}
+.group-btn {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 2px;
+  border: 1px solid var(--border2);
+  background: var(--bg3);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.group-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+.group-btn.open { border-color: var(--gold-dim); color: var(--gold); background: rgba(200,151,42,0.07); }
+.group-btn .arrow { font-size: 0.6rem; transition: transform 0.2s; }
+.group-btn.open .arrow { transform: rotate(90deg); }
+
+/* ── TABLE WRAPPER ── */
+.table-wrap {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(100vh - 130px);
+  padding: 0 0 2rem;
+}
+
+/* ── TABLE ── */
+table {
+  border-collapse: collapse;
+  width: max-content;
+  min-width: 100%;
+}
+
+/* Sticky class name column */
+td:first-child, th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg2);
+  border-bottom: 2px solid var(--border2);
+  padding: 0;
+  white-space: nowrap;
+  user-select: none;
+}
+th:first-child { z-index: 30; }
+
+.th-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 8px 6px 6px;
+  cursor: pointer;
+  min-width: var(--col-min);
+  height: 70px;
+  position: relative;
+  transition: background 0.15s;
+  border-right: 1px solid var(--border);
+  gap: 2px;
+}
+.th-inner:hover { background: rgba(200,151,42,0.06); }
+
+.th-inner.class-th {
+  min-width: 130px;
+  cursor: default;
+  justify-content: center;
+}
+.th-inner.class-th:hover { background: transparent; }
+
+.col-group-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 0;
+}
+
+.th-text {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: center;
+  line-height: 1.2;
+  writing-mode: horizontal-tb;
+}
+.th-inner:hover .th-text { color: var(--text-head); }
+.th-sort-icon {
+  font-size: 0.55rem;
+  color: var(--text-dim);
+  height: 10px;
+}
+.th-inner.sorted-asc .th-sort-icon::after { content: '▲'; color: var(--gold); }
+.th-inner.sorted-desc .th-sort-icon::after { content: '▼'; color: var(--gold); }
+.th-inner:not(.sorted-asc):not(.sorted-desc) .th-sort-icon::after { content: '⬍'; }
+
+.class-th-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold2);
+}
+
+/* Group header row */
+tr.group-header th {
+  position: sticky;
+  top: 70px;
+  z-index: 15;
+}
+tr.group-header th:first-child { z-index: 25; }
+.group-header-cell {
+  padding: 3px 8px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-right: 1px solid var(--border);
+  text-align: center;
+  height: 22px;
+}
+
+/* ── DATA ROWS ── */
+tr.data-row td {
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  padding: 0;
+  transition: background 0.15s;
+}
+
+tr.data-row:hover td { background: rgba(200,151,42,0.04) !important; }
+tr.data-row.hidden { display: none; }
+
+.class-cell {
+  background: var(--bg2) !important;
+  padding: 0 10px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  min-width: 130px;
+  border-right: 2px solid var(--border2) !important;
+}
+.class-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-head);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* Tier cell */
+.tier-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  min-width: var(--col-min);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.1s;
+  position: relative;
+}
+.tier-cell:hover { filter: brightness(1.15); }
+.tier-cell.highlighted { box-shadow: inset 0 0 0 2px var(--gold2); }
+.tier-cell.dimmed { opacity: 0.25; }
+
+/* Text cell (spellcasting, identities) */
+.text-cell {
+  padding: 0 8px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  min-width: 150px;
+  font-size: 0.78rem;
+  color: var(--text);
+  background: var(--bg3);
+  line-height: 1.25;
+}
+.text-cell.identity {
+  font-style: italic;
+  color: var(--text-dim);
+  min-width: 130px;
+}
+.text-cell.pillar {
+  font-weight: 600;
+  color: var(--gold);
+  min-width: 110px;
+  font-size: 0.8rem;
+  background: rgba(200,151,42,0.05);
+}
+
+/* ── TOOLTIP ── */
+.tooltip-wrap { position: relative; }
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  padding: 0.5rem 0.75rem;
+  font-family: 'Crimson Pro', serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--text);
+  width: 220px;
+  text-align: center;
+  line-height: 1.4;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s, visibility 0.18s;
+  z-index: 200;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  white-space: normal;
+}
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--border2);
+}
+.tooltip-wrap:hover .tooltip { opacity: 1; visibility: visible; }
+
+/* Tier badge colors */
+.t-S  { background: var(--s-bg); color: var(--s-tx); }
+.t-A  { background: var(--a-bg); color: var(--a-tx); }
+.t-B  { background: var(--b-bg); color: var(--b-tx); }
+.t-C  { background: var(--c-bg); color: var(--c-tx); }
+.t-D  { background: var(--d-bg); color: var(--d-tx); }
+.t-E  { background: var(--e-bg); color: var(--e-tx); }
+.t-F  { background: var(--f-bg); color: var(--f-tx); }
+.t-NA { background: var(--na-bg); color: var(--na-tx); }
+
+/* Column group colors */
+.grp-pillars  { background: #1a6060; }
+.grp-combat   { background: #6a1a1a; }
+.grp-spell    { background: #2a1a6a; }
+.grp-defense  { background: #1a4a1a; }
+.grp-resource { background: #6a3a10; }
+.grp-utility  { background: #3a1a5a; }
+.grp-identity { background: #4a4a1a; }
+
+.grp-pillars-clr  { color: #40c0c0; }
+.grp-combat-clr   { color: #e06060; }
+.grp-spell-clr    { color: #8080f0; }
+.grp-defense-clr  { color: #60c060; }
+.grp-resource-clr { color: #e08040; }
+.grp-utility-clr  { color: #c060e0; }
+.grp-identity-clr { color: #d0d060; }
+
+/* hidden column */
+td.col-hidden, th.col-hidden { display: none; }
+
+/* ── LEGEND ── */
+.legend {
+  padding: 0.6rem 1rem;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.legend-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); margin-right: 0.25rem; }
+.legend-item {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 0.72rem;
+}
+.legend-swatch {
+  width: 18px; height: 14px; border-radius: 2px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.legend-desc { color: var(--text-dim); }
+
+/* Scrollbar styling */
+.table-wrap::-webkit-scrollbar { width: 6px; height: 6px; }
+.table-wrap::-webkit-scrollbar-track { background: var(--bg2); }
+.table-wrap::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+.table-wrap::-webkit-scrollbar-thumb:hover { background: var(--gold-dim); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="site-title">PF2e <span>Class Tier Chart</span></div>
+    <div class="header-controls">
+      <div class="search-wrap">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="search" type="text" placeholder="Search class..." autocomplete="off">
+      </div>
+      <span class="tier-filter-label">Highlight tier:</span>
+      <div class="tier-pills" id="tier-pills">
+        <span class="tier-pill" data-tier="S">S</span>
+        <span class="tier-pill" data-tier="A">A</span>
+        <span class="tier-pill" data-tier="B">B</span>
+        <span class="tier-pill" data-tier="C">C</span>
+        <span class="tier-pill" data-tier="D">D</span>
+        <span class="tier-pill" data-tier="E">E</span>
+        <span class="tier-pill" data-tier="F">F</span>
+      </div>
+      <button class="btn-clear" onclick="clearAll()">Clear</button>
+      <span class="match-count" id="match-count"></span>
+    </div>
+  </div>
+</header>
+
+<!-- GROUP TOGGLE BAR -->
+<div class="group-controls">
+  <span class="group-label">Columns:</span>
+  <button class="group-btn open grp-pillars-clr" data-group="pillars" onclick="toggleGroup(this)"><span class="arrow">▶</span> Pillars</button>
+  <button class="group-btn open grp-combat-clr"  data-group="combat"  onclick="toggleGroup(this)"><span class="arrow">▶</span> Combat</button>
+  <button class="group-btn open grp-spell-clr"   data-group="spell"   onclick="toggleGroup(this)"><span class="arrow">▶</span> Spellcasting</button>
+  <button class="group-btn open grp-defense-clr" data-group="defense" onclick="toggleGroup(this)"><span class="arrow">▶</span> Defense</button>
+  <button class="group-btn open grp-resource-clr" data-group="resource" onclick="toggleGroup(this)"><span class="arrow">▶</span> Resources</button>
+  <button class="group-btn open grp-utility-clr" data-group="utility" onclick="toggleGroup(this)"><span class="arrow">▶</span> Utility</button>
+  <button class="group-btn open grp-identity-clr" data-group="identity" onclick="toggleGroup(this)"><span class="arrow">▶</span> Identity</button>
+</div>
+
+<!-- TABLE WRAPPER -->
+<div class="table-wrap" id="table-wrap">
+<table id="main-table">
+<thead>
+  <!-- GROUP LABEL ROW -->
+  <tr class="group-header">
+    <th><div class="group-header-cell" style="background:var(--bg2); min-width:130px;"></div></th>
+    <!-- pillars -->
+    <th class="grp-pillars"><div class="group-header-cell grp-pillars" style="min-width:110px;">Pillars</div></th>
+    <th class="grp-pillars"><div class="group-header-cell grp-pillars"></div></th>
+    <th class="grp-pillars"><div class="group-header-cell grp-pillars"></div></th>
+    <th class="grp-pillars"><div class="group-header-cell grp-pillars"></div></th>
+    <th class="grp-pillars"><div class="group-header-cell grp-pillars"></div></th>
+    <th class="grp-pillars"><div class="group-header-cell grp-pillars"></div></th>
+    <!-- combat -->
+    <th class="grp-combat"><div class="group-header-cell grp-combat">Combat</div></th>
+    <th class="grp-combat"><div class="group-header-cell grp-combat"></div></th>
+    <th class="grp-combat"><div class="group-header-cell grp-combat"></div></th>
+    <!-- spell -->
+    <th class="grp-spell"><div class="group-header-cell grp-spell">Spellcasting</div></th>
+    <!-- defense -->
+    <th class="grp-defense"><div class="group-header-cell grp-defense">Defense</div></th>
+    <th class="grp-defense"><div class="group-header-cell grp-defense"></div></th>
+    <th class="grp-defense"><div class="group-header-cell grp-defense"></div></th>
+    <!-- resource -->
+    <th class="grp-resource"><div class="group-header-cell grp-resource">Resources &amp; Complexity</div></th>
+    <th class="grp-resource"><div class="group-header-cell grp-resource"></div></th>
+    <th class="grp-resource"><div class="group-header-cell grp-resource"></div></th>
+    <th class="grp-resource"><div class="group-header-cell grp-resource"></div></th>
+    <!-- utility -->
+    <th class="grp-utility"><div class="group-header-cell grp-utility">Utility &amp; Support</div></th>
+    <th class="grp-utility"><div class="group-header-cell grp-utility"></div></th>
+    <th class="grp-utility"><div class="group-header-cell grp-utility"></div></th>
+    <!-- identity -->
+    <th class="grp-identity"><div class="group-header-cell grp-identity">Identity</div></th>
+    <th class="grp-identity"><div class="group-header-cell grp-identity"></div></th>
+    <th class="grp-identity"><div class="group-header-cell grp-identity"></div></th>
+  </tr>
+  <!-- COLUMN HEADER ROW -->
+  <tr id="col-headers"></tr>
+</thead>
+<tbody id="table-body"></tbody>
+</table>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <span class="legend-label">Tier Legend:</span>
+  <div class="legend-item"><div class="legend-swatch t-S">S</div><span class="legend-desc">Best in class</span></div>
+  <div class="legend-item"><div class="legend-swatch t-A">A</div><span class="legend-desc">Excellent</span></div>
+  <div class="legend-item"><div class="legend-swatch t-B">B</div><span class="legend-desc">Good</span></div>
+  <div class="legend-item"><div class="legend-swatch t-C">C</div><span class="legend-desc">Average</span></div>
+  <div class="legend-item"><div class="legend-swatch t-D">D</div><span class="legend-desc">Below avg</span></div>
+  <div class="legend-item"><div class="legend-swatch t-E">E</div><span class="legend-desc">Poor</span></div>
+  <div class="legend-item"><div class="legend-swatch t-F">F</div><span class="legend-desc">Terrible</span></div>
+  <div class="legend-item"><div class="legend-swatch t-NA">—</div><span class="legend-desc">N/A</span></div>
+  <span style="margin-left:1rem; font-size:0.72rem; color:var(--text-dim);">Click any tier cell to highlight all matching cells across the table. Click column headers to sort.</span>
+</div>
+
+<div class="highlight-notice" id="highlight-notice"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+// COLUMN DEFINITIONS
+// ══════════════════════════════════════════════════════════════════
+const COLS = [
+  // id, label, group, tooltip, type (tier|text|pillar)
+  { id:'pillar',   label:'Strongest Pillar',      group:'pillars',  type:'pillar',
+    tip:'Which of the 4 pillars this class most naturally excels in at mid-level play.' },
+  { id:'combat',   label:'Combat',                group:'pillars',  type:'tier',
+    tip:'Overall effectiveness in structured combat encounters (mid-level, avg subclass).' },
+  { id:'explore',  label:'Exploration',           group:'pillars',  type:'tier',
+    tip:'Effectiveness during travel, investigation, scouting, and out-of-combat problem solving.' },
+  { id:'socmech',  label:'Social (Mechanical)',   group:'pillars',  type:'tier',
+    tip:'Raw mechanical support for social encounters — skill bonuses and social abilities.' },
+  { id:'socflav',  label:'Social (Flavor)',       group:'pillars',  type:'tier',
+    tip:'How naturally the class\'s theme and identity lends itself to roleplay and social situations.' },
+  { id:'downtime', label:'Downtime',              group:'pillars',  type:'tier',
+    tip:'Usefulness during downtime: crafting, earning income, researching, training, etc.' },
+  { id:'melee',    label:'Melee',                 group:'combat',   type:'tier',
+    tip:'Effectiveness in melee combat — attack bonuses, damage, and melee-specific abilities.' },
+  { id:'ranged',   label:'Ranged',                group:'combat',   type:'tier',
+    tip:'Effectiveness at ranged combat — bows, guns, ranged spells, thrown weapons, etc.' },
+  { id:'peakdmg',  label:'Peak Damage',           group:'combat',   type:'tier',
+    tip:'Best-case single-turn or burst damage output under ideal conditions.' },
+  { id:'spell',    label:'Spellcasting',          group:'spell',    type:'text',
+    tip:'The spellcasting tradition and a tier rating for strength within that tradition.' },
+  { id:'saves',    label:'Saves',                 group:'defense',  type:'tier',
+    tip:'Quality of saving throws at mid levels, including proficiency progressions.' },
+  { id:'hp',       label:'HP',                    group:'defense',  type:'tier',
+    tip:'Raw hit point total relative to other classes (HP/level + Con modifier scaling).' },
+  { id:'surv',     label:'Survivability',         group:'defense',  type:'tier',
+    tip:'Holistic "how hard is this class to kill" — HP, AC, saves, self-healing, defensive abilities.' },
+  { id:'action',   label:'Action Economy',        group:'resource', type:'tier',
+    tip:'How efficiently the class uses its 3 actions per turn — free actions, reactions, multi-action payoffs.' },
+  { id:'resmgmt',  label:'Resource Mgmt',         group:'resource', type:'tier',
+    tip:'How forgiving when daily resources run low. S = nearly resource-independent; F = heavily limited.' },
+  { id:'floor',    label:'Ease of Entry',         group:'resource', type:'tier',
+    tip:'How easy the class is to pick up and play effectively. S = very easy; F = very difficult.' },
+  { id:'ceiling',  label:'Mastery Ceiling',       group:'resource', type:'tier',
+    tip:'How much additional power a master player can extract vs a casual player.' },
+  { id:'dps',      label:'DPS (Sustained)',       group:'resource', type:'tier',
+    tip:'Reliable, consistent damage over a full combat encounter accounting for action cost and resources.' },
+  { id:'ooc',      label:'Out-of-Combat Utility', group:'utility',  type:'tier',
+    tip:'Broad usefulness outside combat — familiars, crafting, tracking, rituals, information gathering.' },
+  { id:'team',     label:'Team Buffing/Support',  group:'utility',  type:'tier',
+    tip:'How much this class improves allies through buffs, debuffs, healing, or positioning.' },
+  { id:'partydep', label:'Party Dependence',      group:'utility',  type:'tier',
+    tip:'How well the class functions independently. S = fully self-sufficient; F = nearly useless alone.' },
+  { id:'mechid',   label:'Mechanical Identity',   group:'identity', type:'text',
+    tip:'2–3 words capturing the core mechanical identity of the class.' },
+  { id:'flavid',   label:'Flavor Identity',       group:'identity', type:'text',
+    tip:'2–3 words capturing the thematic/flavor identity of the class.' },
+];
+
+// ══════════════════════════════════════════════════════════════════
+// CLASS DATA
+// ══════════════════════════════════════════════════════════════════
+const CLASSES = [
+  { name:'Alchemist',    pillar:'Downtime',    combat:'C', explore:'B', socmech:'C', socflav:'C', downtime:'S', melee:'C', ranged:'B', peakdmg:'B', spell:'N/A — Alchemical items (C)', saves:'C', hp:'B', surv:'C', action:'C', resmgmt:'C', floor:'D', ceiling:'A', dps:'C', ooc:'A', team:'B', partydep:'A', mechid:'Infused Reagents loop',        flavid:'Mad scientist tinkerer' },
+  { name:'Animist',      pillar:'Combat',      combat:'B', explore:'B', socmech:'B', socflav:'A', downtime:'C', melee:'C', ranged:'D', peakdmg:'C', spell:'Divine — Prepared+Spont hybrid (A)', saves:'B', hp:'C', surv:'B', action:'B', resmgmt:'B', floor:'C', ceiling:'A', dps:'C', ooc:'B', team:'A', partydep:'B', mechid:'Dual-mode spellcasting',      flavid:'Spirit world commune' },
+  { name:'Barbarian',    pillar:'Combat',      combat:'A', explore:'C', socmech:'D', socflav:'C', downtime:'D', melee:'S', ranged:'D', peakdmg:'S', spell:'N/A (D incidental)',          saves:'B', hp:'S', surv:'A', action:'C', resmgmt:'B', floor:'A', ceiling:'B', dps:'A', ooc:'D', team:'D', partydep:'C', mechid:'Rage-powered damage',         flavid:'Unstoppable primal fury' },
+  { name:'Bard',         pillar:'Social',      combat:'B', explore:'B', socmech:'S', socflav:'S', downtime:'B', melee:'C', ranged:'C', peakdmg:'C', spell:'Occult — Spontaneous (B)',     saves:'B', hp:'C', surv:'C', action:'A', resmgmt:'B', floor:'B', ceiling:'A', dps:'C', ooc:'A', team:'S', partydep:'B', mechid:'Composition buff engine',    flavid:'Charismatic performer' },
+  { name:'Champion',     pillar:'Combat',      combat:'A', explore:'C', socmech:'B', socflav:'B', downtime:'C', melee:'A', ranged:'D', peakdmg:'B', spell:'Divine — Focus only (C)',      saves:'S', hp:'A', surv:'S', action:'B', resmgmt:'A', floor:'A', ceiling:'B', dps:'B', ooc:'D', team:'A', partydep:'A', mechid:'Reaction-based defender',    flavid:'Divine armored protector' },
+  { name:'Cleric',       pillar:'Combat',      combat:'B', explore:'B', socmech:'B', socflav:'B', downtime:'B', melee:'C', ranged:'C', peakdmg:'C', spell:'Divine — Prepared (A)',        saves:'B', hp:'C', surv:'B', action:'B', resmgmt:'B', floor:'B', ceiling:'A', dps:'C', ooc:'A', team:'S', partydep:'B', mechid:'Prepared divine flexibility', flavid:'Deity\'s chosen priest' },
+  { name:'Druid',        pillar:'Exploration', combat:'B', explore:'A', socmech:'C', socflav:'B', downtime:'B', melee:'B', ranged:'C', peakdmg:'B', spell:'Primal — Prepared (A)',        saves:'B', hp:'B', surv:'B', action:'B', resmgmt:'B', floor:'B', ceiling:'A', dps:'B', ooc:'B', team:'B', partydep:'B', mechid:'Wild Shape adaptability',     flavid:'Nature\'s primal force' },
+  { name:'Exemplar',     pillar:'Combat',      combat:'A', explore:'C', socmech:'C', socflav:'B', downtime:'D', melee:'A', ranged:'C', peakdmg:'A', spell:'Divine — Ikon-bound (C)',      saves:'B', hp:'B', surv:'A', action:'A', resmgmt:'A', floor:'B', ceiling:'B', dps:'B', ooc:'C', team:'C', partydep:'A', mechid:'Ikon push-pull charge',      flavid:'Mortal ascending divine' },
+  { name:'Fighter',      pillar:'Combat',      combat:'S', explore:'C', socmech:'C', socflav:'C', downtime:'D', melee:'S', ranged:'A', peakdmg:'S', spell:'N/A (E incidental)',          saves:'B', hp:'B', surv:'B', action:'S', resmgmt:'S', floor:'S', ceiling:'B', dps:'A', ooc:'D', team:'D', partydep:'A', mechid:'Highest attack mastery',      flavid:'Dedicated weapon master' },
+  { name:'Gunslinger',   pillar:'Combat',      combat:'A', explore:'C', socmech:'C', socflav:'B', downtime:'D', melee:'C', ranged:'S', peakdmg:'A', spell:'N/A (D incidental)',          saves:'B', hp:'B', surv:'B', action:'A', resmgmt:'A', floor:'B', ceiling:'B', dps:'S', ooc:'D', team:'C', partydep:'A', mechid:'Grit deed combos',           flavid:'Cool gunfighting drifter' },
+  { name:'Guardian',     pillar:'Combat',      combat:'B', explore:'C', socmech:'C', socflav:'C', downtime:'D', melee:'A', ranged:'D', peakdmg:'C', spell:'N/A (E incidental)',          saves:'A', hp:'A', surv:'S', action:'A', resmgmt:'S', floor:'S', ceiling:'C', dps:'D', ooc:'D', team:'A', partydep:'S', mechid:'Reaction-heavy tank',         flavid:'Living wall of defense' },
+  { name:'Inventor',     pillar:'Downtime',    combat:'B', explore:'C', socmech:'C', socflav:'C', downtime:'A', melee:'B', ranged:'B', peakdmg:'B', spell:'N/A — Gadgets (D)',           saves:'C', hp:'B', surv:'B', action:'B', resmgmt:'B', floor:'C', ceiling:'A', dps:'B', ooc:'B', team:'C', partydep:'B', mechid:'Invention upgrade loop',      flavid:'Tinkering mad engineer' },
+  { name:'Investigator', pillar:'Exploration', combat:'B', explore:'S', socmech:'A', socflav:'A', downtime:'A', melee:'B', ranged:'B', peakdmg:'B', spell:'N/A (D incidental)',          saves:'C', hp:'C', surv:'C', action:'B', resmgmt:'A', floor:'B', ceiling:'A', dps:'B', ooc:'S', team:'C', partydep:'A', mechid:'INT-based Strike prep',       flavid:'Brilliant deductive mind' },
+  { name:'Kineticist',   pillar:'Combat',      combat:'A', explore:'B', socmech:'C', socflav:'C', downtime:'D', melee:'B', ranged:'A', peakdmg:'A', spell:'Primal — Impulse, no slots (B)', saves:'B', hp:'B', surv:'A', action:'B', resmgmt:'S', floor:'B', ceiling:'B', dps:'A', ooc:'C', team:'C', partydep:'S', mechid:'Unlimited elemental impulses', flavid:'Elemental force incarnate' },
+  { name:'Magus',        pillar:'Combat',      combat:'A', explore:'C', socmech:'C', socflav:'C', downtime:'D', melee:'A', ranged:'C', peakdmg:'S', spell:'Arcane — Hybrid Spellstrike (B)', saves:'C', hp:'B', surv:'B', action:'B', resmgmt:'B', floor:'C', ceiling:'A', dps:'B', ooc:'D', team:'C', partydep:'B', mechid:'Spellstrike charge-deliver',  flavid:'Arcane warrior in one' },
+  { name:'Monk',         pillar:'Combat',      combat:'A', explore:'B', socmech:'C', socflav:'B', downtime:'B', melee:'S', ranged:'D', peakdmg:'A', spell:'Occult — Ki focus (C incidental)', saves:'A', hp:'B', surv:'A', action:'A', resmgmt:'A', floor:'B', ceiling:'B', dps:'B', ooc:'C', team:'C', partydep:'A', mechid:'Stance-switching unarmed',    flavid:'Disciplined unarmored master' },
+  { name:'Oracle',       pillar:'Combat',      combat:'B', explore:'C', socmech:'B', socflav:'B', downtime:'C', melee:'C', ranged:'C', peakdmg:'B', spell:'Divine — Spontaneous, curse (A)', saves:'C', hp:'C', surv:'C', action:'B', resmgmt:'B', floor:'C', ceiling:'S', dps:'B', ooc:'B', team:'B', partydep:'C', mechid:'Curse-push risk management', flavid:'Cursed divine seeker' },
+  { name:'Psychic',      pillar:'Combat',      combat:'B', explore:'C', socmech:'B', socflav:'B', downtime:'C', melee:'D', ranged:'D', peakdmg:'B', spell:'Occult — Spontaneous, Unleash (B)', saves:'C', hp:'C', surv:'C', action:'B', resmgmt:'B', floor:'B', ceiling:'A', dps:'C', ooc:'C', team:'C', partydep:'C', mechid:'Amplified cantrip bursts',    flavid:'Mind over matter' },
+  { name:'Ranger',       pillar:'Exploration', combat:'A', explore:'S', socmech:'C', socflav:'B', downtime:'C', melee:'B', ranged:'S', peakdmg:'A', spell:'Primal — Optional prepared (C)', saves:'B', hp:'B', surv:'B', action:'B', resmgmt:'B', floor:'A', ceiling:'B', dps:'S', ooc:'B', team:'C', partydep:'A', mechid:'Hunt Prey targeting bonus',   flavid:'Relentless wilderness tracker' },
+  { name:'Rogue',        pillar:'Exploration', combat:'B', explore:'A', socmech:'A', socflav:'A', downtime:'A', melee:'B', ranged:'B', peakdmg:'B', spell:'N/A (D incidental)',          saves:'B', hp:'C', surv:'B', action:'A', resmgmt:'A', floor:'B', ceiling:'B', dps:'B', ooc:'A', team:'C', partydep:'A', mechid:'Sneak Attack off-guard',      flavid:'Cunning adaptable scoundrel' },
+  { name:'Sorcerer',     pillar:'Combat',      combat:'A', explore:'C', socmech:'B', socflav:'B', downtime:'C', melee:'D', ranged:'D', peakdmg:'A', spell:'Varies by Bloodline — Spont (A)', saves:'C', hp:'C', surv:'C', action:'B', resmgmt:'B', floor:'C', ceiling:'S', dps:'B', ooc:'C', team:'B', partydep:'C', mechid:'Maximum spell slot pool',     flavid:'Magic-blooded power' },
+  { name:'Summoner',     pillar:'Combat',      combat:'A', explore:'B', socmech:'C', socflav:'B', downtime:'C', melee:'B', ranged:'C', peakdmg:'A', spell:'Varies — Eidolon tradition (B)', saves:'C', hp:'B', surv:'B', action:'S', resmgmt:'B', floor:'C', ceiling:'S', dps:'B', ooc:'C', team:'B', partydep:'B', mechid:'Shared action duo combat',    flavid:'Bonded creature-partner' },
+  { name:'Swashbuckler', pillar:'Combat',      combat:'A', explore:'C', socmech:'A', socflav:'A', downtime:'C', melee:'S', ranged:'C', peakdmg:'A', spell:'N/A (D incidental)',          saves:'B', hp:'B', surv:'B', action:'A', resmgmt:'A', floor:'B', ceiling:'B', dps:'B', ooc:'C', team:'B', partydep:'A', mechid:'Panache Finisher combos',    flavid:'Daring stylish duelist' },
+  { name:'Witch',        pillar:'Social',      combat:'B', explore:'B', socmech:'B', socflav:'A', downtime:'B', melee:'D', ranged:'D', peakdmg:'B', spell:'Varies by Patron — Prepared (B)', saves:'C', hp:'C', surv:'C', action:'B', resmgmt:'B', floor:'C', ceiling:'A', dps:'B', ooc:'B', team:'A', partydep:'B', mechid:'Familiar lesson delivery',   flavid:'Mysterious patron hexer' },
+  { name:'Wizard',       pillar:'Combat',      combat:'A', explore:'B', socmech:'C', socflav:'C', downtime:'B', melee:'D', ranged:'D', peakdmg:'A', spell:'Arcane — Prepared, biggest list (S)', saves:'C', hp:'C', surv:'C', action:'B', resmgmt:'B', floor:'B', ceiling:'S', dps:'B', ooc:'A', team:'C', partydep:'B', mechid:'Prepared spell flexibility',  flavid:'Scholar of infinite arcane' },
+];
+
+// ══════════════════════════════════════════════════════════════════
+// TIER SORT ORDER
+// ══════════════════════════════════════════════════════════════════
+const TIER_ORDER = { S:0, A:1, B:2, C:3, D:4, E:5, F:6, 'N/A':7 };
+function tierVal(v) {
+  const t = (v||'').trim().charAt(0);
+  return TIER_ORDER[t] !== undefined ? TIER_ORDER[t] : 8;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════════
+let sortCol = null, sortDir = 1;
+let activeTier = null;
+let collapsedGroups = new Set();
+let searchVal = '';
+
+// ══════════════════════════════════════════════════════════════════
+// BUILD HEADER ROW
+// ══════════════════════════════════════════════════════════════════
+function buildHeaders() {
+  const row = document.getElementById('col-headers');
+
+  // Class name header
+  const thClass = document.createElement('th');
+  thClass.innerHTML = `<div class="th-inner class-th"><span class="class-th-text">Class</span></div>`;
+  row.appendChild(thClass);
+
+  COLS.forEach((col, i) => {
+    const th = document.createElement('th');
+    th.className = `grp-${col.group}`;
+    th.dataset.group = col.group;
+    th.dataset.colid = col.id;
+
+    const inner = document.createElement('div');
+    inner.className = 'th-inner tooltip-wrap';
+    inner.dataset.colIdx = i;
+    inner.innerHTML = `
+      <div class="col-group-bar grp-${col.group}"></div>
+      <span class="th-text">${col.label}</span>
+      <span class="th-sort-icon"></span>
+      <div class="tooltip">${col.tip}</div>`;
+
+    if (col.type !== 'text' && col.type !== 'pillar') {
+      inner.addEventListener('click', () => sortBy(col.id, i, inner));
+      inner.title = '';
+    } else {
+      inner.style.cursor = 'default';
+    }
+
+    th.appendChild(inner);
+    row.appendChild(th);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════
+// BUILD TABLE BODY
+// ══════════════════════════════════════════════════════════════════
+function buildRows() {
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = '';
+
+  const sorted = [...CLASSES].sort((a, b) => {
+    if (!sortCol) return 0;
+    const col = COLS.find(c => c.id === sortCol);
+    if (!col) return 0;
+    if (col.type === 'tier') {
+      return (tierVal(a[sortCol]) - tierVal(b[sortCol])) * sortDir;
+    }
+    return (a[sortCol] || '').localeCompare(b[sortCol] || '') * sortDir;
+  });
+
+  sorted.forEach(cls => {
+    const tr = document.createElement('tr');
+    tr.className = 'data-row';
+    tr.dataset.class = cls.name.toLowerCase();
+
+    // Class name cell
+    const tdName = document.createElement('td');
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'class-cell';
+    nameDiv.innerHTML = `<span class="class-name">${cls.name}</span>`;
+    tdName.appendChild(nameDiv);
+    tr.appendChild(tdName);
+
+    COLS.forEach(col => {
+      const td = document.createElement('td');
+      td.className = `grp-${col.group}`;
+      td.dataset.group = col.group;
+
+      const val = cls[col.id] || '';
+
+      if (col.type === 'tier') {
+        const tierLetter = val.trim().charAt(0) || 'N';
+        const displayKey = tierLetter === 'N' ? 'NA' : tierLetter;
+        const div = document.createElement('div');
+        div.className = `tier-cell t-${displayKey}`;
+        div.dataset.tier = tierLetter;
+        div.dataset.colid = col.id;
+        div.textContent = val === 'N/A' ? '—' : val;
+        div.addEventListener('click', () => highlightTier(tierLetter));
+        td.appendChild(div);
+      } else if (col.type === 'pillar') {
+        const div = document.createElement('div');
+        div.className = 'text-cell pillar';
+        div.textContent = val;
+        td.appendChild(div);
+      } else {
+        const div = document.createElement('div');
+        div.className = `text-cell${col.id === 'mechid' || col.id === 'flavid' ? ' identity' : ''}`;
+        div.textContent = val;
+        td.appendChild(div);
+      }
+
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
+
+  applyGroupVisibility();
+  applyFilters();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SORT
+// ══════════════════════════════════════════════════════════════════
+function sortBy(colId, idx, innerEl) {
+  document.querySelectorAll('.th-inner').forEach(el => {
+    el.classList.remove('sorted-asc', 'sorted-desc');
+  });
+
+  if (sortCol === colId) {
+    sortDir *= -1;
+  } else {
+    sortCol = colId;
+    sortDir = 1;
+  }
+
+  innerEl.classList.add(sortDir === 1 ? 'sorted-asc' : 'sorted-desc');
+  buildRows();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// HIGHLIGHT TIER
+// ══════════════════════════════════════════════════════════════════
+function highlightTier(tier) {
+  if (activeTier === tier) {
+    activeTier = null;
+    document.querySelectorAll('.tier-cell').forEach(c => {
+      c.classList.remove('highlighted', 'dimmed');
+    });
+    document.querySelectorAll('.tier-pill').forEach(p => {
+      p.classList.remove('active', 'inactive');
+    });
+    document.getElementById('highlight-notice').classList.remove('visible');
+    updateMatchCount();
+    return;
+  }
+
+  activeTier = tier;
+  let count = 0;
+
+  document.querySelectorAll('.tier-cell').forEach(c => {
+    if (c.dataset.tier === tier) {
+      c.classList.add('highlighted');
+      c.classList.remove('dimmed');
+      count++;
+    } else {
+      c.classList.remove('highlighted');
+      c.classList.add('dimmed');
+    }
+  });
+
+  document.querySelectorAll('.tier-pill').forEach(p => {
+    if (p.dataset.tier === tier) { p.classList.add('active'); p.classList.remove('inactive'); }
+    else { p.classList.remove('active'); p.classList.add('inactive'); }
+  });
+
+  const notice = document.getElementById('highlight-notice');
+  notice.textContent = `Showing ${count} ${tier}-tier cells`;
+  notice.classList.add('visible');
+  updateMatchCount();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SEARCH + FILTER
+// ══════════════════════════════════════════════════════════════════
+function applyFilters() {
+  const rows = document.querySelectorAll('.data-row');
+  let visible = 0;
+  rows.forEach(row => {
+    const name = row.dataset.class || '';
+    const matches = !searchVal || name.includes(searchVal.toLowerCase());
+    if (matches) { row.classList.remove('hidden'); visible++; }
+    else row.classList.add('hidden');
+  });
+  updateMatchCount(visible);
+}
+
+function updateMatchCount(visible) {
+  const total = CLASSES.length;
+  if (visible === undefined) {
+    visible = document.querySelectorAll('.data-row:not(.hidden)').length;
+  }
+  const el = document.getElementById('match-count');
+  if (activeTier) {
+    el.innerHTML = `Tier <strong>${activeTier}</strong> highlighted &nbsp;|&nbsp; <strong>${visible}</strong>/<strong>${total}</strong> classes`;
+  } else if (searchVal) {
+    el.innerHTML = `<strong>${visible}</strong> of <strong>${total}</strong> classes`;
+  } else {
+    el.innerHTML = `<strong>${total}</strong> classes`;
+  }
+}
+
+document.getElementById('search').addEventListener('input', e => {
+  searchVal = e.target.value.trim();
+  applyFilters();
+});
+
+// Tier pill click
+document.querySelectorAll('.tier-pill').forEach(pill => {
+  pill.addEventListener('click', () => highlightTier(pill.dataset.tier));
+});
+
+// ══════════════════════════════════════════════════════════════════
+// GROUP COLLAPSE
+// ══════════════════════════════════════════════════════════════════
+function toggleGroup(btn) {
+  const group = btn.dataset.group;
+  const isOpen = btn.classList.contains('open');
+
+  if (isOpen) {
+    collapsedGroups.add(group);
+    btn.classList.remove('open');
+  } else {
+    collapsedGroups.delete(group);
+    btn.classList.add('open');
+  }
+
+  applyGroupVisibility();
+}
+
+function applyGroupVisibility() {
+  COLS.forEach(col => {
+    const isHidden = collapsedGroups.has(col.group);
+    // header th
+    document.querySelectorAll(`th[data-group="${col.group}"][data-colid="${col.id}"]`).forEach(el => {
+      el.classList.toggle('col-hidden', isHidden);
+    });
+    // group header ths — count visible in group
+    const groupThs = document.querySelectorAll(`th.grp-${col.group}`);
+    groupThs.forEach(el => {
+      if (!el.dataset.colid) {
+        // group header row cells
+        el.style.display = collapsedGroups.has(col.group) ? '' : '';
+      }
+    });
+    // data tds
+    document.querySelectorAll(`td[data-group="${col.group}"]`).forEach(el => {
+      el.classList.toggle('col-hidden', isHidden);
+    });
+  });
+
+  // Update group header spanning
+  updateGroupHeaders();
+}
+
+function updateGroupHeaders() {
+  // For each group, figure out how many columns are visible and set colspan
+  const groups = ['pillars','combat','spell','defense','resource','utility','identity'];
+  const groupRow = document.querySelector('.group-header');
+  if (!groupRow) return;
+  const headerCells = groupRow.querySelectorAll('th');
+  let cellIdx = 1; // skip class column
+  groups.forEach(grp => {
+    const colsInGroup = COLS.filter(c => c.group === grp);
+    const visibleCols = colsInGroup.filter(c => !collapsedGroups.has(c.group)).length;
+    if (headerCells[cellIdx]) {
+      if (visibleCols === 0) {
+        headerCells[cellIdx].style.display = 'none';
+      } else {
+        headerCells[cellIdx].style.display = '';
+        headerCells[cellIdx].colSpan = visibleCols;
+      }
+    }
+    colsInGroup.forEach((_, i) => {
+      if (i > 0 && headerCells[cellIdx + i]) {
+        headerCells[cellIdx + i].style.display = 'none';
+      }
+    });
+    cellIdx += colsInGroup.length;
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CLEAR ALL
+// ══════════════════════════════════════════════════════════════════
+function clearAll() {
+  activeTier = null;
+  searchVal = '';
+  document.getElementById('search').value = '';
+  document.querySelectorAll('.tier-cell').forEach(c => c.classList.remove('highlighted','dimmed'));
+  document.querySelectorAll('.tier-pill').forEach(p => p.classList.remove('active','inactive'));
+  document.getElementById('highlight-notice').classList.remove('visible');
+  applyFilters();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════
+buildHeaders();
+buildRows();
+updateMatchCount();
+</script>
+</body>
+</html>
