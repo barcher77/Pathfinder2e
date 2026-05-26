@@ -1,0 +1,201 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+  .m8b-wrap { font-family: 'Crimson Text', serif; color: var(--color-text-primary); padding: 2rem 1.5rem; max-width: 640px; margin: 0 auto; }
+  .m8b-title { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 900; text-align: center; letter-spacing: 0.08em; margin: 0 0 0.25rem; }
+  .m8b-subtitle { font-family: 'Crimson Text', serif; font-size: 14px; font-style: italic; text-align: center; color: var(--color-text-secondary); margin: 0 0 2rem; }
+  .slider-block { margin-bottom: 1.5rem; }
+  .slider-labels { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .slider-label-left, .slider-label-right { font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; color: var(--color-text-secondary); }
+  .slider-center-label { font-family: 'Crimson Text', serif; font-size: 13px; font-style: italic; color: var(--color-text-secondary); }
+  .alignment-badge { display: block; text-align: center; font-family: 'Cinzel', serif; font-size: 13px; font-weight: 600; letter-spacing: 0.12em; color: var(--color-text-secondary); margin-bottom: 1.5rem; min-height: 20px; }
+  .alignment-badge span { color: var(--color-text-primary); font-size: 15px; }
+  .question-label { font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; color: var(--color-text-secondary); display: block; margin-bottom: 8px; }
+  textarea { width: 100%; min-height: 80px; resize: vertical; font-family: 'Crimson Text', serif; font-size: 16px; box-sizing: border-box; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 12px; background: var(--color-background-primary); color: var(--color-text-primary); transition: border-color 0.2s; }
+  textarea:focus { outline: none; border-color: var(--color-border-primary); }
+  textarea.error { border-color: #c0392b; }
+  .shake-btn { display: block; width: 100%; margin-top: 1rem; padding: 12px; font-family: 'Cinzel', serif; font-size: 14px; font-weight: 600; letter-spacing: 0.1em; cursor: pointer; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: transparent; color: var(--color-text-primary); transition: background 0.15s, transform 0.1s; }
+  .shake-btn:hover { background: var(--color-background-secondary); }
+  .shake-btn:active { transform: scale(0.98); }
+  .orb-wrap { display: flex; justify-content: center; margin: 2rem 0 1rem; }
+  .orb { width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle at 38% 38%, #2a1a4e, #0d0a1a 80%); display: flex; align-items: center; justify-content: center; border: 2px solid #3a2a6e; position: relative; cursor: pointer; transition: transform 0.15s; box-shadow: inset 0 0 40px rgba(80,40,160,0.4); }
+  .orb::before { content: ''; position: absolute; top: 18px; left: 28px; width: 40px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.08); transform: rotate(-30deg); }
+  .orb-inner { width: 110px; height: 110px; border-radius: 50%; background: #0a0818; display: flex; align-items: center; justify-content: center; border: 1px solid #2d1e5a; padding: 12px; box-sizing: border-box; }
+  .orb-text { font-family: 'Crimson Text', serif; font-size: 13px; font-style: italic; text-align: center; line-height: 1.4; opacity: 0; transition: opacity 0.6s ease; }
+  .orb-text.visible { opacity: 1; }
+  .orb-text.normal { color: #a78bfa; }
+  .orb-text.scolding { color: #e07070; }
+  .orb-symbol { font-family: 'Cinzel', serif; font-size: 28px; color: #5b3fa0; transition: opacity 0.3s; }
+  .orb-symbol.hidden { opacity: 0; }
+  .response-alignment { text-align: center; font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.15em; color: var(--color-text-secondary); margin-top: 0.5rem; min-height: 16px; }
+  @keyframes shake { 0%,100%{transform:translateX(0) rotate(0deg)} 15%{transform:translateX(-8px) rotate(-4deg)} 30%{transform:translateX(8px) rotate(4deg)} 45%{transform:translateX(-6px) rotate(-3deg)} 60%{transform:translateX(6px) rotate(3deg)} 75%{transform:translateX(-3px) rotate(-1deg)} 90%{transform:translateX(3px) rotate(1deg)} }
+  @keyframes fieldshake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+  .orb.shaking { animation: shake 0.6s ease; }
+  .textarea-wrap.fieldshaking { animation: fieldshake 0.4s ease; }
+  input[type=range] { width: 100%; accent-color: #7c5cbf; }
+</style>
+
+<div class="m8b-wrap">
+  <div class="m8b-title">⬡ The Alignment Oracle ⬡</div>
+  <div class="m8b-subtitle">Speak thy question. The orb shall judge thee.</div>
+
+  <div class="slider-block">
+    <div class="slider-labels">
+      <span class="slider-label-left">⚖ LAW</span>
+      <span class="slider-center-label" id="lc-label">True Neutral</span>
+      <span class="slider-label-right">CHAOS ☿</span>
+    </div>
+    <input type="range" min="0" max="100" value="50" step="1" id="lc-slider">
+  </div>
+
+  <div class="slider-block">
+    <div class="slider-labels">
+      <span class="slider-label-left">✦ GOOD</span>
+      <span class="slider-center-label" id="ge-label">True Neutral</span>
+      <span class="slider-label-right">EVIL ✧</span>
+    </div>
+    <input type="range" min="0" max="100" value="50" step="1" id="ge-slider">
+  </div>
+
+  <div class="alignment-badge" id="alignment-badge">Current alignment: <span>True Neutral</span></div>
+
+  <label class="question-label" for="question-input">⟡ thy question or situation</label>
+  <div class="textarea-wrap" id="textarea-wrap">
+    <textarea id="question-input" placeholder="What fate awaits my endeavor..."></textarea>
+  </div>
+  <button class="shake-btn" id="shake-btn">✦ Shake the Magic 8-Ball ✦</button>
+
+  <div class="orb-wrap">
+    <div class="orb" id="orb">
+      <div class="orb-inner">
+        <div class="orb-symbol" id="orb-symbol">8</div>
+        <div class="orb-text normal" id="orb-text"></div>
+      </div>
+    </div>
+  </div>
+  <div class="response-alignment" id="response-alignment"></div>
+</div>
+
+<script>
+const RESPONSES = {
+  LG: ["The ancient statutes are clear — your path is righteous. Proceed.","As the paladin's oath endures, so shall your resolve. It shall come to pass.","The scales of justice tip in your favor. Act with honor and it is certain.","The high court of fate has deliberated. The verdict: yes.","Even the gods are bound by law — and the law favors the pure of heart.","Your cause is just. The light does not abandon its champions."],
+  NG: ["A healer doesn't need a reason to mend — and the answer here is yes.","The forest spirits whisper: do what feels right. It usually is.","Good finds a way, regardless of the road taken. Signs point to yes.","The heart knows before the mind does. Trust what you already feel.","Even wandering rivers reach the sea. Your answer awaits downstream.","Help will come from unexpected hands. The outcome is favorable."],
+  CG: ["Burn the rulebook. Save the village anyway. Outlook: blazing.","The rogue's instinct says yes — and the rogue has never been wrong twice in a row.","Laws were made to be bent. Fate was made to be dared. Do it.","The bards will sing of this regardless of how it ends. Might as well be glorious.","Someone has to break down the door. Why not you? The answer is yes.","Chaos has blessed this endeavor with the spark of something magnificent."],
+  LN: ["The contract has been reviewed. Clause 7 permits it. Proceed.","Order requires an answer. The answer is: likely yes. File accordingly.","The precedent has been set. History repeats. Outcome: probable.","Submit the proper forms. The tribunal will rule in your favor.","All variables have been logged. The calculation resolves: affirmative.","The chain of command has spoken. Execute without deviation."],
+  TN: ["The winds shift. Balance is neither gained nor lost in asking.","Seek not the answer — seek the stillness before the question.","The oak does not ask which way to fall. It simply falls. So too shall this.","All things pass into and out of being. This is no different. It is unclear.","The void offers no comfort and no condemnation. It offers only: perhaps.","As above, so below. As within, so without. Do not ask again."],
+  CN: ["The dice have been cast off a cliff. Results: unknowable. Thrilling.","Why would you want a reliable answer? Where's the fun in that?","The stars are drunk tonight. So is this prophecy. Flip a coin.","Maybe! Maybe not! Maybe something entirely different and unexpected!","The oracle got bored halfway through your question. Try again. Or don't.","Fate is just a rumor. Do the chaotic thing. You were going to anyway."],
+  LE: ["Power is acquired through patience and procedure. The answer serves your ambition: yes.","The contract is binding. The outcome is assured. Your compliance is noted.","Every empire was built on exactly this kind of decision. Do not hesitate.","The law protects those who know how to wield it. You do. Proceed.","Loyalty is a leash on the weak. For you, it is a weapon. Use it.","The tribunal has reviewed your request. Approved. No witnesses necessary."],
+  NE: ["Will it benefit you? Then the answer is yes. All other factors are irrelevant.","Sentiment is a liability. The favorable outcome is within reach. Take it.","Allies are temporary. Advantages are not. Signs point to exploitation.","The prophecy cares nothing for your conscience. Neither does the outcome: favorable.","Others will suffer regardless. You may as well profit. The answer is yes.","Trust no one. Take everything. The 8-ball has spoken."],
+  CE: ["Burn it down. See what rises from the ash. The answer is: burn it down.","The screaming of your enemies IS the answer. Glorious. Yes.","Order is a cage. This outcome cracks the bars wide open. Do it.","Why ask? The only answer that matters is the one soaked in chaos.","The dark gods are laughing. That means you're on the right track.","Everything you fear about this outcome is precisely why you must pursue it."]
+};
+
+const ERROR_RESPONSES = [
+  "The orb sees no question. It sees only the void where your curiosity should be.",
+  "Silence is not a question, seeker. Try again with words.",
+  "The oracle cannot divine what hath not been asked. Speak thy query.",
+  "You have shaken the ball without purpose. The spirits are unamused.",
+  "An empty question yields an empty fate. Ask something, mortal.",
+  "The 8-ball peers into your soul and finds... nothing written. Fill the field."
+];
+
+const ALIGNMENT_NAMES = {
+  LG:"Lawful Good", NG:"Neutral Good", CG:"Chaotic Good",
+  LN:"Lawful Neutral", TN:"True Neutral", CN:"Chaotic Neutral",
+  LE:"Lawful Evil", NE:"Neutral Evil", CE:"Chaotic Evil"
+};
+
+const LC_LABELS = ["Stalwart Law","Mostly Lawful","Pretty Lawful","Leaning Law","True Neutral","Leaning Chaos","Pretty Chaotic","Mostly Chaotic","Stalwart Chaos"];
+const GE_LABELS = ["Stalwart Good","Mostly Good","Pretty Good","Leaning Good","True Neutral","Leaning Evil","Pretty Evil","Mostly Evil","Stalwart Evil"];
+
+function getSliderLabel(val, labels) {
+  return labels[Math.round(val / 100 * 8)];
+}
+
+function axisWeights(val) {
+  if (val <= 50) { const t = val/50; return {low:1-t, mid:t, high:0}; }
+  else { const t=(val-50)/50; return {low:0, mid:1-t, high:t}; }
+}
+
+function getAlignmentLabel(lc, ge) {
+  const lcIdx = Math.round(lc/100*8), geIdx = Math.round(ge/100*8);
+  const lcZ = lcIdx<4?'L':lcIdx===4?'N':'C', geZ = geIdx<4?'G':geIdx===4?'N':'E';
+  if (lcZ==='N'&&geZ==='N') return 'TN';
+  if (lcZ==='N') return geZ==='G'?'NG':'NE';
+  if (geZ==='N') return lcZ==='L'?'LN':'CN';
+  return lcZ+geZ;
+}
+
+function weightedPick(lc, ge) {
+  const lcW=axisWeights(lc), geW=axisWeights(ge);
+  const pool=[['LG',lcW.low*geW.low],['NG',lcW.mid*geW.low],['CG',lcW.high*geW.low],['LN',lcW.low*geW.mid],['TN',lcW.mid*geW.mid],['CN',lcW.high*geW.mid],['LE',lcW.low*geW.high],['NE',lcW.mid*geW.high],['CE',lcW.high*geW.high]].filter(([,w])=>w>0);
+  let r=Math.random()*pool.reduce((s,[,w])=>s+w,0);
+  for (const [k,w] of pool){r-=w;if(r<=0)return k;}
+  return pool[pool.length-1][0];
+}
+
+const lcSlider=document.getElementById('lc-slider'), geSlider=document.getElementById('ge-slider');
+const lcLabel=document.getElementById('lc-label'), geLabel=document.getElementById('ge-label');
+const badge=document.getElementById('alignment-badge'), shakeBtn=document.getElementById('shake-btn');
+const orb=document.getElementById('orb'), orbText=document.getElementById('orb-text');
+const orbSymbol=document.getElementById('orb-symbol'), responseAlignment=document.getElementById('response-alignment');
+const questionInput=document.getElementById('question-input'), textareaWrap=document.getElementById('textarea-wrap');
+
+function updateLabels() {
+  const lc=parseInt(lcSlider.value), ge=parseInt(geSlider.value);
+  lcLabel.textContent=getSliderLabel(lc,LC_LABELS);
+  geLabel.textContent=getSliderLabel(ge,GE_LABELS);
+  badge.innerHTML='Current alignment: <span>'+ALIGNMENT_NAMES[getAlignmentLabel(lc,ge)]+'</span>';
+}
+
+lcSlider.addEventListener('input',updateLabels);
+geSlider.addEventListener('input',updateLabels);
+
+// Clear error state on typing
+questionInput.addEventListener('input', () => questionInput.classList.remove('error'));
+
+shakeBtn.addEventListener('click', () => {
+  const lc=parseInt(lcSlider.value), ge=parseInt(geSlider.value);
+  const isEmpty = !questionInput.value.trim();
+
+  orbText.classList.remove('visible','normal','scolding');
+  orbText.textContent='';
+  orbSymbol.classList.remove('hidden');
+  responseAlignment.textContent='';
+
+  orb.classList.remove('shaking');
+  void orb.offsetWidth;
+  orb.classList.add('shaking');
+
+  if (isEmpty) {
+    // Shake the textarea too
+    questionInput.classList.add('error');
+    textareaWrap.classList.remove('fieldshaking');
+    void textareaWrap.offsetWidth;
+    textareaWrap.classList.add('fieldshaking');
+    textareaWrap.addEventListener('animationend', () => textareaWrap.classList.remove('fieldshaking'), {once:true});
+
+    const msg = ERROR_RESPONSES[Math.floor(Math.random()*ERROR_RESPONSES.length)];
+    setTimeout(() => {
+      orbSymbol.classList.add('hidden');
+      orbText.classList.add('scolding');
+      orbText.textContent = msg;
+      orbText.classList.add('visible');
+      responseAlignment.textContent = '— THE ORB IS DISPLEASED —';
+    }, 650);
+  } else {
+    const key=weightedPick(lc,ge);
+    const response=RESPONSES[key][Math.floor(Math.random()*RESPONSES[key].length)];
+    setTimeout(() => {
+      orbSymbol.classList.add('hidden');
+      orbText.classList.add('normal');
+      orbText.textContent=response;
+      orbText.classList.add('visible');
+      responseAlignment.textContent='— '+ALIGNMENT_NAMES[key].toUpperCase()+' —';
+    }, 650);
+  }
+
+  orb.addEventListener('animationend',()=>orb.classList.remove('shaking'),{once:true});
+});
+
+updateLabels();
+</script>
