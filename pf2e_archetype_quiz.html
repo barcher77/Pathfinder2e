@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Which Archetype Should I Take? — PF2e</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:#1a1006; --parchment:#f5edd6; --parchment-dark:#e8d9b5; --parchment-mid:#efe2c0;
+    --gold:#c8972a; --gold-light:#e8b84b; --gold-dark:#8a6518;
+    --red:#8b1a1a; --red-light:#c02020; --teal:#1a5a5a;
+    --shadow:rgba(26,16,6,0.35); --shadow-deep:rgba(26,16,6,0.6);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background-color:#0e0a04;
+    background-image:radial-gradient(ellipse at 20% 10%,rgba(200,151,42,0.08) 0%,transparent 50%),
+      radial-gradient(ellipse at 80% 90%,rgba(139,26,26,0.08) 0%,transparent 50%);
+    min-height:100vh;font-family:'Crimson Pro',Georgia,serif;color:var(--ink);
+    display:flex;flex-direction:column;align-items:center;padding:2rem 1rem 4rem;}
+  .frame{width:100%;max-width:820px;background:var(--parchment);
+    background-image:radial-gradient(ellipse at 50% 0%,rgba(232,184,75,0.18) 0%,transparent 60%);
+    border-radius:4px;
+    box-shadow:0 0 0 2px var(--gold-dark),0 0 0 6px var(--ink),0 0 0 8px var(--gold-dark),0 20px 60px var(--shadow-deep);
+    position:relative;overflow:hidden;}
+  .frame::before,.frame::after{content:'✦';position:absolute;font-size:1.4rem;color:var(--gold);z-index:10;}
+  .frame::before{top:10px;left:14px;} .frame::after{top:10px;right:14px;}
+  .frame-inner{position:relative;}
+  .frame-inner::before,.frame-inner::after{content:'✦';position:absolute;font-size:1.4rem;color:var(--gold);z-index:10;bottom:10px;}
+  .frame-inner::before{left:14px;} .frame-inner::after{right:14px;}
+
+  .quiz-header{padding:2.5rem 2.5rem 1.5rem;text-align:center;border-bottom:2px solid var(--gold-dark);}
+  .quiz-header::after{content:'';display:block;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin-top:1rem;}
+  .eyebrow{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.3em;color:var(--gold-dark);text-transform:uppercase;margin-bottom:0.75rem;}
+  h1{font-family:'Cinzel Decorative',serif;font-size:clamp(1.4rem,4vw,2.1rem);color:var(--red);line-height:1.25;text-shadow:1px 1px 0 rgba(255,255,255,0.4),2px 3px 6px var(--shadow);margin-bottom:0.6rem;}
+  .subtitle{font-family:'Crimson Pro',serif;font-style:italic;font-size:1.05rem;color:#5a4020;max-width:560px;margin:0 auto;line-height:1.5;}
+
+  .progress-bar-wrap{padding:1rem 2.5rem 0;}
+  .progress-label{display:flex;justify-content:space-between;font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--gold-dark);margin-bottom:0.4rem;}
+  .progress-track{height:6px;background:var(--parchment-dark);border-radius:3px;border:1px solid var(--gold-dark);overflow:hidden;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-dark),var(--gold-light));border-radius:3px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1);width:0%;}
+
+  .path-crumb{padding:0.5rem 2.5rem 0;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.1em;color:var(--gold-dark);opacity:0.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:1.4rem;}
+  .crumb-sep{margin:0 0.3em;opacity:0.5;}
+
+  .question-area{padding:1.5rem 2.5rem 1.5rem;}
+  .question-number{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.25em;color:var(--gold-dark);text-transform:uppercase;margin-bottom:0.5rem;}
+  .question-text{font-family:'Cinzel',serif;font-size:clamp(1rem,2.5vw,1.2rem);color:var(--ink);line-height:1.5;margin-bottom:0.4rem;font-weight:600;}
+  .question-flavor{font-style:italic;color:#6b4c20;font-size:0.95rem;margin-bottom:1.5rem;line-height:1.45;}
+
+  .options{display:flex;flex-direction:column;gap:0.65rem;}
+  .option-btn{display:flex;align-items:flex-start;gap:1rem;background:var(--parchment-mid);border:1.5px solid var(--gold-dark);border-radius:3px;padding:0.85rem 1.1rem;cursor:pointer;text-align:left;transition:all 0.18s ease;position:relative;overflow:hidden;font-family:inherit;}
+  .option-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,151,42,0.15),transparent);opacity:0;transition:opacity 0.18s ease;}
+  .option-btn:hover{border-color:var(--gold);background:var(--parchment-dark);transform:translateX(4px);box-shadow:-3px 0 0 var(--gold),2px 4px 12px var(--shadow);}
+  .option-btn:hover::before{opacity:1;}
+  .option-btn.selected{border-color:var(--red);background:#f0e0cc;transform:translateX(6px);box-shadow:-4px 0 0 var(--red),3px 5px 16px var(--shadow);}
+  .option-letter{font-family:'Cinzel',serif;font-weight:600;font-size:0.85rem;color:var(--gold-dark);min-width:1.4rem;padding-top:0.1rem;flex-shrink:0;}
+  .option-btn.selected .option-letter{color:var(--red);}
+  .option-text{font-size:0.98rem;line-height:1.45;color:var(--ink);}
+  .option-label{font-weight:600;display:block;margin-bottom:0.1rem;}
+  .option-sub{font-style:italic;color:#6b4c20;font-size:0.88rem;}
+
+  .nav-area{display:flex;justify-content:space-between;align-items:center;padding:1rem 2.5rem 2rem;border-top:1px solid var(--parchment-dark);margin-top:0.5rem;}
+  .btn{font-family:'Cinzel',serif;font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.65rem 1.6rem;border-radius:2px;cursor:pointer;transition:all 0.2s ease;border:none;}
+  .btn-back{background:transparent;border:1.5px solid var(--gold-dark);color:var(--gold-dark);}
+  .btn-back:hover{background:var(--parchment-dark);color:var(--ink);}
+  .btn-back:disabled{opacity:0.3;cursor:default;}
+  .btn-next{background:var(--red);color:var(--parchment);box-shadow:0 3px 10px rgba(139,26,26,0.35);}
+  .btn-next:hover{background:var(--red-light);transform:translateY(-1px);}
+  .btn-next:disabled{background:#b0a090;box-shadow:none;cursor:default;transform:none;}
+  .btn-results{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:var(--ink);font-size:0.85rem;padding:0.75rem 2rem;box-shadow:0 3px 12px rgba(200,151,42,0.4);}
+  .btn-results:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(200,151,42,0.55);}
+  .btn-results:disabled{background:#b0a090;box-shadow:none;cursor:default;transform:none;}
+  .ornament{text-align:center;color:var(--gold);font-size:1.1rem;letter-spacing:0.5rem;padding:0.25rem 0;}
+
+  #intro-screen{padding:2.5rem;text-align:center;}
+  .intro-body{font-size:1.05rem;line-height:1.7;color:#4a3010;max-width:580px;margin:1rem auto 2rem;}
+  .intro-body em{color:var(--red);font-style:normal;font-weight:600;}
+
+  /* Results */
+  #results-screen{display:none;padding:2.5rem;}
+  .results-header{text-align:center;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:2px solid var(--gold-dark);}
+  .results-header::after{content:'';display:block;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin-top:1rem;}
+  .results-eyebrow{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.3em;color:var(--gold-dark);text-transform:uppercase;margin-bottom:0.5rem;}
+  .results-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.2rem,3.5vw,1.8rem);color:var(--red);margin-bottom:0.5rem;text-shadow:1px 1px 0 rgba(255,255,255,0.4);}
+  .results-subtitle{font-style:italic;color:#5a4020;font-size:1rem;}
+
+  /* Concept header */
+  .concept-card{background:var(--parchment-mid);border:2px solid var(--gold-dark);border-radius:3px;margin-bottom:1.5rem;overflow:hidden;box-shadow:3px 6px 18px var(--shadow);opacity:0;transform:translateY(16px);animation:cardReveal 0.5s ease forwards 0.1s;}
+  @keyframes cardReveal{to{opacity:1;transform:translateY(0);}}
+  .concept-header{display:flex;align-items:center;gap:1rem;padding:1.1rem 1.4rem;border-bottom:1px solid var(--parchment-dark);background:linear-gradient(135deg,rgba(200,151,42,0.1),transparent);}
+  .concept-icon{font-size:2rem;}
+  .concept-name{font-family:'Cinzel Decorative',serif;font-size:clamp(1.1rem,3vw,1.5rem);color:var(--red);flex:1;text-shadow:1px 1px 0 rgba(255,255,255,0.3);}
+  .concept-body{padding:1rem 1.4rem 0.5rem;}
+  .concept-pitch{font-size:1rem;line-height:1.6;color:var(--ink);margin-bottom:0.5rem;}
+  .concept-pitch strong{color:var(--red);}
+
+  /* Archetype entries */
+  .arc-entries{display:flex;flex-direction:column;gap:0.8rem;padding:0.75rem 1.4rem 1.25rem;}
+  .arc-entry{background:var(--parchment-dark);border:1px solid rgba(139,101,24,0.4);border-radius:3px;padding:0.85rem 1rem;}
+  .arc-entry-top{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.35rem;}
+  .arc-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:600;color:var(--red);}
+  .tag{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.15rem 0.45rem;border-radius:2px;border:1px solid;}
+  .tag-multi{border-color:var(--teal);color:var(--teal);background:rgba(26,90,90,0.08);}
+  .tag-src{border-color:var(--gold-dark);color:var(--gold-dark);background:transparent;}
+  .tag-uncommon{border-color:#7a4800;color:#7a4800;background:rgba(122,72,0,0.07);}
+  .tag-rare{border-color:#6a006a;color:#6a006a;background:rgba(106,0,106,0.07);}
+  .tag-limited{border-color:#005a7a;color:#005a7a;background:rgba(0,90,122,0.07);}
+  .arc-req{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.08em;color:#7a3000;font-style:italic;margin-bottom:0.3rem;}
+  .arc-desc{font-size:0.93rem;line-height:1.55;color:var(--ink);}
+  .arc-desc strong{color:var(--red);}
+
+  /* Path summary */
+  .path-summary{margin-top:1.25rem;padding:1rem 1.25rem;background:var(--parchment-dark);border:1px solid var(--gold-dark);border-radius:3px;opacity:0;animation:cardReveal 0.5s ease forwards 0.35s;}
+  .path-summary-label{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:0.6rem;}
+  .path-steps{display:flex;flex-wrap:wrap;align-items:center;gap:0.3rem;font-size:0.88rem;color:#5a4020;line-height:1.6;}
+  .path-step{font-style:italic;}
+  .path-arrow{color:var(--gold);font-size:0.75rem;}
+
+  .retake-area{text-align:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--parchment-dark);}
+  .fade-slide{animation:fadeSlide 0.35s ease forwards;}
+  @keyframes fadeSlide{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  #quiz-screen{display:none;}
+  .screen-active{display:block !important;}
+  @media(max-width:600px){
+    .frame{border-radius:0;}
+    .question-area,.nav-area,#results-screen,#intro-screen{padding-left:1.25rem;padding-right:1.25rem;}
+    .progress-bar-wrap,.path-crumb{padding-left:1.25rem;padding-right:1.25rem;}
+    .arc-entry-top{gap:0.3rem;}
+  }
+</style>
+</head>
+<body>
+<div class="frame"><div class="frame-inner">
+
+<!-- INTRO -->
+<div id="intro-screen" class="screen-active">
+  <div class="quiz-header">
+    <div class="eyebrow">Pathfinder 2nd Edition · Free Archetypes</div>
+    <h1>Which Archetype<br>Should I Take?</h1>
+    <p class="subtitle">A branching guide to finding your perfect second specialization.</p>
+  </div>
+  <div class="ornament">— ✦ —</div>
+  <div style="padding:1.5rem 0 0.5rem;">
+    <p class="intro-body">
+      This quiz works differently from the class and ancestry quizzes. Instead of asking who you are, it asks <em>what you want to add</em> — because your archetype completes your character rather than defining them.
+      <br><br>
+      Each result gives you a <em>cluster of specific archetypes</em> that fit your answer, with plain-English descriptions of what they actually do at the table. Covers all <em>27 multiclass dedications</em> plus over <em>50 general archetypes</em> from across the game's sourcebooks.
+    </p>
+    <div style="text-align:center;">
+      <button class="btn btn-results" onclick="startQuiz()" style="font-size:0.9rem;padding:0.85rem 2.5rem;">Begin the Questionnaire</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz-screen">
+  <div class="quiz-header">
+    <div class="eyebrow">Pathfinder 2nd Edition · Free Archetypes</div>
+    <h1>Which Archetype<br>Should I Take?</h1>
+    <p class="subtitle">Follow the path. Answer honestly.</p>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-label">
+      <span id="progress-text">Prologue</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+  <div class="path-crumb" id="path-crumb"></div>
+  <div class="ornament" style="padding:0.35rem 0 0;">— ✦ —</div>
+  <div class="question-area" id="question-area"></div>
+  <div class="nav-area">
+    <button class="btn btn-back" id="btn-back" onclick="goBack()" disabled>← Back</button>
+    <button class="btn btn-next" id="btn-next" onclick="goNext()" disabled>Next →</button>
+    <button class="btn btn-results" id="btn-submit" onclick="goNext()" style="display:none;" disabled>Show My Options ✦</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="results-screen">
+  <div class="results-header">
+    <div class="results-eyebrow">Your Archetype Options</div>
+    <div class="results-title" id="results-title">The Path Reveals Itself</div>
+    <p class="results-subtitle" id="results-subtitle">Based on your answers, here are the archetypes that fit.</p>
+  </div>
+  <div id="results-content"></div>
+  <div class="retake-area">
+    <button class="btn btn-results" onclick="retakeQuiz()" style="font-size:0.85rem;">✦ Start Over</button>
+  </div>
+</div>
+
+</div></div>
+<script>
+// ═══════════════════════════════════════════════════════════
+// RESULTS — each is a concept + cluster of archetypes
+// rarity: 'standard' | 'uncommon' | 'rare' | 'limited'
+// limited = PFS-restricted but fine in home games
+// req = special prerequisite beyond standard dedication
+// ═══════════════════════════════════════════════════════════
+const RESULTS = {
+
+  // ── COMBAT ──────────────────────────────────────────────
+
+  r_ranged: {
+    icon:"🏹", concept:"The Ranged Specialist",
+    pitch:"Your archetype is about <strong>mastering ranged combat</strong> beyond your class's normal capability — better accuracy, longer range, unique tricks at distance.",
+    archetypes:[
+      {name:"Archer", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"The definitive bow specialist. Feats reduce long-range penalties, let you fire multiple arrows in a single action, and eventually let you ignore cover. <strong>Best for any class that wants to commit fully to the bow.</strong>"},
+      {name:"Crossbow Infiltrator", multi:false, src:"Battlecry!", rarity:"standard",
+       desc:"Stealth-focused crossbow specialist who can reload and fire while hidden without breaking concealment. <strong>Best for characters who want precision ranged attacks from the shadows</strong>, not an open volley."},
+      {name:"Eldritch Archer", multi:false, src:"Player Core 2", rarity:"standard", req:"Requires an existing spellcasting class feature",
+       desc:"Channels spell energy through your arrows — load a spell into your next shot and deliver it alongside the physical hit. <strong>Best for spellcasters who want devastating magical ranged attacks</strong> instead of separate spell actions."},
+    ]
+  },
+
+  r_dual: {
+    icon:"⚔️", concept:"The Dual-Weapon Warrior",
+    pitch:"You want to fight with <strong>a weapon in each hand</strong> as your signature identity, beyond what the standard two-weapon rules give you.",
+    archetypes:[
+      {name:"Dual-Weapon Warrior", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Feats let you attack faster with your off-hand weapon, combine both weapons into single devastating combo strikes, and make your flurry of blows harder to dodge. <strong>The archetype for anyone whose fantasy is two blades moving as one.</strong>"},
+    ]
+  },
+
+  r_mauler: {
+    icon:"🪓", concept:"The Power Striker",
+    pitch:"You want to hit things <strong>very hard with large two-handed weapons</strong> and use that power to control the battlefield.",
+    archetypes:[
+      {name:"Mauler", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Two-handed weapon mastery — feats improve Athletics maneuvers while wielding big weapons, letting you shove, trip, and knock back enemies as part of your attacks. <strong>Turns your weapon into a crowd-control tool, not just a damage source.</strong>"},
+      {name:"Fighter", multi:true, src:"Player Core", rarity:"standard",
+       desc:"The multiclass dip for pure attack supremacy. The Dedication grants Attack of Opportunity — a reaction that punishes enemies for moving or casting near you. Every additional feat improves your already-formidable accuracy. <strong>Take this if you want the best attacks in the game.</strong>"},
+    ]
+  },
+
+  r_duelist: {
+    icon:"🤺", concept:"The Duelist",
+    pitch:"You want to fight <strong>one-on-one with finesse and footwork</strong> — reading your opponent, punishing mistakes, and winning through precision rather than brute force.",
+    archetypes:[
+      {name:"Duelist", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"A riposte reaction lets you strike or disarm when an enemy misses you, and feats add conditions and debuffs to your chosen opponent. <strong>Best for characters who want the fight to be a duel, not a brawl.</strong>"},
+      {name:"Swashbuckler", multi:true, src:"Player Core", rarity:"standard",
+       desc:"The Panache system — you gain it through daring acts and spend it on powerful Finishers. The Dedication gives you a Swashbuckler style and the basic Finisher action. <strong>Best if you want momentum-based, stylish single-weapon combat.</strong>"},
+    ]
+  },
+
+  r_unarmed: {
+    icon:"👊", concept:"The Unarmed Fighter",
+    pitch:"Your body <strong>is your weapon</strong> — claws, fists, natural attacks, or disciplined strikes with nothing in your hands.",
+    archetypes:[
+      {name:"Clawdancer", multi:false, src:"Howl of the Wild", rarity:"standard",
+       desc:"Fighting with natural weapons (claws, jaws, horns). Feats improve finesse with natural attacks, add better unarmed strikes, and eventually let you enter a feral state for enhanced combat. <strong>Best for beast-ancestry characters who want to embrace their natural weapons.</strong>"},
+      {name:"Monk", multi:true, src:"Player Core", rarity:"standard",
+       desc:"Flurry of Blows for two unarmed strikes as one action, plus improved unarmed proficiency beyond your class baseline. Additional feats add stances, ki abilities, and disciplined combat techniques. <strong>Best if you want the full martial-arts discipline experience.</strong>"},
+      {name:"Bullet Dancer", multi:false, src:"Guns & Gears", rarity:"uncommon",
+       desc:"Blends firearms and unarmed combat in a fluid Garundi martial art — reload as part of movement, use momentum from unarmed strikes to power your shots. <strong>Best for a character who wants gunfighting and body combat to be the same thing.</strong>"},
+    ]
+  },
+
+  r_bastion: {
+    icon:"🛡️", concept:"The Shield Master",
+    pitch:"You want to treat your shield as an <strong>active weapon and defense system</strong>, far beyond what normal Shield Block gives you.",
+    archetypes:[
+      {name:"Bastion", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Shield Block becomes a much more powerful reaction — more frequency, better damage reduction, and feats that let you use your shield offensively or to protect adjacent allies. <strong>The definitive archetype for anyone whose shield is part of their identity.</strong>"},
+    ]
+  },
+
+  r_sentinel: {
+    icon:"🪨", concept:"The Armor Specialist",
+    pitch:"You want to wear <strong>heavier armor than your class normally allows</strong>, or get more out of the heavy armor you already wear.",
+    archetypes:[
+      {name:"Sentinel", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Armor proficiency improvements beyond your class baseline, no Fatigued condition from sleeping in armor, and eventually full armor specialization effects regardless of class. <strong>Essential for any non-Fighter, non-Champion who wants to be a front-line armored warrior.</strong>"},
+    ]
+  },
+
+  r_protector: {
+    icon:"🛡️", concept:"The Protector",
+    pitch:"You want your archetype to <strong>intercept threats to allies</strong> — taking hits for others, punishing enemies who target them.",
+    archetypes:[
+      {name:"Guardian", multi:true, src:"Player Core", rarity:"standard",
+       desc:"The Intercept action lets you redirect attacks targeting adjacent allies to yourself instead. Feats expand this to area effects and spells. <strong>The purest 'stand between danger and my party' archetype in the game.</strong>"},
+      {name:"Champion", multi:true, src:"Player Core", rarity:"standard", req:"Must worship a deity",
+       desc:"A powerful Reaction — Retributive Strike punishes any enemy that damages an ally adjacent to you. Also grants Champion's Code, a divine ally, and access to defensive class feats. <strong>Best if you want protection with a righteous, divine flavor.</strong>"},
+    ]
+  },
+
+  r_endurance: {
+    icon:"💢", concept:"The Rage-Powered Survivor",
+    pitch:"You want to <strong>get stronger as you take damage</strong> — the archetype that turns a losing position into a dangerous one.",
+    archetypes:[
+      {name:"Barbarian", multi:true, src:"Player Core", rarity:"standard",
+       desc:"Rage grants bonus damage and temporary HP, and your Instinct choice shapes the flavor (Animal, Dragon, Giant, etc.). The Dedication gives you the basic Rage ability and access to Barbarian feats. <strong>Best for any martial who wants a resource-free burst of power.</strong>"},
+      {name:"Bloodrager", multi:false, src:"War of Immortals", rarity:"standard",
+       desc:"A hybrid of berserker rage and elemental power — when you're below half HP, your strikes gain elemental damage and you can unleash short-range elemental bursts. <strong>Best for characters who want the 'danger mode' fantasy with a magical, dramatic flair.</strong>"},
+    ]
+  },
+
+  r_movement: {
+    icon:"💨", concept:"The Mobile Fighter",
+    pitch:"You want to <strong>control the battlefield through superior movement</strong> — difficult terrain doesn't slow you, enemies can't pin you down, and you're always exactly where you need to be.",
+    archetypes:[
+      {name:"Acrobat", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Enhanced Acrobatics for avoiding attacks of opportunity, moving through enemy spaces, and treating falls as trivial. Feats let you tumble through enemies and gain defensive bonuses from your mobility. <strong>Best for light, nimble characters who want to never be where enemies expect.</strong>"},
+      {name:"Horizon Walker", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Select terrain types to master — you move at full speed through difficult terrain, gain speed bonuses in your chosen environments, and eventually leave no tracks. <strong>Best for wilderness-focused characters who want every landscape to be their home ground.</strong>"},
+      {name:"Guerrilla", multi:false, src:"Battlecry!", rarity:"standard",
+       desc:"Hit-and-run specialist: ambush bonuses, terrain use for the whole party, and the ability to disengage without triggering reactions. <strong>Best for skirmisher characters who want to control engagement range.</strong>"},
+    ]
+  },
+
+  r_ambush: {
+    icon:"🗡️", concept:"The Ambush Predator",
+    pitch:"You want an archetype built around <strong>striking first, striking hard, and using stealth as a weapon</strong>.",
+    archetypes:[
+      {name:"Assassin", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Mark for Death lets you study a target to add persistent bleed and extra damage to your first hit. Feats refine this into a devastating opening-strike system. <strong>The archetype for methodical killers who plan the fight before it starts.</strong>"},
+      {name:"Crossbow Infiltrator", multi:false, src:"Battlecry!", rarity:"standard",
+       desc:"Fire from concealment without breaking stealth, reload while hidden, and use your crossbow in cramped infiltration scenarios. <strong>Best for stealth-focused ranged characters.</strong>"},
+      {name:"Rogue", multi:true, src:"Player Core", rarity:"standard",
+       desc:"Sneak Attack dice when flanking or when enemies are Off-Guard, plus access to Rogue class feats. The Dedication gives you the fundamental precision striker identity. <strong>Best if you want ongoing sneak attack damage and a full rogue feat list.</strong>"},
+    ]
+  },
+
+  r_firearms: {
+    icon:"🔫", concept:"The Firearms Specialist",
+    pitch:"You want <strong>guns, explosives, or heavy artillery</strong> as a core part of how your character fights.",
+    archetypes:[
+      {name:"Gunslinger", multi:true, src:"Player Core", rarity:"standard", req:"Trained in a firearm or crossbow",
+       desc:"A Gunslinger Way ability and reload feats, plus access to the full Gunslinger feat list. Each Way (Drifter, Pistolero, Sniper, etc.) gives you a different firing-style signature. <strong>The essential dip for any non-Gunslinger who wants to use firearms effectively.</strong>"},
+      {name:"Bullet Dancer", multi:false, src:"Guns & Gears", rarity:"uncommon",
+       desc:"Fluid Garundi martial art blending firearms and unarmed combat — reload while moving or striking, use momentum from your body to power shots. <strong>Best for an acrobatic, close-range gunfighter.</strong>"},
+      {name:"Demolitionist", multi:false, src:"Guns & Gears", rarity:"uncommon", req:"Trained in Crafting",
+       desc:"Prepare and throw alchemical explosives without being an Alchemist, with improved control over splash damage. <strong>Best for characters who want to reshape the battlefield with area denial.</strong>"},
+      {name:"Artillerist", multi:false, src:"Guns & Gears", rarity:"standard",
+       desc:"Siege weapons and oversized guns — solo-crew weapons that normally need a team, and quickly set up/tear down heavy artillery. <strong>Best for campaigns with mass combat or sieges, or any character who wants to be the big gun.</strong>"},
+    ]
+  },
+
+  r_mounted: {
+    icon:"🐴", concept:"The Mounted Warrior",
+    pitch:"You want to fight <strong>from the back of a mount or beast</strong> — using your creature as a combat asset, not just transportation.",
+    archetypes:[
+      {name:"Cavalier", multi:false, src:"Player Core 2", rarity:"standard", req:"Requires a mount",
+       desc:"Command your steed to attack, and charge strikes deal extra damage at full gallop. Feats deepen the bond and turn the two of you into a coordinated combat unit. <strong>Best for the classic mounted knight fantasy.</strong>"},
+      {name:"Rider", multi:false, src:"Howl of the Wild", rarity:"standard",
+       desc:"Ride anything — even creatures without the mount trait. Share actions more efficiently with your mount and your mount gains resilience from your guidance. <strong>Best for characters who want the mounted lifestyle without needing a specially-trained horse.</strong>"},
+      {name:"Megafauna Tamer", multi:false, src:"Howl of the Wild", rarity:"standard",
+       desc:"Bond with truly massive creatures — dinosaurs, mammoths, megafauna — as a more powerful companion platform. <strong>Best for primal characters who want something prehistoric and impressive.</strong>"},
+      {name:"Drake Rider", multi:false, src:"Draconic Codex", rarity:"uncommon", req:"Requires a drake companion",
+       desc:"Bond with a juvenile drake as a mount, training together until your fighting styles integrate seamlessly — you strike while it breathes. <strong>Best for the draconic rider fantasy.</strong>"},
+    ]
+  },
+
+  // ── MAGIC ──────────────────────────────────────────────
+
+  r_arcane: {
+    icon:"📚", concept:"Arcane Spellcasting",
+    pitch:"You want to add <strong>arcane magic</strong> to your character — prepared or spontaneous, scholarly or bloodline-born.",
+    archetypes:[
+      {name:"Wizard", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Arcana",
+       desc:"Prepared arcane spellcasting from a spellbook, plus an arcane Thesis ability. The Dedication gives you cantrips and 1st-rank spell slots; additional feats add more slots and class features. <strong>Best if you want deliberate, flexible arcane preparation.</strong>"},
+      {name:"Sorcerer", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Arcana or relevant tradition skill",
+       desc:"Spontaneous spellcasting fueled by a Bloodline — you pick your spells known and cast them freely. <strong>Best if you want arcane magic (or any other tradition, depending on bloodline) that flows naturally without daily preparation.</strong>"},
+    ]
+  },
+
+  r_divine: {
+    icon:"✝️", concept:"Divine Spellcasting",
+    pitch:"You want to add <strong>divine magic</strong> to your character — healing, protection, sacred power, or the mysteries of faith.",
+    archetypes:[
+      {name:"Cleric", multi:true, src:"Player Core", rarity:"standard", req:"Must worship a deity",
+       desc:"Prepared divine spellcasting and Channel Energy (heal or harm). The Dedication gives you divine cantrips and spells. <strong>Best if you want full divine spell access and the ability to heal without the Champion's restrictions.</strong>"},
+      {name:"Oracle", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Religion",
+       desc:"Spontaneous divine casting shaped by a Mystery — but your curse grows as you push it, adding risk for reward. <strong>Best for characters who want divine power with dramatic, escalating cost.</strong>"},
+      {name:"Animist", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Nature or Religion",
+       desc:"Spirit companion bonds and divine cantrips. Your apparitions grant unique spell access based on their nature. <strong>Best for characters whose divine connection is to spirits of place and the natural world rather than a deity.</strong>"},
+    ]
+  },
+
+  r_primal: {
+    icon:"🌿", concept:"Primal Spellcasting",
+    pitch:"You want to add <strong>primal magic</strong> — the forces of nature, animals, elements, and the living world.",
+    archetypes:[
+      {name:"Druid", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Nature",
+       desc:"Prepared primal spellcasting and a Druidic Order ability (Animal, Leaf, Storm, or Wild). The Dedication gives you cantrips and a signature primal ability. <strong>Best if you want the full nature-caster experience with order-based flavor.</strong>"},
+      {name:"Ranger", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Nature",
+       desc:"Hunt Prey for persistent bonuses against a designated target, plus optional primal spellcasting. <strong>Best for martial characters who want nature magic as a tool alongside combat skills, not as their primary identity.</strong>"},
+      {name:"Kineticist", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Nature",
+       desc:"An elemental impulse and overflow ability — blast a chosen element with no spell slots required. <strong>Best for characters who want sustained, reliable elemental output rather than limited spell slots.</strong>"},
+    ]
+  },
+
+  r_occult: {
+    icon:"🔮", concept:"Occult Spellcasting",
+    pitch:"You want to add <strong>occult magic</strong> — the strange, the mental, the mysterious, and the things that don't quite fit the other traditions.",
+    archetypes:[
+      {name:"Bard", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Occultism and Performance",
+       desc:"Occult spontaneous spellcasting and Inspire Courage — a sustained bonus to attack rolls and damage for the whole party. <strong>Best for social, support-minded characters who want magic and battlefield presence simultaneously.</strong>"},
+      {name:"Witch", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Arcana or relevant tradition skill",
+       desc:"A Patron grants you a familiar that teaches you spells. Feats add hexes and curses. <strong>Best if you want occult (or any tradition, depending on patron) magic with a mysterious, patron-bound flavor.</strong>"},
+      {name:"Psychic", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Occultism",
+       desc:"Psi Cantrips and Unleash Psyche — a burst mode that amplifies your mental magic dramatically. <strong>Best for characters who want psychic, mind-based occult magic with a high-risk, high-reward burst mechanic.</strong>"},
+    ]
+  },
+
+  r_familiar: {
+    icon:"🦉", concept:"The Familiar Bond",
+    pitch:"You want a <strong>familiar as a core, central feature</strong> of your character — not just a background companion but a genuine magical partner.",
+    archetypes:[
+      {name:"Familiar Master", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Your familiar gains more ability slots per day, can take on unusual and powerful forms, and eventually becomes near-independent. <strong>Best for existing spellcasters who want their familiar to be genuinely exceptional rather than a minor bonus.</strong>"},
+      {name:"Familiar Sage", multi:false, src:"Tian Xia CG", rarity:"standard",
+       desc:"Your familiar functions as a teacher and lore-keeper — it knows additional esoteric knowledge, can temporarily share its skills with you, and grows as a font of wisdom. <strong>Best for knowledge-focused characters who want their familiar to be a partner in scholarship.</strong>"},
+      {name:"Witch", multi:true, src:"Player Core", rarity:"standard",
+       desc:"Your Patron's familiar is central to your entire spellcasting practice — it teaches you spells and delivers hexes. <strong>Best if you want the familiar to be inseparable from how you cast rather than just a bonus companion.</strong>"},
+    ]
+  },
+
+  r_hexes: {
+    icon:"🌀", concept:"Curses & Hexes",
+    pitch:"You want to <strong>inflict persistent magical afflictions</strong> on enemies — curses and hexes that accumulate, compound, and punish.",
+    archetypes:[
+      {name:"Hexologist", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Access to unique hex cantrips and feats that let you stack and extend curses beyond normal limits. <strong>Best for any character who wants to layer ongoing magical debuffs as a primary strategy.</strong>"},
+      {name:"Witch", multi:true, src:"Player Core", rarity:"standard",
+       desc:"Patron-granted hexes alongside your spellcasting tradition — persistent, renewable magical afflictions built into your core practice. <strong>Best if you want hexes as part of a full magical identity rather than a standalone technique.</strong>"},
+      {name:"Curse Maelstrom", multi:false, src:"Dark Archive", rarity:"rare", req:"Must already bear a curse of your own",
+       desc:"Embrace a curse you carry and direct its energy outward — your own curse symptoms become triggers for empowered magical effects. <strong>Best for characters with an existing curse who want to weaponize it dramatically.</strong>"},
+    ]
+  },
+
+  r_spell_weapon: {
+    icon:"⚡", concept:"Spells Through Attacks",
+    pitch:"You want to <strong>deliver spell effects through weapon strikes</strong> — magic and martial as a single action, not two separate turns.",
+    archetypes:[
+      {name:"Eldritch Archer", multi:false, src:"Player Core 2", rarity:"standard", req:"Requires existing spellcasting",
+       desc:"Load a spell into your next arrow and deliver it on impact alongside the physical hit. <strong>Best for ranged spellcasters who want to make every arrow a potentially spell-empowered event.</strong>"},
+      {name:"Magus", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Arcana",
+       desc:"Spellstrike — load a spell into your weapon and deliver both as a single Strike. The Dedication gives you this core ability plus arcane spellcasting. <strong>Best for melee characters who want spell-plus-weapon as their signature move.</strong>"},
+    ]
+  },
+
+  r_elemental: {
+    icon:"🔥", concept:"Elemental Power",
+    pitch:"You want access to <strong>raw elemental forces</strong> — fire, ice, lightning, earth, or the pure expression of a chosen element.",
+    archetypes:[
+      {name:"Elementalist", multi:false, src:"Rage of Elements", rarity:"standard", req:"Must be able to cast spells",
+       desc:"Attune to one of six elements as your magical identity. All your spells gain elemental empowerment and you access element-specific abilities. <strong>Best for casters who want to deeply specialize their magical identity around one element.</strong>"},
+      {name:"Kineticist", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Nature",
+       desc:"Elemental impulse blasts with no spell slots — an endless stream of elemental output. <strong>Best for non-casters who want sustained elemental damage without managing resources.</strong>"},
+      {name:"Bloodrager", multi:false, src:"War of Immortals", rarity:"standard",
+       desc:"When bloodied (below half HP), your strikes gain elemental damage and you can unleash elemental bursts. <strong>Best for a dramatic, desperate-moment elemental combat style.</strong>"},
+    ]
+  },
+
+  r_flex_cast: {
+    icon:"📜", concept:"Flexible Spellcasting",
+    pitch:"You're already a spellcaster. You want your casting to be <strong>more flexible, broader, or better optimized</strong>.",
+    archetypes:[
+      {name:"Flexible Spellcaster", multi:false, src:"Secrets of Magic", rarity:"limited", req:"Must be a prepared spellcaster; fine in home games",
+       desc:"Redesigns your preparation from a rigid daily list to a hybrid system — prepare spells but swap them between slots freely from a broader pool. <strong>Best for prepared casters who feel constrained by committing to specific slots at morning prep.</strong>"},
+      {name:"Geomancer", multi:false, src:"Secrets of Magic", rarity:"standard", req:"Must be able to cast spells",
+       desc:"Attune to the terrain around you — ley lines and elemental nodes grant free spell-like abilities based on your environment. <strong>Best for casters who explore diverse locations and want magic that responds to their setting.</strong>"},
+      {name:"Récherché", multi:false, src:"Secrets of Magic", rarity:"limited", req:"Must cast spells; fine in home games",
+       desc:"Eclectic academic access to spells across multiple traditions — broader lists, at the cost of reduced mastery in any single one. <strong>Best for casters who prize variety and want access to spells their tradition normally can't touch.</strong>"},
+    ]
+  },
+
+  r_fueled_cast: {
+    icon:"💫", concept:"Unusual-Fueled Casting",
+    pitch:"Your magic is powered by something <strong>other than standard spell slot management</strong> — an emotional state, the terrain you stand on, or a unique internal reservoir.",
+    archetypes:[
+      {name:"Cathartic Mage", multi:false, src:"Secrets of Magic", rarity:"limited", req:"Must cast spells; fine in home games",
+       desc:"Bond an emotion type to your spellcasting — channeling that emotion gives your spells free metamagic, while suppressing it has consequences. <strong>Best for deeply emotional characters who want mechanics that reflect their inner state.</strong>"},
+      {name:"Geomancer", multi:false, src:"Secrets of Magic", rarity:"standard", req:"Must cast spells",
+       desc:"Magic powered by the terrain around you — you draw strength from ley lines and elemental nodes in your environment. <strong>Best for explorers and wilderness casters who move through varied landscapes.</strong>"},
+    ]
+  },
+
+  r_weird_magic: {
+    icon:"🌑", concept:"Dark & Occult Mysteries",
+    pitch:"You want magic that is <strong>strange, psychic, shadow-touched, or genuinely uncanny</strong> — things that don't fit in the standard magical categories.",
+    archetypes:[
+      {name:"Occultist", multi:false, src:"Dark Archive", rarity:"standard",
+       desc:"Work with magical implements (bell, chalice, lantern, etc.) — each grants a unique active power and passive aura. <strong>Best for characters who want their magic items to be genuinely magical artifacts rather than equipment.</strong>"},
+      {name:"Mentalist", multi:false, src:"Dark Archive", rarity:"uncommon",
+       desc:"Psychic suggestion and mental influence — telepathic abilities, implanted suggestions, and eventually surface-thought reading. <strong>Best for social manipulators who want their social skills backed by genuine psychic power.</strong>"},
+      {name:"Nightshroud", multi:false, src:"Dark Archive", rarity:"rare",
+       desc:"Partially absorbed into a shadow realm — become partially incorporeal in darkness, pass through surfaces briefly, project shadow-stuff as attacks. <strong>Best for characters with a deep, established connection to shadow or darkness.</strong>"},
+      {name:"Planeshifter", multi:false, src:"Dark Archive", rarity:"rare", req:"Must have previously visited another plane",
+       desc:"Absorb the essence of a plane you've visited — gain that plane's traits as natural abilities and briefly shift yourself or objects into it for tactical advantages. <strong>Best for extraplanar travelers with established planar experience.</strong>"},
+    ]
+  },
+
+  r_ritualist: {
+    icon:"🕯️", concept:"The Ritual Master",
+    pitch:"You want performing <strong>rituals to be your signature magical act</strong> — faster, cheaper, more powerful, and with fewer chances of catastrophic failure.",
+    archetypes:[
+      {name:"Ritualist", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Reduce ritual casting time, cost, and failure risk. Access uncommon rituals others can't learn, perform rituals solo that normally need multiple casters. <strong>Best for characters whose power comes from meticulous preparation rather than in-combat spellcasting.</strong>"},
+    ]
+  },
+
+  // ── SUPPORT ─────────────────────────────────────────────
+
+  r_healer_divine: {
+    icon:"✨", concept:"The Divine Healer",
+    pitch:"You want to <strong>heal allies through divine power</strong> — channeling vitality energy through faith or a deity's blessing.",
+    archetypes:[
+      {name:"Blessed One", multi:false, src:"Player Core 2", rarity:"standard", req:"Trained in Medicine or Religion; good or neutral deity",
+       desc:"A pool of healing you distribute by touch, with feats to remove conditions (paralysis, disease) alongside the healing. <strong>Best for non-divine-casters who want reliable out-of-combat healing and a sacred identity.</strong>"},
+      {name:"Cleric", multi:true, src:"Player Core", rarity:"standard", req:"Must worship a deity",
+       desc:"Channel Energy — heal allies or harm undead based on your deity. Full divine spellcasting provides in-combat healing options. <strong>Best if you want healing as part of a complete divine caster package rather than a standalone ability.</strong>"},
+    ]
+  },
+
+  r_healer_medic: {
+    icon:"💊", concept:"The Battlefield Medic",
+    pitch:"You want to make the <strong>Medicine skill dramatically more powerful</strong> — faster, more effective, and capable of things nobody else can do with a bandage.",
+    archetypes:[
+      {name:"Medic", multi:false, src:"Player Core 2", rarity:"standard", req:"Trained in Medicine",
+       desc:"Treat Wounds heals more HP, takes less time, and can remove conditions alongside the heal. Eventually you can perform emergency surgery that stabilizes and buffs allies simultaneously. <strong>The archetype that turns Medicine from a downtime skill into a genuine combat resource.</strong>"},
+    ]
+  },
+
+  r_buffer: {
+    icon:"📣", concept:"The Combat Leader",
+    pitch:"You want to <strong>make your allies fight better</strong> on the battlefield — auras, commands, and inspiration that change how the whole party performs.",
+    archetypes:[
+      {name:"Marshal", multi:false, src:"Advanced Player's Guide", rarity:"standard", req:"Trained in Diplomacy or Intimidation",
+       desc:"A Marshal Aura stance gives adjacent allies bonuses to attack rolls or saves that scale with your feats. <strong>Best for characters who want a persistent, passive leadership presence without spending actions every turn.</strong>"},
+      {name:"Bard", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Occultism and Performance",
+       desc:"Inspire Courage — a sustained bonus to attack rolls and damage for the whole party that you keep up as a free action. <strong>Best if you want the most impactful single-action party buff in the game alongside full occult casting.</strong>"},
+      {name:"Commander", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Diplomacy",
+       desc:"Grant allies extra actions and tactical coordination through a command structure. <strong>Best for tactical players who want to give their party more to do on their turns.</strong>"},
+    ]
+  },
+
+  r_companion: {
+    icon:"🐾", concept:"The Companion Bond",
+    pitch:"You want one or more <strong>animal companions, beast partners, or bonded creatures</strong> fighting alongside you.",
+    archetypes:[
+      {name:"Beastmaster", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Bond with multiple animal companions — a second (and eventually third) creature joins your party. Your companions develop unique abilities from your bond. <strong>Best for players who want to run a multi-creature party within the party.</strong>"},
+      {name:"Ranger", multi:true, src:"Player Core", rarity:"standard",
+       desc:"Hunt Prey for combat bonuses plus optional animal companion access through Ranger feats. <strong>Best for martial characters who want one reliable companion alongside their core hunting identity.</strong>"},
+      {name:"Druid", multi:true, src:"Player Core", rarity:"standard",
+       desc:"The Animal Order dedication grants an animal companion and access to Druid feats that develop it. <strong>Best for primal-aligned characters who want both companion and nature magic.</strong>"},
+      {name:"Summoner", multi:true, src:"Player Core", rarity:"standard",
+       desc:"An Eidolon that shares your actions — you Act Together, effectively giving you and your magical creature a shared turn. <strong>Best for characters who want the companion to feel like a genuine second self, not just a pet.</strong>"},
+    ]
+  },
+
+  r_explorer: {
+    icon:"🗺️", concept:"The Explorer",
+    pitch:"You want your archetype to make your character <strong>exceptional in the exploration pillar</strong> — wilderness navigation, ruins, ancient traps, or simply surviving anywhere.",
+    archetypes:[
+      {name:"Hardy Traveler", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Ignore terrain and weather penalties, reduce forced march fatigue, and help the whole party travel further per day. <strong>Best for the character whose job is getting the party to the dungeon in fighting shape.</strong>"},
+      {name:"Horizon Walker", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Master multiple terrain types — full speed through difficult terrain, speed bonuses in your chosen environments, and eventually supernatural scouting abilities. <strong>Best for wilderness rangers and explorers who want terrain mastery as a character identity.</strong>"},
+      {name:"Archaeologist", multi:false, src:"Player Core 2", rarity:"standard", req:"Trained in Society or Crafting",
+       desc:"Expert in ruins — bonuses to disabling magical traps, identifying relic items, and accessing ancient lore unavailable to others. <strong>Best for dungeon-delvers who want expertise in ancient places and the things inside them.</strong>"},
+    ]
+  },
+
+  r_social_support: {
+    icon:"👑", concept:"The Social Specialist",
+    pitch:"You want your archetype to give you <strong>social leverage, information networks, or influence</strong> that goes beyond what skills alone provide.",
+    archetypes:[
+      {name:"Noble", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Noble privilege as a mechanical resource — call on your title for services, give orders to NPCs, and use your house's reputation to smooth social encounters. <strong>Best for characters who want power to come from who they are, not just what they say.</strong>"},
+      {name:"Celebrity", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Genuine fame as a mechanical tool — free goods from fans, social leverage, and the ability to use your reputation for intimidation or persuasion in unique ways. <strong>Best for performers, champions, and anyone whose deeds have made them known.</strong>"},
+      {name:"Dandy", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Master of high society and fashion — read hidden agendas, use dress as a status weapon, introduce people to change social dynamics. <strong>Best for court intrigue characters who treat social maneuvering with tactical precision.</strong>"},
+      {name:"Investigator", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Society",
+       desc:"Devise a Stratagem — roll your attack in advance using Intelligence, plus Pursue a Lead for persistent bonuses against a target. <strong>Best for clever characters who want to win through preparation and deduction rather than raw combat.</strong>"},
+    ]
+  },
+
+  // ── IDENTITY ────────────────────────────────────────────
+
+  r_shadow: {
+    icon:"🌑", concept:"The Shadow Operative",
+    pitch:"You want an archetype built around <strong>shadow, darkness, deception, and eliminating threats before they become fights</strong>.",
+    archetypes:[
+      {name:"Assassin", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Mark for Death — study a target to add persistent bleed and extra damage to your first successful Strike. A methodical killing system for characters who plan the fight before it starts."},
+      {name:"Rogue", multi:true, src:"Player Core", rarity:"standard",
+       desc:"Sneak Attack damage when enemies are Off-Guard, plus the full Rogue feat list for skills, dirty tricks, and precision. <strong>Best for the complete operative identity — not just the killing blow but the whole covert package.</strong>"},
+      {name:"Misdirector", multi:false, src:"Player Core 2", rarity:"standard", req:"Trained in Deception",
+       desc:"Master of misdirection — plant convincing false evidence, redirect enemy attention in combat, make your actions appear to be something else entirely. <strong>Best for characters whose primary weapon is confusion and false impressions.</strong>"},
+    ]
+  },
+
+  r_champion: {
+    icon:"⚜️", concept:"The Righteous Warrior",
+    pitch:"You want your archetype to reflect <strong>sacred purpose and the protection of others through martial strength</strong>.",
+    archetypes:[
+      {name:"Champion", multi:true, src:"Player Core", rarity:"standard", req:"Must worship a deity",
+       desc:"Retributive Strike reaction punishes any enemy that damages an ally adjacent to you. Grants Champion's Code, a divine ally, and access to defensive and retributive class feats. <strong>The best martial-divine protection archetype in the game.</strong>"},
+      {name:"Avenger", multi:false, src:"War of Immortals", rarity:"standard",
+       desc:"Mark an enemy that has harmed an ally and deal extra damage against them, with escalating retributive bonuses as the fight continues. <strong>Best for characters whose sacred duty is specifically punishing those who hurt the innocent.</strong>"},
+    ]
+  },
+
+  r_exemplar: {
+    icon:"🌟", concept:"The Divine Vessel",
+    pitch:"You want your body, weapon, or armor to be <strong>literally infused with divine power through sacred Ikons</strong> — mortal ascending toward something greater.",
+    archetypes:[
+      {name:"Exemplar", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Religion",
+       desc:"Ikon abilities — choose a sacred weapon, armor, or body feature that shifts between a mortal state and a divine empowered state. The Dedication gives you one Ikon and the push-pull mechanic of channeling divine power. <strong>Best for characters whose divine connection is physical and immanent, not just faith-based.</strong>"},
+    ]
+  },
+
+  r_preacher: {
+    icon:"🙏", concept:"The Preacher",
+    pitch:"You want to use <strong>faith as a rhetorical weapon and social force</strong> — inspiring allies, demoralizing enemies, and converting the uncertain.",
+    archetypes:[
+      {name:"Preacher", multi:false, src:"Player Core 2", rarity:"standard", req:"Trained in Religion",
+       desc:"Deliver impassioned sermons that demoralize enemies and inspire allies simultaneously. Divine rhetoric bypasses social resistance in ways normal Diplomacy cannot. <strong>Best for characters whose faith is a performance as much as a belief.</strong>"},
+      {name:"Battle Harbinger", multi:false, src:"Divine Mysteries", rarity:"standard", req:"Trained in Religion; deity with a combat domain",
+       desc:"Channels divine power into empowering combat rather than healing — bless weapons, call divine wrath on enemies, and grant combat-enhancing divine boons. <strong>Best for a martial cleric fantasy focused on holy war rather than healing.</strong>"},
+      {name:"Cleric", multi:true, src:"Player Core", rarity:"standard", req:"Must worship a deity",
+       desc:"Full divine spellcasting plus Channel Energy. <strong>Best if the Preacher concept needs to be backed up by a full repertoire of divine spells, not just rhetoric.</strong>"},
+    ]
+  },
+
+  r_hunter: {
+    icon:"🎯", concept:"The Monster Hunter",
+    pitch:"You want an archetype built around <strong>hunting, tracking, and eliminating specific types of threats</strong> — especially dangerous creatures.",
+    archetypes:[
+      {name:"Bounty Hunter", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Designate a mark and gain persistent bonuses against it — tracking, combat, and capture feats that make your target feel genuinely hunted. <strong>Best for methodical hunters who want one target to be their signature challenge.</strong>"},
+      {name:"Ranger", multi:true, src:"Player Core", rarity:"standard",
+       desc:"Hunt Prey for ongoing attack and damage bonuses against your designated target, plus wilderness skills and optional spellcasting. <strong>Best for a complete hunter identity rather than a single hunter mechanic.</strong>"},
+      {name:"Exorcist", multi:false, src:"Book of the Dead", rarity:"standard", req:"Trained in Religion",
+       desc:"Detect, disrupt, and banish undead and possessing spirits — sense undead presence, force entities out of host bodies, and deal enhanced damage to undead. <strong>Best for characters whose hunting specializes specifically in supernatural and undead threats.</strong>"},
+    ]
+  },
+
+  r_social_id: {
+    icon:"👑", concept:"The Social Power",
+    pitch:"You want your archetype to reflect <strong>power through status, fame, or influence</strong> — the ability to move through society as a force rather than just a person.",
+    archetypes:[
+      {name:"Noble", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Noble title as a mechanical resource — services on demand, orders to NPCs, house reputation as social leverage."},
+      {name:"Celebrity", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Genuine fame as a tool — fan services, reputation-based intimidation and persuasion, social presence that precedes you."},
+      {name:"Dandy", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Court intrigue mastery — read hidden agendas, use fashion as a weapon, control social dynamics through careful positioning."},
+      {name:"Preacher", multi:false, src:"Player Core 2", rarity:"standard", req:"Trained in Religion",
+       desc:"Faith as a social force — sermons that move crowds, divine rhetoric, and the ability to inspire or terrify through belief alone."},
+    ]
+  },
+
+  r_scholar: {
+    icon:"📖", concept:"The Scholar & Ritualist",
+    pitch:"You want your archetype to reflect <strong>deep knowledge, ancient lore, and the power that comes from understanding things others don't</strong>.",
+    archetypes:[
+      {name:"Archaeologist", multi:false, src:"Player Core 2", rarity:"standard", req:"Trained in Society or Crafting",
+       desc:"Expert in ruins, traps, and relics — bonuses to disabling magical traps and identifying ancient items. <strong>Best for the scholarly explorer whose knowledge is most relevant underground.</strong>"},
+      {name:"Ritualist", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Ritual mastery — reduced time, cost, and failure risk; access to uncommon rituals; solo performance of multi-caster rituals. <strong>Best for characters whose power comes from preparation and ancient rites.</strong>"},
+      {name:"Investigator", multi:true, src:"Player Core", rarity:"standard",
+       desc:"Devise a Stratagem with Intelligence, Pursue a Lead for persistent bonuses, and extensive skill access. <strong>Best for the genius detective who wins by knowing everything before the fight begins.</strong>"},
+      {name:"Wizard", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Arcana",
+       desc:"Prepared arcane spellcasting from a spellbook plus a Thesis ability. <strong>Best for characters whose scholar identity needs to be backed up by the most flexible spell list in the game.</strong>"},
+    ]
+  },
+
+  r_dragon: {
+    icon:"🐉", concept:"The Draconic Path",
+    pitch:"You want your archetype to reflect <strong>genuine draconic transformation or heritage</strong> — scales, breath, and the power of ancient dragon blood.",
+    archetypes:[
+      {name:"Dragon Disciple", multi:false, src:"Advanced Player's Guide", rarity:"limited", req:"Requires a draconic connection (sorcerer bloodline, dragon patron, etc.); fine in home games",
+       desc:"Literal physical transformation — scales improve AC, hands become claws, and you eventually gain a dragon's breath weapon. Each feat changes your physiology. <strong>The archetype for characters whose draconic heritage is becoming visibly, bodily real.</strong>"},
+      {name:"Draconic Acolyte", multi:false, src:"Draconic Codex", rarity:"uncommon",
+       desc:"Studied under a dragon's tutelage — resistance to your patron dragon's damage type and scaled techniques mimicking draconic natural weapons. <strong>Best for characters who walk the draconic path through devotion rather than blood.</strong>"},
+    ]
+  },
+
+  r_nemesis: {
+    icon:"⚔️", concept:"The Sworn Nemesis",
+    pitch:"You want your archetype to reflect <strong>a sacred grudge, a sworn enemy, or a destiny of confrontation</strong> with a specific type of foe.",
+    archetypes:[
+      {name:"Rancor", multi:false, src:"War of Immortals", rarity:"standard",
+       desc:"Designate a nemesis and gain escalating bonuses to attacks and saves against them that grow stronger as combat continues. The longer the fight, the more dangerous you become to your chosen enemy. <strong>Best for characters defined by a specific, personal, mythic grudge.</strong>"},
+      {name:"Avenger", multi:false, src:"War of Immortals", rarity:"standard",
+       desc:"Mark an enemy that has harmed an ally and deal escalating retributive damage against them. Divine or martial conviction powering righteous punishment. <strong>Best for protectors whose nemesis is anyone who hurts those they love.</strong>"},
+      {name:"Bounty Hunter", multi:false, src:"Player Core 2", rarity:"standard",
+       desc:"Designation system with persistent tracking and combat bonuses. <strong>Best if the nemesis is a profession rather than a destiny — you hunt because it's what you do.</strong>"},
+    ]
+  },
+
+  r_strange: {
+    icon:"🪞", concept:"The Uncanny Self",
+    pitch:"You want an archetype that reflects something <strong>strange, dual, or psychically unusual</strong> about your character's nature and identity.",
+    archetypes:[
+      {name:"Alter Ego", multi:false, src:"Dark Archive", rarity:"uncommon",
+       desc:"A second distinct identity with its own skill profile and locked abilities — slip between personas, access different capabilities as each self. <strong>Best for the dual-identity character who wants both halves to be mechanically real.</strong>"},
+      {name:"Mentalist", multi:false, src:"Dark Archive", rarity:"uncommon",
+       desc:"Psychic influence — telepathic communication, implanted suggestions, and eventual surface-thought reading. <strong>Best for characters whose uncanny quality is that they know what you're thinking.</strong>"},
+      {name:"Possessed", multi:false, src:"Dark Archive", rarity:"rare",
+       desc:"Share your body with a supernatural entity that grants power at the cost of control. Spell-like abilities and enhanced physical traits — the entity occasionally asserts influence. <strong>Best for deeply committed characters who want the dual-nature experience at its most dramatic.</strong>"},
+    ]
+  },
+
+  r_relic: {
+    icon:"🏺", concept:"The Relic Guardian",
+    pitch:"You want an archetype built around a <strong>deep bond with an artifact or sacred object</strong> — drawing power from it, protecting it, unlocking its secrets.",
+    archetypes:[
+      {name:"Relic Warden", multi:false, src:"War of Immortals", rarity:"standard",
+       desc:"Attune more deeply to relics than other characters, unlock hidden powers in artifacts, and use your relic as a focus for offensive and defensive abilities. <strong>Best for characters whose signature item is genuinely central to who they are — not equipment but identity.</strong>"},
+    ]
+  },
+
+  // ── MULTICLASS ──────────────────────────────────────────
+
+  r_fighter_multi: {
+    icon:"🗡️", concept:"Fighter Multiclass",
+    pitch:"You want the single most impactful martial dip in the game: <strong>Attack of Opportunity</strong>.",
+    archetypes:[
+      {name:"Fighter", multi:true, src:"Player Core", rarity:"standard", req:"Trained in your choice of weapon",
+       desc:"Attack of Opportunity is a free reaction that lets you Strike any enemy who moves, stands up, or casts a spell near you. It fundamentally changes how enemies interact with you. Additional Fighter feats improve accuracy, unlock powerful weapon techniques, and make you hit harder. <strong>The go-to dip for any martial who wants to punish enemy movement.</strong>"},
+    ]
+  },
+
+  r_barbarian_multi: {
+    icon:"💢", concept:"Barbarian Multiclass",
+    pitch:"You want to <strong>Rage</strong> — a resource-free burst of bonus damage and survivability that defines every fight.",
+    archetypes:[
+      {name:"Barbarian", multi:true, src:"Player Core", rarity:"standard",
+       desc:"Rage grants bonus damage, temporary HP, and an Instinct ability (Animal, Dragon, Giant, etc.) that shapes its flavor. No spell slots, no resources — just a powerful passive that activates when you need it. Additional feats deepen the Rage. <strong>Best for any martial who wants a reliable power boost with a primal, visceral aesthetic.</strong>"},
+    ]
+  },
+
+  r_monk_multi: {
+    icon:"👊", concept:"Monk Multiclass",
+    pitch:"You want <strong>Flurry of Blows</strong> and improved unarmed capability — the martial arts discipline dip.",
+    archetypes:[
+      {name:"Monk", multi:true, src:"Player Core", rarity:"standard",
+       desc:"Flurry of Blows makes two unarmed Strikes a single action. The Dedication also improves your unarmed proficiency beyond your class baseline. Additional feats add stances, ki abilities, and disciplined techniques. <strong>Best for characters who want unarmed combat to be genuinely excellent — or who want Flurry for any reason.</strong>"},
+    ]
+  },
+
+  r_swash_multi: {
+    icon:"🤺", concept:"Swashbuckler Multiclass",
+    pitch:"You want <strong>Panache</strong> and the Finisher system — momentum-based, style-forward combat.",
+    archetypes:[
+      {name:"Swashbuckler", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Acrobatics or a style-specific skill",
+       desc:"A Swashbuckler Style ability defines how you gain Panache (through stunts, feints, banter, etc.), and Finishers spend it for powerful attacks. The Dedication gives you your style and basic Finisher action. <strong>Best for characters who want combat momentum and a flashy, performance-driven fighting aesthetic.</strong>"},
+    ]
+  },
+
+  r_bard_multi: {
+    icon:"🎭", concept:"Bard Multiclass",
+    pitch:"You want <strong>Inspire Courage</strong> — the most efficient party buff action in the game — alongside occult spellcasting.",
+    archetypes:[
+      {name:"Bard", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Occultism and Performance",
+       desc:"Inspire Courage gives the whole party a sustained attack and damage bonus as a free action each round. The Dedication also gives you occult cantrips and 1st-rank spell slots. <strong>Best for any support-minded character who wants to maximize party output with minimal action cost.</strong>"},
+    ]
+  },
+
+  r_commander_multi: {
+    icon:"📣", concept:"Commander Multiclass",
+    pitch:"You want to <strong>grant your allies extra actions</strong> through battlefield coordination.",
+    archetypes:[
+      {name:"Commander", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Diplomacy",
+       desc:"Command the battlefield — grant allies extra actions, coordinate strikes, and give your party more to do on their turns. <strong>Best for tactical players who find the most satisfaction in the party's combined output rather than their personal damage.</strong>"},
+    ]
+  },
+
+  r_champion_multi: {
+    icon:"⚜️", concept:"Champion Multiclass",
+    pitch:"You want <strong>Retributive Strike</strong> — a powerful reaction that punishes enemies for harming your allies.",
+    archetypes:[
+      {name:"Champion", multi:true, src:"Player Core", rarity:"standard", req:"Must worship a deity",
+       desc:"Retributive Strike triggers whenever an enemy damages an ally adjacent to you — you can Strike that enemy as a reaction, and if you hit, your ally takes less damage. Also grants Champion's Code and a divine ally. <strong>The best protection-through-offense reaction in the game.</strong>"},
+    ]
+  },
+
+  r_summoner_multi: {
+    icon:"🐉", concept:"Summoner Multiclass",
+    pitch:"You want <strong>an Eidolon</strong> that shares your actions and fights as your bonded companion.",
+    archetypes:[
+      {name:"Summoner", multi:true, src:"Player Core", rarity:"standard",
+       desc:"An Eidolon — a customizable magical creature bonded to you. Act Together lets you and the Eidolon share a turn, effectively giving you double the actions. You share HP. <strong>Best for characters who want a true tactical partner that feels like an extension of themselves, not just a pet.</strong>"},
+    ]
+  },
+
+  r_magus_multi: {
+    icon:"⚡", concept:"Magus Multiclass",
+    pitch:"You want <strong>Spellstrike</strong> — load a spell into your weapon and deliver both effects in a single Strike.",
+    archetypes:[
+      {name:"Magus", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Arcana",
+       desc:"Spellstrike lets you combine a spell and a weapon Strike into a single action — potentially delivering devastating damage and spell effects simultaneously. The Dedication gives you Spellstrike, a Spellbook, and basic arcane cantrips. <strong>Best for characters who want the dramatic 'spell through blade' moment as their signature attack.</strong>"},
+    ]
+  },
+
+  r_alchemist_multi: {
+    icon:"⚗️", concept:"Alchemist Multiclass",
+    pitch:"You want access to <strong>alchemical items — bombs, elixirs, and mutagens</strong> — prepared fresh each day.",
+    archetypes:[
+      {name:"Alchemist", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Crafting",
+       desc:"Infused Reagents give you free alchemical items each day — bombs for ranged area damage, elixirs for healing and buffs, mutagens for physical enhancement. Additional feats expand your formula list. <strong>Best for characters who want a toolkit of expendable consumables without paying full gold cost.</strong>"},
+    ]
+  },
+
+  r_thaumaturge_multi: {
+    icon:"🔍", concept:"Thaumaturge Multiclass",
+    pitch:"You want to <strong>exploit creature vulnerabilities</strong> using implements — finding and hammering every enemy's weakness.",
+    archetypes:[
+      {name:"Thaumaturge", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Arcana, Nature, Occultism, or Religion",
+       desc:"Exploit Vulnerability — your implements let you identify and target a creature's fundamental weakness, dealing extra damage regardless of what that weakness is. <strong>Best for characters who want to be the party's monster expert and ensure nothing is immune to their damage.</strong>"},
+    ]
+  },
+
+  r_kineticist_multi: {
+    icon:"🔥", concept:"Kineticist Multiclass",
+    pitch:"You want <strong>elemental impulse blasts that never run out</strong> — no spell slots, no resources, just an endless stream of elemental force.",
+    archetypes:[
+      {name:"Kineticist", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Nature",
+       desc:"Choose an element — fire, water, earth, air, metal, or wood. Your basic impulse is an at-will ranged blast that costs nothing. Additional feats shape and enhance it. <strong>Best for characters who want reliable, sustained elemental output without resource management.</strong>"},
+    ]
+  },
+
+  r_inventor_multi: {
+    icon:"🔧", concept:"Inventor Multiclass",
+    pitch:"You want <strong>an Innovation</strong> — a signature invention that defines your combat style.",
+    archetypes:[
+      {name:"Inventor", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Crafting",
+       desc:"Choose an Innovation type: Construct Companion (a clockwork creature that fights alongside you), Weapon Modification (upgrade your weapon with unique built-in features), or Armor Modification (transform your armor into a platform for gadgets). <strong>Best for characters who want their equipment to be genuinely exceptional and custom-built.</strong>"},
+    ]
+  },
+
+  r_exemplar_multi: {
+    icon:"🌟", concept:"Exemplar Multiclass",
+    pitch:"You want <strong>sacred Ikons</strong> — weapon, armor, or body features infused with divine power that shift between mortal and transcendent states.",
+    archetypes:[
+      {name:"Exemplar", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Religion",
+       desc:"Choose an Ikon — a sacred weapon, a divine armor, or a celestial body feature. Each Ikon has a mortal state (reliable, defensive) and a divine state (powerful, costly). The Dedication gives you your first Ikon and the push-pull mechanic. <strong>Best for martial characters who want divine power expressed physically rather than through spellcasting.</strong>"},
+    ]
+  },
+
+  r_stealth_multi: {
+    icon:"🗝️", concept:"Stealth & Precision",
+    pitch:"You want a multiclass dip for <strong>stealth, precision strikes, and covert capability</strong>.",
+    archetypes:[
+      {name:"Rogue", multi:true, src:"Player Core", rarity:"standard", req:"Trained in Stealth",
+       desc:"Sneak Attack dice when enemies are Off-Guard — reliable bonus damage whenever you have positioning. Full access to Rogue feats for skills, dirty tricks, and the operative toolkit."},
+      {name:"Ranger", multi:true, src:"Player Core", rarity:"standard",
+       desc:"Hunt Prey for persistent bonuses against a designated target plus wilderness and tracking capabilities. Clean, efficient, requires no spell-training investment."},
+      {name:"Swashbuckler", multi:true, src:"Player Core", rarity:"standard",
+       desc:"Panache and Finishers for stylish, momentum-based precision. Best if your stealth is aesthetic as much as tactical — the dashing, confident operative."},
+    ]
+  },
+
+}; // end RESULTS
+
+// ═══════════════════════════════════════════════════════════
+// DECISION TREE
+// ═══════════════════════════════════════════════════════════
+const TREE = {
+
+  q0: {
+    number:"Prologue",
+    text:"Before we begin — what matters most about this archetype?",
+    flavor:"Your answer shapes how we frame the results.",
+    isWeighting:true,
+    options:[
+      {letter:"A",label:"The mechanical edge it gives me.",sub:"I want clear advantages: better actions, more damage, new capabilities.",weight:{mech:0.70,flav:0.30},next:"q1"},
+      {letter:"B",label:"The identity and concept it adds.",sub:"I want it to feel right for this character — a role or theme that fits.",weight:{mech:0.30,flav:0.70},next:"q1"},
+      {letter:"C",label:"Both equally.",weight:{mech:0.50,flav:0.50},next:"q1"},
+    ]
+  },
+
+  q1:{
+    number:"The Core Question",
+    text:"What do you want this archetype to ADD to your character?",
+    flavor:"Not what you already have — what's missing, or what you want more of.",
+    options:[
+      {letter:"A",label:"A specific way of fighting.",sub:"Better attacks, a weapon specialty, defense, or mobility.",next:"q2_combat"},
+      {letter:"B",label:"Magic or supernatural power I don't currently have.",sub:"Spell slots, elemental forces, a familiar, hexes — something magical.",next:"q2_magic"},
+      {letter:"C",label:"Support for my party.",sub:"Healing, buffing, a companion, exploration, or social utility.",next:"q2_support"},
+      {letter:"D",label:"A character concept or theme.",sub:"An identity — assassin, divine warrior, scholar, nemesis. Who you ARE, not just what you do.",next:"q2_identity"},
+      {letter:"E",label:"A taste of another class's abilities.",sub:"I know which class I'm interested in. I want to dip into it.",next:"q2_multi"},
+    ]
+  },
+
+  q2_combat:{
+    number:"The Combat Path",
+    text:"What kind of combat addition are you looking for?",
+    flavor:"Combat archetypes cover a huge range. Let's narrow it down.",
+    options:[
+      {letter:"A",label:"A weapon style or fighting technique.",sub:"Better with a specific weapon, style, or combat approach.",next:"q3_weapon"},
+      {letter:"B",label:"Better defense or survivability.",sub:"Shields, armor, protecting others, or staying up when I should fall.",next:"q3_defense"},
+      {letter:"C",label:"Movement, agility, and terrain mastery.",sub:"Harder to pin down. Faster. Always in position.",next:"r_movement"},
+      {letter:"D",label:"Ambush, assassination, or precision kills.",sub:"Strike first, strike hard. Make the opening count.",next:"r_ambush"},
+      {letter:"E",label:"Firearms, explosives, or artillery.",sub:"Guns, bombs, cannons. The sound of progress.",next:"r_firearms"},
+      {letter:"F",label:"Mounted or beast-based combat.",sub:"My creature is part of how I fight.",next:"r_mounted"},
+    ]
+  },
+
+  q3_weapon:{
+    number:"Weapon Style",
+    text:"What weapon style or fighting approach?",
+    flavor:"Each one has a dedicated archetype built around it.",
+    options:[
+      {letter:"A",label:"Ranged attacks — bow, crossbow, or magical arrows.",next:"r_ranged"},
+      {letter:"B",label:"Two weapons — one in each hand, always.",next:"r_dual"},
+      {letter:"C",label:"Two-handed power weapons — big, slow, devastating.",next:"r_mauler"},
+      {letter:"D",label:"Single weapon finesse — dueling, parrying, footwork.",next:"r_duelist"},
+      {letter:"E",label:"Unarmed or natural attacks — my body is the weapon.",next:"r_unarmed"},
+    ]
+  },
+
+  q3_defense:{
+    number:"Defense Style",
+    text:"How do you want to be harder to kill?",
+    flavor:"Defense archetypes work very differently from each other.",
+    options:[
+      {letter:"A",label:"I want to master the shield — block more, block better.",next:"r_bastion"},
+      {letter:"B",label:"I want to wear heavier armor than my class normally allows.",next:"r_sentinel"},
+      {letter:"C",label:"I want to protect my allies — stand between them and danger.",next:"r_protector"},
+      {letter:"D",label:"I want to get stronger and scarier when I take damage.",next:"r_endurance"},
+    ]
+  },
+
+  q2_magic:{
+    number:"The Magic Path",
+    text:"What kind of magic do you want to add?",
+    flavor:"Magic archetypes cover everything from spell slots to curses to elemental blasts.",
+    options:[
+      {letter:"A",label:"I want to start casting spells — I don't have a spellcasting tradition yet.",sub:"Give me spell slots and a proper magical tradition.",next:"q3_tradition"},
+      {letter:"B",label:"I already cast spells. I want to cast them better or differently.",sub:"More flexibility, unusual fuel, or a new dimension to my magic.",next:"q3_enhance"},
+      {letter:"C",label:"I want a familiar as a core feature of my magic.",next:"r_familiar"},
+      {letter:"D",label:"I want to inflict curses, hexes, and persistent magical afflictions.",next:"r_hexes"},
+      {letter:"E",label:"I want to deliver spells through weapon attacks.",sub:"Magic and martial as one action, not two.",next:"r_spell_weapon"},
+      {letter:"F",label:"I want raw elemental forces — fire, ice, lightning, earth.",next:"r_elemental"},
+    ]
+  },
+
+  q3_tradition:{
+    number:"Magical Tradition",
+    text:"Which magical tradition calls to you?",
+    flavor:"Each tradition has distinct flavor and a cluster of multiclass options.",
+    options:[
+      {letter:"A",label:"Arcane — scholarly, versatile, learned.",sub:"I want the broadest spell list, backed by study and intelligence.",next:"r_arcane"},
+      {letter:"B",label:"Divine — sacred, faith-based, healing.",sub:"I want magic that comes from a deity or divine calling.",next:"r_divine"},
+      {letter:"C",label:"Primal — nature, animals, elements.",sub:"I want magic that feels alive — the forces of the natural world.",next:"r_primal"},
+      {letter:"D",label:"Occult — strange, mental, mysterious.",sub:"I want magic that doesn't fit neatly anywhere else.",next:"r_occult"},
+    ]
+  },
+
+  q3_enhance:{
+    number:"Enhanced Casting",
+    text:"How do you want to enhance your existing spellcasting?",
+    flavor:"These archetypes change HOW you cast, not just what you can cast.",
+    options:[
+      {letter:"A",label:"More flexibility — break out of the rigid prepared-spell system.",next:"r_flex_cast"},
+      {letter:"B",label:"Unusual fuel — emotions, terrain, or environmental resonance.",next:"r_fueled_cast"},
+      {letter:"C",label:"Occult or dark mysteries — implements, psychic powers, shadow.",next:"r_weird_magic"},
+      {letter:"D",label:"Ritual mastery — I want rituals to be my signature act.",next:"r_ritualist"},
+    ]
+  },
+
+  q2_support:{
+    number:"The Support Path",
+    text:"How do you want to support your party?",
+    flavor:"Support covers everything from healing to buffing to exploration.",
+    options:[
+      {letter:"A",label:"Healing — keeping everyone alive.",next:"q3_healing"},
+      {letter:"B",label:"Buffing and tactics — making allies fight better.",next:"r_buffer"},
+      {letter:"C",label:"An animal companion or bonded creature.",next:"r_companion"},
+      {letter:"D",label:"Exploration — travel, terrain, ruins, and survival.",next:"r_explorer"},
+      {letter:"E",label:"Social and information — influence, networks, leverage.",next:"r_social_support"},
+    ]
+  },
+
+  q3_healing:{
+    number:"Healing Style",
+    text:"What kind of healer do you want to be?",
+    flavor:"Two very different approaches to keeping the party standing.",
+    options:[
+      {letter:"A",label:"Divine touch — healing through sacred power and faith.",sub:"No Medicine ranks required. Channel vitality through your hands.",next:"r_healer_divine"},
+      {letter:"B",label:"Battlefield medicine — make the Medicine skill dramatically more powerful.",sub:"Turn bandages and herbs into a genuine combat resource.",next:"r_healer_medic"},
+    ]
+  },
+
+  q2_identity:{
+    number:"The Identity Path",
+    text:"What concept or theme does this archetype represent?",
+    flavor:"Not a mechanic — a story. Who is this part of your character?",
+    options:[
+      {letter:"A",label:"Shadow, assassination, darkness, and covert operations.",next:"r_shadow"},
+      {letter:"B",label:"Sacred or divine calling — faith made martial or rhetorical.",next:"q3_divine_id"},
+      {letter:"C",label:"Monster hunter, tracker, or creature specialist.",next:"r_hunter"},
+      {letter:"D",label:"Social power — nobility, fame, influence, or rhetoric.",next:"r_social_id"},
+      {letter:"E",label:"Scholar, ritualist, or keeper of forbidden knowledge.",next:"r_scholar"},
+      {letter:"F",label:"Mythic, legendary, or destined — something larger than life.",next:"q3_mythic_id"},
+    ]
+  },
+
+  q3_divine_id:{
+    number:"The Divine Path",
+    text:"What does your divine calling look like?",
+    flavor:"Sacred power manifests in very different ways.",
+    options:[
+      {letter:"A",label:"A righteous warrior — protecting others, punishing the wicked.",next:"r_champion"},
+      {letter:"B",label:"A mortal vessel — your body or weapon is literally infused with divine power.",next:"r_exemplar"},
+      {letter:"C",label:"A passionate preacher — faith as rhetoric, rhetoric as weapon.",next:"r_preacher"},
+    ]
+  },
+
+  q3_mythic_id:{
+    number:"The Mythic Path",
+    text:"What kind of legend are you becoming?",
+    flavor:"First instinct.",
+    options:[
+      {letter:"A",label:"Draconic — scales, breath, transformation.",next:"r_dragon"},
+      {letter:"B",label:"A sworn nemesis — ancient grudge, destined confrontation.",next:"r_nemesis"},
+      {letter:"C",label:"Something uncanny — a double life, psychic strangeness, or possession.",next:"r_strange"},
+      {letter:"D",label:"A relic guardian — bound to an artifact, drawing power from it.",next:"r_relic"},
+    ]
+  },
+
+  q2_multi:{
+    number:"The Multiclass Path",
+    text:"What kind of class ability are you after?",
+    flavor:"Each multiclass dedication gives you that class's signature mechanic plus access to its feat list.",
+    options:[
+      {letter:"A",label:"Martial — better combat (more attacks, a rage, unarmed mastery, or finishers).",next:"q3_martial_multi"},
+      {letter:"B",label:"Spellcasting — I want to start casting in a specific tradition.",next:"q3_tradition"},
+      {letter:"C",label:"Support and leadership — inspire, command, protect, or partner.",next:"q3_support_multi"},
+      {letter:"D",label:"Stealth, precision, or finesse — operative and skirmisher skills.",next:"r_stealth_multi"},
+      {letter:"E",label:"Something unique — a signature mechanic no martial or caster provides.",next:"q3_unique_multi"},
+    ]
+  },
+
+  q3_martial_multi:{
+    number:"Martial Multiclass",
+    text:"What's the specific martial ability you're after?",
+    flavor:"Each of these feels very different in play.",
+    options:[
+      {letter:"A",label:"Attack of Opportunity — punish enemies for moving or casting near me.",next:"r_fighter_multi"},
+      {letter:"B",label:"Rage — a resource-free burst of power and survivability.",next:"r_barbarian_multi"},
+      {letter:"C",label:"Flurry of Blows — two unarmed strikes as one action.",next:"r_monk_multi"},
+      {letter:"D",label:"Panache and Finishers — momentum-based, stylish combat.",next:"r_swash_multi"},
+    ]
+  },
+
+  q3_support_multi:{
+    number:"Support Multiclass",
+    text:"How do you want to support your allies?",
+    flavor:"Support multiclass archetypes all feel different at the table.",
+    options:[
+      {letter:"A",label:"Inspire Courage — the most efficient party buff in the game.",next:"r_bard_multi"},
+      {letter:"B",label:"Grant allies extra actions through tactical coordination.",next:"r_commander_multi"},
+      {letter:"C",label:"A powerful protective reaction (Retributive Strike).",next:"r_champion_multi"},
+      {letter:"D",label:"An Eidolon partner that shares my actions.",next:"r_summoner_multi"},
+    ]
+  },
+
+  q3_unique_multi:{
+    number:"Unique Mechanics",
+    text:"Which unique class mechanic interests you?",
+    flavor:"These don't fit neatly into combat or magic — they're their own thing.",
+    options:[
+      {letter:"A",label:"Spellstrike — deliver a spell through a weapon Strike.",next:"r_magus_multi"},
+      {letter:"B",label:"Alchemical items — bombs, elixirs, and mutagens prepared daily.",next:"r_alchemist_multi"},
+      {letter:"C",label:"Exploit Vulnerability — find and hammer every creature's weakness.",next:"r_thaumaturge_multi"},
+      {letter:"D",label:"Elemental impulse blasts — unlimited elemental output, no spell slots.",next:"r_kineticist_multi"},
+      {letter:"E",label:"An Innovation — a custom-built weapon, armor, or construct companion.",next:"r_inventor_multi"},
+      {letter:"F",label:"Sacred Ikons — divine power bound into weapon, armor, or body.",next:"r_exemplar_multi"},
+    ]
+  },
+
+}; // end TREE
+
+// ═══════════════════════════════════════════════════════════
+// ENGINE
+// ═══════════════════════════════════════════════════════════
+let questionPath=['q0'], answers={}, mechWeight=0.5, flavWeight=0.5;
+function currentQId(){return questionPath[questionPath.length-1];}
+
+function startQuiz(){
+  questionPath=['q0'];answers={};mechWeight=0.5;flavWeight=0.5;
+  document.getElementById('intro-screen').classList.remove('screen-active');
+  document.getElementById('quiz-screen').classList.add('screen-active');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const qId=currentQId(), q=TREE[qId], depth=questionPath.length;
+  const pct=Math.round(((depth-1)/4)*100);
+  document.getElementById('progress-text').textContent=q.number;
+  document.getElementById('progress-pct').textContent=pct+'%';
+  document.getElementById('progress-fill').style.width=pct+'%';
+
+  const crumbEl=document.getElementById('path-crumb');
+  if(depth<=1){crumbEl.textContent='';}
+  else{
+    const crumbs=questionPath.slice(0,-1).map(id=>{
+      const ai=answers[id];
+      return ai!==undefined?TREE[id].options[ai].label:null;
+    }).filter(Boolean);
+    crumbEl.innerHTML=crumbs.map((c,i)=>
+      `<span class="path-step">${c}</span>`+(i<crumbs.length-1?'<span class="crumb-sep">›</span>':'')
+    ).join('');
+  }
+
+  const area=document.getElementById('question-area');
+  area.innerHTML='';area.classList.remove('fade-slide');void area.offsetWidth;area.classList.add('fade-slide');
+
+  const qNum=document.createElement('div');qNum.className='question-number';qNum.textContent=q.number;
+  const qText=document.createElement('div');qText.className='question-text';qText.textContent=q.text;
+  const qFlav=document.createElement('div');qFlav.className='question-flavor';qFlav.textContent=q.flavor;
+  const opts=document.createElement('div');opts.className='options';
+
+  q.options.forEach((opt,idx)=>{
+    const btn=document.createElement('button');
+    btn.className='option-btn'+(answers[qId]===idx?' selected':'');
+    btn.innerHTML=`<span class="option-letter">${opt.letter}</span><span class="option-text"><span class="option-label">${opt.label}</span>${opt.sub?`<span class="option-sub">${opt.sub}</span>`:''}</span>`;
+    btn.addEventListener('click',()=>selectAnswer(idx));
+    opts.appendChild(btn);
+  });
+
+  area.appendChild(qNum);area.appendChild(qText);area.appendChild(qFlav);area.appendChild(opts);
+  updateNav();
+}
+
+function selectAnswer(idx){
+  const qId=currentQId(),q=TREE[qId];
+  if(q.isWeighting){const w=q.options[idx].weight;mechWeight=w.mech;flavWeight=w.flav;}
+  answers[qId]=idx;
+  document.querySelectorAll('.option-btn').forEach((b,i)=>b.classList.toggle('selected',i===idx));
+  updateNav();
+}
+
+function updateNav(){
+  const qId=currentQId(),q=TREE[qId];
+  const hasAns=answers[qId]!==undefined;
+  let isTerminal=false;
+  if(hasAns){const next=q.options[answers[qId]].next;isTerminal=!(next in TREE);}
+  document.getElementById('btn-back').disabled=questionPath.length<=1;
+  document.getElementById('btn-next').disabled=!hasAns||isTerminal;
+  document.getElementById('btn-next').style.display=isTerminal?'none':'';
+  document.getElementById('btn-submit').style.display=isTerminal?'':'none';
+  document.getElementById('btn-submit').disabled=!hasAns;
+}
+
+function goNext(){
+  const qId=currentQId(),ansIdx=answers[qId];
+  if(ansIdx===undefined)return;
+  const next=TREE[qId].options[ansIdx].next;
+  if(next in TREE){questionPath.push(next);renderQuestion();}
+  else{showResult(next);}
+}
+
+function goBack(){if(questionPath.length>1){questionPath.pop();renderQuestion();}}
+
+// ═══════════════════════════════════════════════════════════
+// RESULTS
+// ═══════════════════════════════════════════════════════════
+function showResult(key){
+  document.getElementById('quiz-screen').classList.remove('screen-active');
+  const rs=document.getElementById('results-screen');
+  rs.style.display='block';
+
+  const r=RESULTS[key];
+
+  document.getElementById('results-title').textContent=r.concept;
+  document.getElementById('results-subtitle').textContent=
+    mechWeight>0.6?'Optimized for mechanical fit — here are the archetypes that deliver.':
+    flavWeight>0.6?'Matched to your concept — here are the archetypes that fit the identity.':
+    'Based on your path through the questions, here are your options.';
+
+  const content=document.getElementById('results-content');
+  content.innerHTML='';
+
+  // Concept card
+  const conceptCard=document.createElement('div');
+  conceptCard.className='concept-card';
+
+  // Build archetype entries HTML
+  const arcHtml=r.archetypes.map(a=>{
+    const rarityTag=a.rarity!=='standard'?`<span class="tag tag-${a.rarity}">${a.rarity}</span>`:'';
+    const multiTag=a.multi?`<span class="tag tag-multi">Multiclass</span>`:'';
+    const reqHtml=a.req?`<div class="arc-req">⚠ ${a.req}</div>`:'';
+    return `<div class="arc-entry">
+      <div class="arc-entry-top">
+        <span class="arc-name">${a.name}</span>
+        ${multiTag}
+        <span class="tag tag-src">${a.src}</span>
+        ${rarityTag}
+      </div>
+      ${reqHtml}
+      <div class="arc-desc">${a.desc}</div>
+    </div>`;
+  }).join('');
+
+  conceptCard.innerHTML=`
+    <div class="concept-header">
+      <span class="concept-icon">${r.icon}</span>
+      <span class="concept-name">${r.concept}</span>
+    </div>
+    <div class="concept-body">
+      <p class="concept-pitch">${r.pitch}</p>
+    </div>
+    <div class="arc-entries">${arcHtml}</div>`;
+  content.appendChild(conceptCard);
+
+  // Path summary
+  const pathSteps=questionPath.map(qId=>{
+    const ai=answers[qId];
+    return ai!==undefined?TREE[qId].options[ai].label:null;
+  }).filter(Boolean);
+
+  if(pathSteps.length>0){
+    const pathEl=document.createElement('div');
+    pathEl.className='path-summary';
+    pathEl.innerHTML=`
+      <div class="path-summary-label">Your Path Through the Questions</div>
+      <div class="path-steps">
+        ${pathSteps.map((s,i)=>
+          `<span class="path-step">${s}</span>`+(i<pathSteps.length-1?'<span class="path-arrow">→</span>':'')
+        ).join('')}
+        <span class="path-arrow">→</span>
+        <span class="path-step" style="font-weight:600;color:var(--red);">${r.concept}</span>
+      </div>`;
+    content.appendChild(pathEl);
+  }
+}
+
+function retakeQuiz(){
+  questionPath=['q0'];answers={};mechWeight=0.5;flavWeight=0.5;
+  document.getElementById('results-screen').style.display='none';
+  document.getElementById('quiz-screen').classList.add('screen-active');
+  renderQuestion();
+}
+</script>
+</body>
+</html>
