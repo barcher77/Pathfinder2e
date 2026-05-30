@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Which Pathfinder 2e Ancestry Are You? — Quick Path</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1006;
+    --parchment: #f5edd6;
+    --parchment-dark: #e8d9b5;
+    --parchment-mid: #efe2c0;
+    --gold: #c8972a;
+    --gold-light: #e8b84b;
+    --gold-dark: #8a6518;
+    --red: #8b1a1a;
+    --red-light: #c02020;
+    --teal: #1a5a5a;
+    --shadow: rgba(26,16,6,0.35);
+    --shadow-deep: rgba(26,16,6,0.6);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: #0e0a04;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(200,151,42,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(139,26,26,0.08) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    min-height: 100vh;
+    font-family: 'Crimson Pro', Georgia, serif;
+    color: var(--ink);
+    display: flex; flex-direction: column; align-items: center;
+    padding: 2rem 1rem 4rem;
+  }
+  .frame {
+    width: 100%; max-width: 820px;
+    background: var(--parchment);
+    background-image:
+      radial-gradient(ellipse at 50% 0%, rgba(232,184,75,0.18) 0%, transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='p'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23p)' opacity='0.06'/%3E%3C/svg%3E");
+    border-radius: 4px;
+    box-shadow: 0 0 0 2px var(--gold-dark), 0 0 0 6px var(--ink), 0 0 0 8px var(--gold-dark), 0 20px 60px var(--shadow-deep);
+    position: relative; overflow: hidden;
+  }
+  .frame::before,.frame::after { content:'✦'; position:absolute; font-size:1.4rem; color:var(--gold); z-index:10; }
+  .frame::before { top:10px; left:14px; } .frame::after { top:10px; right:14px; }
+  .frame-inner { position:relative; }
+  .frame-inner::before,.frame-inner::after { content:'✦'; position:absolute; font-size:1.4rem; color:var(--gold); z-index:10; bottom:10px; }
+  .frame-inner::before { left:14px; } .frame-inner::after { right:14px; }
+
+  .quiz-header { padding:2.5rem 2.5rem 1.5rem; text-align:center; border-bottom:2px solid var(--gold-dark); position:relative; }
+  .quiz-header::after { content:''; display:block; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin-top:1rem; }
+  .eyebrow { font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.3em; color:var(--gold-dark); text-transform:uppercase; margin-bottom:0.75rem; }
+  h1 { font-family:'Cinzel Decorative',serif; font-size:clamp(1.4rem,4vw,2.1rem); color:var(--red); line-height:1.25; text-shadow:1px 1px 0 rgba(255,255,255,0.4),2px 3px 6px var(--shadow); margin-bottom:0.6rem; }
+  .subtitle { font-family:'Crimson Pro',serif; font-style:italic; font-size:1.05rem; color:#5a4020; max-width:560px; margin:0 auto; line-height:1.5; }
+
+  .progress-bar-wrap { padding:1rem 2.5rem 0; }
+  .progress-label { display:flex; justify-content:space-between; font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.15em; color:var(--gold-dark); margin-bottom:0.4rem; }
+  .progress-track { height:6px; background:var(--parchment-dark); border-radius:3px; border:1px solid var(--gold-dark); overflow:hidden; }
+  .progress-fill { height:100%; background:linear-gradient(90deg,var(--gold-dark),var(--gold-light)); border-radius:3px; transition:width 0.5s cubic-bezier(0.4,0,0.2,1); width:0%; }
+
+  .path-crumb { padding:0.5rem 2.5rem 0; font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.1em; color:var(--gold-dark); opacity:0.8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-height:1.4rem; }
+  .crumb-sep { margin:0 0.3em; opacity:0.5; }
+
+  .question-area { padding:1.5rem 2.5rem 1.5rem; }
+  .question-number { font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.25em; color:var(--gold-dark); text-transform:uppercase; margin-bottom:0.5rem; }
+  .question-text { font-family:'Cinzel',serif; font-size:clamp(1rem,2.5vw,1.2rem); color:var(--ink); line-height:1.5; margin-bottom:0.4rem; font-weight:600; }
+  .question-flavor { font-style:italic; color:#6b4c20; font-size:0.95rem; margin-bottom:1.5rem; line-height:1.45; }
+
+  .options { display:flex; flex-direction:column; gap:0.65rem; }
+  .option-btn { display:flex; align-items:flex-start; gap:1rem; background:var(--parchment-mid); border:1.5px solid var(--gold-dark); border-radius:3px; padding:0.85rem 1.1rem; cursor:pointer; text-align:left; transition:all 0.18s ease; position:relative; overflow:hidden; font-family:inherit; }
+  .option-btn::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(200,151,42,0.15),transparent); opacity:0; transition:opacity 0.18s ease; }
+  .option-btn:hover { border-color:var(--gold); background:var(--parchment-dark); transform:translateX(4px); box-shadow:-3px 0 0 var(--gold),2px 4px 12px var(--shadow); }
+  .option-btn:hover::before { opacity:1; }
+  .option-btn.selected { border-color:var(--red); background:#f0e0cc; transform:translateX(6px); box-shadow:-4px 0 0 var(--red),3px 5px 16px var(--shadow); }
+  .option-letter { font-family:'Cinzel',serif; font-weight:600; font-size:0.85rem; color:var(--gold-dark); min-width:1.4rem; padding-top:0.1rem; flex-shrink:0; }
+  .option-btn.selected .option-letter { color:var(--red); }
+  .option-text { font-size:0.98rem; line-height:1.45; color:var(--ink); }
+  .option-label { font-weight:600; display:block; margin-bottom:0.1rem; }
+  .option-sub { font-style:italic; color:#6b4c20; font-size:0.88rem; }
+
+  .nav-area { display:flex; justify-content:space-between; align-items:center; padding:1rem 2.5rem 2rem; border-top:1px solid var(--parchment-dark); margin-top:0.5rem; }
+  .btn { font-family:'Cinzel',serif; font-size:0.8rem; letter-spacing:0.12em; text-transform:uppercase; padding:0.65rem 1.6rem; border-radius:2px; cursor:pointer; transition:all 0.2s ease; border:none; }
+  .btn-back { background:transparent; border:1.5px solid var(--gold-dark); color:var(--gold-dark); }
+  .btn-back:hover { background:var(--parchment-dark); color:var(--ink); }
+  .btn-back:disabled { opacity:0.3; cursor:default; }
+  .btn-next { background:var(--red); color:var(--parchment); box-shadow:0 3px 10px rgba(139,26,26,0.35); }
+  .btn-next:hover { background:var(--red-light); transform:translateY(-1px); box-shadow:0 5px 16px rgba(139,26,26,0.45); }
+  .btn-next:disabled { background:#b0a090; box-shadow:none; cursor:default; transform:none; }
+  .btn-results { background:linear-gradient(135deg,var(--gold-dark),var(--gold)); color:var(--ink); font-size:0.85rem; padding:0.75rem 2rem; box-shadow:0 3px 12px rgba(200,151,42,0.4); }
+  .btn-results:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(200,151,42,0.55); }
+  .btn-results:disabled { background:#b0a090; box-shadow:none; cursor:default; transform:none; }
+
+  .ornament { text-align:center; color:var(--gold); font-size:1.1rem; letter-spacing:0.5rem; padding:0.25rem 0; }
+
+  #intro-screen { padding:2.5rem; text-align:center; }
+  .intro-body { font-size:1.05rem; line-height:1.7; color:#4a3010; max-width:580px; margin:1rem auto 2rem; }
+  .intro-body em { color:var(--red); font-style:normal; font-weight:600; }
+
+  /* Results */
+  #results-screen { display:none; padding:2.5rem; }
+  .results-header { text-align:center; margin-bottom:2rem; padding-bottom:1.5rem; border-bottom:2px solid var(--gold-dark); }
+  .results-header::after { content:''; display:block; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin-top:1rem; }
+  .results-eyebrow { font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.3em; color:var(--gold-dark); text-transform:uppercase; margin-bottom:0.5rem; }
+  .results-title { font-family:'Cinzel Decorative',serif; font-size:clamp(1.2rem,3.5vw,1.8rem); color:var(--red); margin-bottom:0.5rem; text-shadow:1px 1px 0 rgba(255,255,255,0.4); }
+  .results-subtitle { font-style:italic; color:#5a4020; font-size:1rem; }
+
+  .result-card { background:var(--parchment-mid); border:2px solid var(--gold-dark); border-radius:3px; margin-bottom:1.25rem; overflow:hidden; box-shadow:3px 6px 18px var(--shadow); opacity:0; transform:translateY(16px); animation:cardReveal 0.55s ease forwards 0.1s; }
+  @keyframes cardReveal { to{opacity:1;transform:translateY(0);} }
+  .result-card-header { display:flex; align-items:center; gap:1rem; padding:1.25rem 1.5rem; border-bottom:1px solid var(--parchment-dark); background:linear-gradient(135deg,rgba(200,151,42,0.1),transparent); flex-wrap:wrap; }
+  .result-icon { font-size:2.8rem; line-height:1; filter:drop-shadow(0 2px 4px var(--shadow)); }
+  .result-anc-name { font-family:'Cinzel Decorative',serif; font-size:clamp(1.3rem,4vw,1.9rem); color:var(--red); flex:1; text-shadow:1px 1px 0 rgba(255,255,255,0.4); }
+  .result-tags { display:flex; gap:0.4rem; flex-wrap:wrap; }
+  .tag { font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.2rem 0.5rem; border-radius:2px; border:1px solid; }
+  .tag-mech { border-color:var(--teal); color:var(--teal); background:rgba(26,90,90,0.07); }
+  .tag-flav { border-color:var(--red); color:var(--red); background:rgba(139,26,26,0.07); }
+  .result-card-body { padding:1.25rem 1.5rem; }
+  .result-why { font-size:1.05rem; line-height:1.65; color:var(--ink); margin-bottom:1rem; }
+  .result-why strong { color:var(--red); font-weight:600; }
+  .result-quick-facts { display:flex; gap:1.5rem; flex-wrap:wrap; padding-top:0.75rem; border-top:1px solid var(--parchment-dark); }
+  .quick-fact { font-size:0.88rem; }
+  .quick-fact-label { font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold-dark); display:block; margin-bottom:0.15rem; }
+
+  .path-summary { margin-top:1.5rem; padding:1rem 1.25rem; background:var(--parchment-dark); border:1px solid var(--gold-dark); border-radius:3px; opacity:0; animation:cardReveal 0.55s ease forwards 0.35s; }
+  .path-summary-label { font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold-dark); margin-bottom:0.6rem; }
+  .path-steps { display:flex; flex-wrap:wrap; align-items:center; gap:0.3rem; font-size:0.88rem; color:#5a4020; line-height:1.6; }
+  .path-step { font-style:italic; }
+  .path-arrow { color:var(--gold); font-size:0.75rem; }
+
+  .all-anc-toggle { text-align:center; margin:2rem 0 1rem; opacity:0; animation:cardReveal 0.55s ease forwards 0.55s; }
+  .btn-toggle { background:transparent; border:1.5px solid var(--gold-dark); color:var(--gold-dark); font-family:'Cinzel',serif; font-size:0.75rem; letter-spacing:0.12em; text-transform:uppercase; padding:0.6rem 1.4rem; border-radius:2px; cursor:pointer; transition:all 0.18s; }
+  .btn-toggle:hover { background:var(--parchment-dark); color:var(--ink); }
+  #all-anc-grid { display:none; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:0.75rem; margin-top:1rem; }
+  #all-anc-grid.visible { display:grid; }
+  .anc-mini-card { background:var(--parchment-mid); border:1px solid var(--gold-dark); border-radius:3px; padding:0.75rem 0.9rem; }
+  .anc-mini-name { font-family:'Cinzel',serif; font-size:0.9rem; color:var(--red); font-weight:600; margin-bottom:0.2rem; }
+  .anc-mini-type { font-size:0.75rem; font-weight:600; color:var(--teal); margin-bottom:0.1rem; }
+  .anc-mini-flav { font-size:0.78rem; font-style:italic; color:#6b4c20; }
+
+  .retake-area { text-align:center; margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--parchment-dark); }
+
+  .fade-slide { animation:fadeSlide 0.35s ease forwards; }
+  @keyframes fadeSlide { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+  #quiz-screen { display:none; }
+  .screen-active { display:block !important; }
+  @media(max-width:600px){
+    .frame{border-radius:0;}
+    .question-area,.nav-area,#results-screen,#intro-screen{padding-left:1.25rem;padding-right:1.25rem;}
+    .progress-bar-wrap,.path-crumb{padding-left:1.25rem;padding-right:1.25rem;}
+    #all-anc-grid{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="frame"><div class="frame-inner">
+
+<!-- INTRO -->
+<div id="intro-screen" class="screen-active">
+  <div class="quiz-header">
+    <div class="eyebrow">Pathfinder 2nd Edition · Quick Path</div>
+    <h1>Which Ancestry<br>Are You?</h1>
+    <p class="subtitle">No twenty questions. The tome reads you quickly — and still finds all fifty.</p>
+  </div>
+  <div class="ornament">— ✦ —</div>
+  <div style="padding:1.5rem 0 0.5rem;">
+    <p class="intro-body">
+      This is the <em>branching path</em> version of the ancestry quiz. Each answer narrows your destiny rather than scoring against every possibility. Most paths resolve in <em>four or five questions</em>.
+      <br><br>
+      All <em>50 ancestries</em> are reachable. Answer as who you want to be, and the tome will find your people.
+    </p>
+    <div style="text-align:center;">
+      <button class="btn btn-results" onclick="startQuiz()" style="font-size:0.9rem;padding:0.85rem 2.5rem;">Begin the Questionnaire</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz-screen">
+  <div class="quiz-header">
+    <div class="eyebrow">Pathfinder 2nd Edition · Quick Path</div>
+    <h1>Which Ancestry<br>Are You?</h1>
+    <p class="subtitle">Follow the path. Answer honestly.</p>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-label">
+      <span id="progress-text">Prologue</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+  <div class="path-crumb" id="path-crumb"></div>
+  <div class="ornament" style="padding:0.35rem 0 0;">— ✦ —</div>
+  <div class="question-area" id="question-area"></div>
+  <div class="nav-area">
+    <button class="btn btn-back" id="btn-back" onclick="goBack()" disabled>← Back</button>
+    <button class="btn btn-next" id="btn-next" onclick="goNext()" disabled>Next →</button>
+    <button class="btn btn-results" id="btn-submit" onclick="goNext()" style="display:none;" disabled>Reveal My People ✦</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="results-screen">
+  <div class="results-header">
+    <div class="results-eyebrow">Your People</div>
+    <div class="results-title" id="results-title">The Tome Has Spoken</div>
+    <p class="results-subtitle" id="results-subtitle">Your path through the questions led here.</p>
+  </div>
+  <div id="results-card"></div>
+  <div class="all-anc-toggle">
+    <button class="btn-toggle" onclick="toggleAll()">Explore All 50 Ancestries ▾</button>
+  </div>
+  <div id="all-anc-grid"></div>
+  <div class="retake-area">
+    <button class="btn btn-results" onclick="retakeQuiz()" style="font-size:0.85rem;">✦ Take the Path Again</button>
+  </div>
+</div>
+
+</div></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// ANCESTRY DATA (for result card & all-ancestries grid)
+// ═══════════════════════════════════════════════════════
+const ANCESTRIES = {
+  Dwarf:         { type:"Humanoid",   size:"Medium", hp:10, icon:"⛏️",  mech:"Clan dagger & stonecunning",      flav:"Tradition-bound mountain craftsperson",     source:"Player Core" },
+  Elf:           { type:"Humanoid",   size:"Medium", hp:6,  icon:"🌙",  mech:"Elven lore & magic attunement",   flav:"Ancient long-lived art and magic master",   source:"Player Core" },
+  Gnome:         { type:"Humanoid",   size:"Small",  hp:8,  icon:"🌈",  mech:"Fey heritage & innate cantrips",  flav:"Eccentric fey-touched wonder-seeker",        source:"Player Core" },
+  Goblin:        { type:"Humanoid",   size:"Small",  hp:6,  icon:"🔥",  mech:"Scrappy survivalist feats",       flav:"Impulsive fire-loving chaos gremlin",        source:"Player Core" },
+  Halfling:      { type:"Humanoid",   size:"Small",  hp:6,  icon:"🍀",  mech:"Keen Eyes & Lucky rerolls",       flav:"Resilient optimistic community wanderer",    source:"Player Core" },
+  Human:         { type:"Humanoid",   size:"Medium", hp:8,  icon:"🌍",  mech:"Two free boosts & bonus feat",    flav:"Adaptable and ambitious generalist",         source:"Player Core" },
+  Leshy:         { type:"Plant",      size:"Small",  hp:8,  icon:"🌿",  mech:"Plant nourishment & nature bond", flav:"Nature spirit in a living plant body",       source:"Player Core" },
+  Orc:           { type:"Humanoid",   size:"Medium", hp:10, icon:"💪",  mech:"Two free boosts & endurance",     flav:"Proud fierce warrior of primal strength",    source:"Player Core" },
+  Athamaru:      { type:"Amphibious", size:"Medium", hp:8,  icon:"🐟",  mech:"Swim speed & metamorphosis",      flav:"Colorful cooperative undersea fish-folk",    source:"Howl of the Wild" },
+  Azarketi:      { type:"Amphibious", size:"Medium", hp:8,  icon:"🔱",  mech:"Swim speed & alghollthu heritage",flav:"Fallen-empire gillman heir",                 source:"City of Lost Omens" },
+  Catfolk:       { type:"Humanoid",   size:"Medium", hp:8,  icon:"🐱",  mech:"Land on Your Feet & low-light",   flav:"Curious feline wanderer-protector",          source:"Player Core 2" },
+  Centaur:       { type:"Beast",      size:"Large",  hp:8,  icon:"🐴",  mech:"Large PC & natural mount",        flav:"Noble nomadic guardian of the wilds",        source:"Howl of the Wild" },
+  Fetchling:     { type:"Humanoid",   size:"Medium", hp:8,  icon:"🌑",  mech:"Darkvision & shadow feats",       flav:"Shadow-touched Azlanti exile",               source:"Ancestry Guide" },
+  Hobgoblin:     { type:"Humanoid",   size:"Medium", hp:8,  icon:"⚔️",  mech:"Unit tactics & intimidation",     flav:"Disciplined military strategist",            source:"Player Core 2" },
+  Kholo:         { type:"Humanoid",   size:"Medium", hp:8,  icon:"🦴",  mech:"Bite unarmed attack 1d6",         flav:"Pragmatic hyena-headed community hunter",    source:"Player Core 2" },
+  Kitsune:       { type:"Humanoid",   size:"Medium", hp:8,  icon:"🦊",  mech:"Change Shape (fox/humanoid)",     flav:"Charismatic fox-folk shapeshifter",          source:"Ancestry Guide" },
+  Kobold:        { type:"Humanoid",   size:"Small",  hp:6,  icon:"🐉",  mech:"Patron-heritage feats",           flav:"Small draconic-blooded clever scrapper",     source:"Player Core 2" },
+  Lizardfolk:    { type:"Humanoid",   size:"Medium", hp:8,  icon:"🦎",  mech:"Claws unarmed attack & survivor", flav:"Ancient stoic heir to vanished empires",     source:"Player Core 2" },
+  Merfolk:       { type:"Amphibious", size:"Medium", hp:8,  icon:"🧜",  mech:"Swim speed & aquatic grace",      flav:"Ocean-ruling aristocratic magic-user",       source:"Howl of the Wild" },
+  Minotaur:      { type:"Beast",      size:"Large",  hp:10, icon:"🐂",  mech:"Horns 1d8 & Large PC rules",     flav:"Powerful labyrinthine navigator",            source:"Howl of the Wild" },
+  Nagaji:        { type:"Humanoid",   size:"Medium", hp:10, icon:"🐍",  mech:"Fangs unarmed & divine heritage", flav:"Serpentine goddess-created guardian",        source:"Impossible Lands" },
+  Ratfolk:       { type:"Humanoid",   size:"Small",  hp:6,  icon:"🐀",  mech:"Sharp Teeth & trade networks",    flav:"Clever communal scavenger-trader",           source:"Player Core 2" },
+  Samsaran:      { type:"Humanoid",   size:"Medium", hp:8,  icon:"♾️",  mech:"Cryptomnesia & Wanderer's Soul",  flav:"Blue-skinned reincarnating truth-seeker",    source:"Tian Xia CG" },
+  Tanuki:        { type:"Humanoid",   size:"Small",  hp:10, icon:"🦝",  mech:"Change Shape (raccoon dog)",      flav:"Jovial raccoon-dog trickster",               source:"Tian Xia CG" },
+  Tengu:         { type:"Humanoid",   size:"Medium", hp:6,  icon:"🐦",  mech:"Sharp Beak & blade expertise",    flav:"Gregarious avian collector and survivor",    source:"Player Core 2" },
+  Tripkee:       { type:"Humanoid",   size:"Small",  hp:6,  icon:"🐸",  mech:"Climb bonus & cautious feats",    flav:"Tiny tree-frog folk: cautious, then bold",   source:"Player Core 2" },
+  Vanara:        { type:"Humanoid",   size:"Medium", hp:6,  icon:"🐒",  mech:"Prehensile tail (free Interact)", flav:"Acrobatic prehensile-tailed jungle mystic",  source:"Impossible Lands" },
+  Wayang:        { type:"Humanoid",   size:"Small",  hp:8,  icon:"🌒",  mech:"Shadow control & darkvision",     flav:"Shadow-born Netherworld philosopher",        source:"Tian Xia CG" },
+  Anadi:         { type:"Humanoid",   size:"Medium", hp:8,  icon:"🕷️",  mech:"Change Shape (spider/human)",     flav:"Sapient shapeshifting spider community",    source:"The Mwangi Expanse" },
+  Android:       { type:"Humanoid",   size:"Medium", hp:8,  icon:"🤖",  mech:"Constructed body & logic feats",  flav:"Technological soul in a synthetic body",    source:"Ancestry Guide" },
+  Automaton:     { type:"Construct",  size:"Medium", hp:8,  icon:"⚙️",  mech:"Living construct with soul-core", flav:"Ancient soul-housing war-construct",         source:"Guns & Gears" },
+  AwAnim:        { type:"Beast",      size:"Medium", hp:8,  icon:"🐾",  mech:"Awakened Mind & animal attacks",  flav:"Animal granted sudden sapience",             source:"Howl of the Wild" },
+  Conrasu:       { type:"Plant",      size:"Medium", hp:10, icon:"✨",  mech:"Sunlight Healing & aeon feats",   flav:"Cosmic aeon-shard in a living wood shell",   source:"The Mwangi Expanse" },
+  Dragonet:      { type:"Dragon",     size:"Tiny",   hp:8,  icon:"🐲",  mech:"Wings & Tiny PC rules",           flav:"Tiny fully-formed dragon adventurer",        source:"Draconic Codex" },
+  Fleshwarp:     { type:"Aberration", size:"Medium", hp:10, icon:"🧬",  mech:"Unusual Anatomy disease resist",  flav:"Magically transformed unique aberrant form", source:"Ancestry Guide" },
+  Ghoran:        { type:"Plant",      size:"Medium", hp:8,  icon:"🌺",  mech:"Photosynthesis & cycling lives",  flav:"Ancient plant soul cycling through bodies",  source:"Impossible Lands" },
+  Goloma:        { type:"Humanoid",   size:"Medium", hp:8,  icon:"👁️",  mech:"Eyes in Back — dual Seek",        flav:"Thousand-eyed hypervigilant prey-folk",      source:"The Mwangi Expanse" },
+  Jotunborn:     { type:"Giant",      size:"Large",  hp:10, icon:"🏔️",  mech:"Iivlar Weaving & Large PC",       flav:"Titan-blooded glowing-threaded colossus",    source:"Battlecry!" },
+  Kashrishi:     { type:"Humanoid",   size:"Small",  hp:8,  icon:"💎",  mech:"Empathic Sense & glowing horn",   flav:"Crystal-horned psychic empath",              source:"Impossible Lands" },
+  Poppet:        { type:"Construct",  size:"Small",  hp:6,  icon:"🪆",  mech:"Constructed & fire weakness",     flav:"Tiny cloth-and-wicker spontaneous life",     source:"Grand Bazaar" },
+  Sarangay:      { type:"Humanoid",   size:"Medium", hp:8,  icon:"🌙",  mech:"Head Gem & Horns 1d6 shove",      flav:"Carabao-headed forest warrior, moon-sworn",  source:"Tian Xia CG" },
+  Shisk:         { type:"Humanoid",   size:"Medium", hp:8,  icon:"📿",  mech:"Quill feats & secrets-as-currency",flav:"Bone-quilled subterranean knowledge hoarder",source:"The Mwangi Expanse" },
+  Shoony:        { type:"Humanoid",   size:"Small",  hp:6,  icon:"🐕",  mech:"Blunt snout & pacifist feats",    flav:"Gentle dog-folk communal pacifist farmer",   source:"Pathfinder #153" },
+  Skeleton:      { type:"Undead",     size:"Medium", hp:6,  icon:"💀",  mech:"Undead traits & bone recovery",   flav:"Intellect-retaining skeleton finding purpose",source:"Book of the Dead" },
+  Sprite:        { type:"Fey",        size:"Tiny",   hp:6,  icon:"🧚",  mech:"Magical strikes & Tiny PC",       flav:"Whimsical fey from the First World",         source:"Ancestry Guide" },
+  Strix:         { type:"Humanoid",   size:"Medium", hp:8,  icon:"🦅",  mech:"Wing-assisted movement & talons", flav:"Reclusive winged avian tribe-guardian",      source:"Ancestry Guide" },
+  Surki:         { type:"Humanoid",   size:"Medium", hp:8,  icon:"🪲",  mech:"Magiphage — absorb ambient magic", flav:"Insectile Darklands magic-devourer",         source:"Howl of the Wild" },
+  Vishkanya:     { type:"Humanoid",   size:"Medium", hp:8,  icon:"🐍",  mech:"Envenom (1/day venom application)",flav:"Golden-eyed ophidian venomous serpent-folk", source:"Impossible Lands" },
+  Yaksha:        { type:"Spirit",     size:"Medium", hp:8,  icon:"🌸",  mech:"Spirit trait & protection vows",  flav:"Divine guardian spirit anchored to Golarion",source:"Tian Xia CG" },
+  Yaoguai:       { type:"Humanoid",   size:"Medium", hp:8,  icon:"🌀",  mech:"Change Shape & cultivated power", flav:"Animal transcended into shapeshifting spirit",source:"Tian Xia CG" },
+};
+const ANC_DISPLAY = { AwAnim: "Awakened Animal" };
+function ancName(k){ return ANC_DISPLAY[k] || k; }
+
+// ═══════════════════════════════════════════════════════
+// WHY DESCRIPTIONS
+// ═══════════════════════════════════════════════════════
+const WHY = {
+  Dwarf: "Your answers point to someone who values <strong>deep roots, earned skill, and the weight of tradition</strong>. Dwarves are defined by their clans, their craft, and their stubbornness — they live long, remember longer, and never stop building. You'll feel the connection to something older and more enduring than yourself.",
+  Elf: "You are drawn to <strong>ancient beauty, quiet mastery, and the long view</strong>. Elves live for centuries and grow deeply invested in the things they love — art, magic, knowledge, or nature. Your path suggests someone who wants depth of experience rather than breadth, and a character whose history actually spans centuries.",
+  Gnome: "Your answers reveal a spirit that <strong>hungers for wonder and withers without it</strong>. Gnomes are fey-touched wanderers who must constantly seek new experiences or literally lose their color. You want a character whose magic is eccentric, whose curiosity is a survival instinct, and whose size understates their personality.",
+  Goblin: "You want to play someone who is <strong>chaotic, impulsive, and genuinely joyful about terrible decisions</strong>. Goblins love fire, live entirely in the present, and have an infectious energy that makes every session more fun. Your path suggests you don't take yourself too seriously — and that's exactly right.",
+  Halfling: "<strong>Resilient, warm-hearted, and impossible to keep down</strong> — that's the halfling. Your path suggests someone who values community and good humor while navigating a world built for people twice their size. Halflings have a lucky streak and an optimism that other ancestries find baffling and secretly admire.",
+  Human: "Your path reflects the <strong>defining trait of humanity: adaptability</strong>. Humans have no fixed identity — no flaw, no niche, no predetermined path. That's the point. You want maximum flexibility to become exactly who you choose, and humans deliver that better than any other ancestry.",
+  Leshy: "You want to be <strong>something that grew</strong>. Leshies are immortal spirits of nature housed in plant or fungal bodies — they begin as adults, never age, and look completely unique. Your path suggests a character connected to the living world in a way that goes beyond just being 'a nature person.'",
+  Orc: "Your path radiates <strong>pride, physical power, and a live-hard intensity</strong>. Orcs are fierce, relatively short-lived, and defined by their strength and warrior culture. Like humans, they have two free ability boosts — but where humans spread out, orcs lean all the way in.",
+  Athamaru: "You want to be part of a <strong>close-knit cooperative community with deep ties to water</strong>. Athamaru are colorful, pheromone-communicating fish-folk who form matriarchies and protect their people fiercely. Your path suggests someone whose heart is underwater.",
+  Azarketi: "You carry the weight of a <strong>fallen empire in your blood</strong>. Azarketi are the altered descendants of Azlanti humans — gillmen with pearlescent skin and violet eyes who navigate prejudice while honoring their ancient legacy. You want a character with depth, history, and aquatic capability.",
+  Catfolk: "Your path points to <strong>curiosity, quick reflexes, and an irresistible wandering spirit</strong>. Catfolk are feline-featured wanderers who protect natural places and collect experiences in equal measure. You want a character who's charming, fast, and perpetually interested in what's around the next corner.",
+  Centaur: "You want to be <strong>large, powerful, and deeply connected to the open land</strong>. Centaurs are noble nomadic guardians — half-human, half-horse — who serve as territorial protectors and athletic icons. Your path suggests you want physical presence that makes an immediate and lasting impression.",
+  Fetchling: "You are drawn to <strong>shadow, mystery, and the aesthetic of the threshold between worlds</strong>. Fetchlings are descendants of Azlanti humans changed by the Shadow Plane — monochromatic, strange-eyed, and deeply tied to darkness. Your path suggests you want to look different and carry that difference with quiet grace.",
+  Hobgoblin: "Your path reflects a character defined by <strong>discipline, strategy, and military precision</strong>. Hobgoblins are organized, tactical, and pragmatic — they prize unit cohesion and practical effectiveness over flashy power. You want an ancestry that feels earned and purposeful rather than chaotic.",
+  Kholo: "You want a character with <strong>physical presence, practical community values, and a formidable bite</strong>. Kholo are hyena-headed pragmatists who value communal bonds and direct action. Your path suggests someone who doesn't need fancy magic — just strong jaws, strong convictions, and people worth fighting for.",
+  Kitsune: "You are the <strong>shapeshifting charmer</strong>. Kitsune are fox-folk tricksters with the divine ability to shift between vulpine and humanoid forms — charismatic, clever, and surrounded by an air of mischievous grace. Your path suggests someone who loves playing with identity and keeps everyone guessing.",
+  Kobold: "Your path reveals someone who wants to be <strong>small, clever, draconic, and surprisingly dangerous</strong>. Kobolds serve powerful patrons and bear physical traits that reflect that bond. You don't mind being underestimated — in fact, you prefer it. Ancestry feats reward cunning over brute force.",
+  Lizardfolk: "You want an ancestry defined by <strong>ancient stoicism, physical practicality, and a connection to history</strong>. Lizardfolk are heirs to empires older than elven memory — they don't need magic or politics, just endurance and claws. Your path suggests a character who has outlasted everything and can outlast more.",
+  Merfolk: "You belong to the <strong>ocean</strong>, and you know it. Merfolk are aristocratic aquatic rulers who treat magic as a practical tool and organize under sophisticated hierarchy. Your path suggests a character with regal bearing, magical facility, and a homeland most people have never even approached.",
+  Minotaur: "You want to be <strong>large, physically powerful, and unexpectedly brilliant</strong>. Minotaurs are often stereotyped as brutes but are actually superb navigators and architects — steadfast, inquisitive, and devastating in a fight. Your path suggests you want to subvert expectations with every step you take.",
+  Nagaji: "Your path points to a character of <strong>quiet strength, serpentine grace, and divine devotion</strong>. Nagaji were created by a goddess as companions to nagas — patient, spiritually inclined, and formidable in combat. You want an ancestry with mythic origins and a natural weapon that reflects your sacred heritage.",
+  Ratfolk: "You are <strong>small, clever, and deeply embedded in community</strong>. Ratfolk maintain trade networks, hoard interesting objects, and approach every problem with a twitch of the whiskers and a backup plan. Your path suggests someone who thrives through wit, cooperation, and knowing a little bit about everything.",
+  Samsaran: "You carry <strong>fragments of past lives like half-remembered dreams</strong>. Samsarans are blue-skinned reincarnating beings from Tian Xia — each life is a step toward enlightenment, and death is merely a transition. Your path suggests a character with philosophical depth, spiritual calm, and the weight of many lifetimes.",
+  Tanuki: "You want to be <strong>joyful, mischievous, and impossible to pin down</strong>. Tanuki are raccoon-dog folk who transform into animal form for fun, prioritize warmth and celebration over hierarchy, and make every situation more entertaining. Your path suggests someone who brings light wherever they go.",
+  Tengu: "You collect things — <strong>knowledge, blades, relationships, experiences</strong>. Tengu are avian survivors and wanderers equally comfortable in wilderness and city, known for blade expertise and bottomless curiosity. Your path suggests a character who has been everywhere and picked up something useful at each stop.",
+  Tripkee: "Your path points to <strong>careful deliberation followed by explosive decisive action</strong>. Tripkee are tiny tree-frog folk whose colorful skin and cautious nature belie an immense spirit. You want a small character with surprising capability — one whose size is never the whole story.",
+  Vanara: "You want a character who is <strong>acrobatic, philosophical, and perpetually curious</strong> — with a tail that does whatever you need it to. Vanara are monkey-folk from Vudra's jungles: mischievous, spiritual, and physically nimble. Your prehensile tail opens options other ancestries simply don't have.",
+  Wayang: "You are drawn to <strong>shadow, inner darkness, and the philosophy of dissolution</strong>. Wayang are small people from the Netherworld who can move their shadow independently and draw strength from embracing darkness rather than fearing it. Your path suggests a character whose depth is literal.",
+  Anadi: "Your path points to someone who wants to be <strong>fundamentally different from what others expect</strong>. Anadi are sapient spiders who developed shapeshifting magic to interact with the humanoid world — peaceful, communal, and genuinely alien beneath their human disguise. You want a character with a profound secret.",
+  Android: "You want to play <strong>a soul in a machine</strong>. Androids are technological wonders from crashed starships — synthetic bodies housing living spirits, navigating a world that wasn't built for them with brilliant logic and growing emotional depth. Your path suggests a fascination with what 'person' truly means.",
+  Automaton: "Your path points to a <strong>living construct housing an ancient soul</strong>. Automatons were created by the Jistka Imperium — not mindless robots but genuine people with transplanted souls. They become dying rather than destroyed, and their Automaton Core makes them something entirely unique in PF2e.",
+  AwAnim: "You want to be <strong>an animal who woke up</strong>. Awakened Animals are former beasts granted sudden sapience — they must reconcile brand-new consciousness with deep animal instincts, bridging civilization and wilderness in a way no other ancestry does. Your path suggests a character defined by their original nature.",
+  Conrasu: "You are a <strong>shard of cosmic aeon force given consciousness</strong>. Conrasu are not quite plant, not quite construct — they are living wood exoskeletons built around a globe of light or darkness. Your path suggests you want something genuinely unlike anything else at the table.",
+  Dragonet: "You want to be <strong>a tiny dragon</strong>, and that should need no further justification. Dragonets are fully real dragons at Tiny scale — wings, teeth, claws, and all the draconic independence you could want. Your path suggests someone whose ancestral fantasy is exactly as cool as it sounds.",
+  Fleshwarp: "Your path suggests someone who wants to be <strong>uniquely, unmistakably themselves</strong> — whatever form that takes. Fleshwarps are people transformed by wild magic or unnatural forces. Every fleshwarp looks completely different from every other. There is no default form. Just you, in whatever body the magic made.",
+  Ghoran: "You want a character with <strong>roots deeper than any single body</strong>. Ghorans are ancient plant souls who transfer consciousness into new forms every twenty years — each life is complete, each body is a new chapter. Your path suggests a character whose identity transcends their current physical form.",
+  Goloma: "You see in every direction, <strong>and you never stop watching</strong>. Goloma have thousands of tiny eyes across their neck and hair and an evolved psychology of perpetual vigilance. Your path suggests a character defined by extraordinary perception — someone who processes the world differently from everyone else.",
+  Jotunborn: "You want to be <strong>enormous, powerful, and trailing strands of ethereal light</strong>. Jotunborn are titan-blooded beings over twelve feet tall with magical Iivlar threads woven through their skin. Your path suggests someone who wants sheer physical presence combined with an otherworldly beauty that's impossible to ignore.",
+  Kashrishi: "Your path points to a character who is <strong>emotionally perceptive, psychically attuned, and quietly formidable</strong>. Kashrishi have crystalline horns and sense the emotional states of those around them — a gift that shapes their entire experience of the world. You want senses that go deeper than sight.",
+  Poppet: "You want to be <strong>a small constructed being figuring out what 'alive' means</strong>. Poppets are cloth-and-wicker constructs who spontaneously manifest a spark of life — they struggle with identity, burn easily, and live about thirty years if well-maintained. Your path suggests someone who finds magic in the mundane.",
+  Sarangay: "Your path points to a character with <strong>fierce physical strength, lunar devotion, and a soul housed in a sacred gem</strong>. Sarangay are carabao-headed warriors of Tian Xia's forests whose essence cannot be destroyed while their head gem survives. Your path leads to an ancestry where mythology is mechanics.",
+  Shisk: "You want to be a <strong>keeper of secrets in a body made of quills</strong>. Shisk are subterranean humanoids whose entire economy runs on trading information and artistic performance. Your path suggests a character who measures wealth in what they know rather than what they carry.",
+  Shoony: "Your path reveals someone who wants to be <strong>gentle, loyal, and quietly resilient</strong>. Shoonies are flat-faced dog-folk whose pacifist tendencies and communal farming culture belie deep capacity for courage. You want a character whose warmth is a genuine strength, not a liability.",
+  Skeleton: "You want to be <strong>dead — and fine with it</strong>. Skeletons who retain their intellect navigate a world that finds them disturbing with surprising grace, decorating their bones and coping with fragmented memories of life. Your path suggests a character whose relationship with mortality is more complex than most.",
+  Sprite: "You want to be <strong>tiny, magical, and absolutely impossible to ignore despite your size</strong>. Sprites are First World fey — whimsical, powerful in their small way, and endlessly curious about mortal magic. Your path suggests someone who wants to be genuinely extraordinary and leans all the way into it.",
+  Strix: "You want <strong>wings, a devoted community, and a character the wider world doesn't fully understand</strong>. Strix are reclusive avian humanoids devoted to homeland and tribe — fearsome to outsiders, deeply artistic within their culture. Your path suggests you want beauty and danger living in the same pair of wings.",
+  Surki: "You are an <strong>insectile being who devours ambient magic to survive</strong>. Surkis absorb magical energy instead of eating, and develop wildly unique adaptations based on what they've absorbed — no two surkis develop alike. Your path suggests a character that is entirely, mechanically, distinctly yours.",
+  Vishkanya: "Your path points to <strong>serpentine grace and venomous capability</strong>. Vishkanya are ophidian folk with golden slit eyes and forked tongues whose blood and saliva carry genuine venom. They're rare, striking, and mechanically distinct. You want a character whose natural weapons mean something.",
+  Yaksha: "You are a <strong>divine guardian spirit who refused to leave when the gods did</strong>. Yaksha are primordial protectors sworn to the communities and wilderness they guard — the Spirit trait means they interact with the world differently from any Humanoid ancestry. Your path leads to devotion made manifest.",
+  Yaoguai: "Your path points to a character defined by <strong>transcendence — the moment a simple thing becomes something far greater</strong>. Yaoguai began as ordinary animals, objects, or plants that cultivated magical power until they crossed into sapience and shapeshifting. They straddle the line between nature spirit and mortal.",
+};
+
+// ═══════════════════════════════════════════════════════
+// DECISION TREE
+// next: question key OR ancestry key (key in ANCESTRIES)
+// ═══════════════════════════════════════════════════════
+const TREE = {
+
+  // ── PROLOGUE ──────────────────────────────────────────
+  q0: {
+    number: "Prologue",
+    text: "Before we begin — what matters most when choosing an ancestry?",
+    flavor: "Your answer will shape how we describe your result.",
+    isWeighting: true,
+    options: [
+      { letter:"A", label:"The mechanics are what I'm here for.",
+        sub:"Interesting feats, unique abilities, something that changes how I play.",
+        weight:{ mech:0.70, flav:0.30 }, next:"q1" },
+      { letter:"B", label:"The story and identity come first.",
+        sub:"I want a character whose nature and background inspire me to roleplay.",
+        weight:{ mech:0.30, flav:0.70 }, next:"q1" },
+      { letter:"C", label:"Both matter equally.",
+        sub:"I need to love the mechanics AND the fantasy.",
+        weight:{ mech:0.50, flav:0.50 }, next:"q1" },
+    ]
+  },
+
+  // ── THE GREAT DIVIDE ───────────────────────────────────
+  q1: {
+    number: "The Great Divide",
+    text: "At your core, what kind of being are you?",
+    flavor: "Not your class, not your history — what ARE you, fundamentally?",
+    options: [
+      { letter:"A", label:"A person — mortal, humanoid in body, defined by culture and choice.",
+        sub:"I want to be recognizably person-shaped. My story comes from who I am, not what I am.",
+        next:"q2_person" },
+      { letter:"B", label:"A creature-kin — I have strong warm-blooded beast features.",
+        sub:"Fur, a snout, a tail, a powerful frame. My animal heritage is visible and central.",
+        next:"q2_mammal" },
+      { letter:"C", label:"A creature-kin — but cold-blooded, scaled, or aquatic.",
+        sub:"Scales, venom, fins, or an ancient reptilian heritage. I'm not mammalian.",
+        next:"q2_cold" },
+      { letter:"D", label:"Avian, winged, or draconic — feathers, wings, or dragon blood.",
+        sub:"I have a beak, broad wings, or literal draconic heritage. The sky is part of my nature.",
+        next:"q2_avian" },
+      { letter:"E", label:"Not made of flesh — constructed, plant-grown, or undead.",
+        sub:"My body is built, grown, or reanimated rather than born and breathing.",
+        next:"q2_made" },
+      { letter:"F", label:"Something from beyond — shadow, fey, spirit, or the planes.",
+        sub:"I come from or was shaped by somewhere most mortals never go.",
+        next:"q2_beyond" },
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════
+  // BRANCH A — PERSON-SHAPED HUMANOIDS (12 ancestries)
+  // ══════════════════════════════════════════════════════
+  q2_person: {
+    number: "The Mortal Path",
+    text: "What kind of humanoid are you?",
+    flavor: "Among people-shaped mortals, many roads diverge here.",
+    options: [
+      { letter:"A", label:"Rooted — underground, craft-focused, tradition-bound endurance.",
+        sub:"Stone. Darkness. Things built to last. My people measure time in centuries.",
+        next:"q3_rooted" },
+      { letter:"B", label:"Ancient and long-lived — centuries of art, magic, and memory.",
+        sub:"I was alive when the current empires were young. That changes a person.",
+        next:"Elf" },
+      { letter:"C", label:"Small and unusual — something sets me apart from the average person.",
+        sub:"Under four feet, but my size is the least interesting thing about me.",
+        next:"q3_small" },
+      { letter:"D", label:"Adaptable and ambitious — no fixed destiny, maximum flexibility.",
+        sub:"I'm not defined by my heritage. I define myself.",
+        next:"q3_human" },
+      { letter:"E", label:"Military and disciplined — my culture prizes tactical excellence.",
+        sub:"Order. Hierarchy. Strategy. My people don't do things halfway.",
+        next:"Hobgoblin" },
+      { letter:"F", label:"Subtly strange — spiritual gifts or unusual perceptions.",
+        sub:"I look like a person, mostly. But I experience the world differently.",
+        next:"q3_spiritual" },
+    ]
+  },
+
+  q3_rooted: {
+    number: "Stone or Secrets",
+    text: "Deep roots can mean different things. Which speaks to you?",
+    flavor: "Both live underground. Both value what endures. They are very different people.",
+    options: [
+      { letter:"A", label:"Craft, endurance, clan honor, and a famous dagger given at birth.",
+        sub:"My people build things that last. Our grudges outlast empires.",
+        next:"Dwarf" },
+      { letter:"B", label:"Bone quills, subterranean secrets, and information as currency.",
+        sub:"I don't hoard gold. I hoard what people don't know I know.",
+        next:"Shisk" },
+    ]
+  },
+
+  q3_small: {
+    number: "Small but Significant",
+    text: "What's the heart of your Small ancestry?",
+    flavor: "All three are under four feet. Everything else is different.",
+    options: [
+      { letter:"A", label:"Fey-touched wonder-seeker who must find new experiences or fade.",
+        sub:"The Bleaching is real. Stagnation is death. I cannot stay still.",
+        next:"Gnome" },
+      { letter:"B", label:"Chaotic, fire-loving, intensely alive in every present moment.",
+        sub:"I don't think too far ahead. The now is more than enough.",
+        next:"Goblin" },
+      { letter:"C", label:"Lucky, resilient, warm-hearted — a community is my greatest strength.",
+        sub:"The world is built for larger folk. I've learned to work with that.",
+        next:"Halfling" },
+    ]
+  },
+
+  q3_human: {
+    number: "Two Free Boosts",
+    text: "Both Humans and Orcs have two free ability boosts and no flaw. What drives you?",
+    flavor: "The most flexible ancestries in the game — but they lead very different lives.",
+    options: [
+      { letter:"A", label:"Pure adaptability — I want maximum flexibility and no fixed niche.",
+        sub:"I'll decide who I am. My ancestry won't decide for me.",
+        next:"Human" },
+      { letter:"B", label:"Fierce pride, raw physical power, and a culture of earned glory.",
+        sub:"I live intensely. I have maybe 60 years. I intend to use them.",
+        next:"Orc" },
+    ]
+  },
+
+  q3_spiritual: {
+    number: "Strange Gifts",
+    text: "What's the unusual gift that marks your people?",
+    flavor: "Each of these looks mostly humanoid. Each experiences the world profoundly differently.",
+    options: [
+      { letter:"A", label:"You carry fragmented memories of past lives like half-remembered dreams.",
+        sub:"I have been here before. Many times. I'm not sure I'm done yet.",
+        next:"Samsaran" },
+      { letter:"B", label:"You sense the emotional states of everyone nearby — a constant psychic hum.",
+        sub:"I don't just see how people feel. I feel it too.",
+        next:"Kashrishi" },
+      { letter:"C", label:"You have thousands of tiny eyes across your skin and see in every direction at once.",
+        sub:"Nothing surprises my people. That hypervigilance is survival. It's also exhausting.",
+        next:"Goloma" },
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════
+  // BRANCH B — MAMMALIAN BEAST-KIN (13 ancestries)
+  // ══════════════════════════════════════════════════════
+  q2_mammal: {
+    number: "The Creature's Nature",
+    text: "What kind of warm-blooded creature-kin are you?",
+    flavor: "Fur, claws, a snout — but the spirit inside varies enormously.",
+    options: [
+      { letter:"A", label:"Feline or fox — graceful, clever, potentially a shapeshifter.",
+        sub:"Quick reflexes. Independent nature. The world is full of interesting things.",
+        next:"q3_feline" },
+      { letter:"B", label:"Canine, hyena, or raccoon-dog — loyal, tenacious, or mischievous.",
+        sub:"Pack instincts. Bite strength. An infectious personality.",
+        next:"q3_canine" },
+      { letter:"C", label:"Primate or rodent — nimble, curious, and community-minded.",
+        sub:"Quick hands. Clever mind. I work best with people I trust.",
+        next:"q3_primate" },
+      { letter:"D", label:"Large and powerful — horse, bull, or titan-blooded giant.",
+        sub:"I am Large. The world is built for smaller folk. I don't mind.",
+        next:"q3_large" },
+      { letter:"E", label:"I was once an ordinary animal who gained sapience.",
+        sub:"My consciousness is new. My instincts are ancient. That tension defines me.",
+        next:"q3_awakened" },
+    ]
+  },
+
+  q3_feline: {
+    number: "Cat or Fox",
+    text: "Purely feline, or a fox-spirit shapeshifter?",
+    flavor: "Both are clever and graceful. One can look like a person — or a fox.",
+    options: [
+      { letter:"A", label:"Cat-featured, curious wanderer who always lands on their feet.",
+        sub:"My feline heritage is fully visible and I couldn't be happier about it.",
+        next:"Catfolk" },
+      { letter:"B", label:"Fox-spirit with two distinct forms and divine trickster magic.",
+        sub:"I shift between human and fox shapes. Both are equally real to me.",
+        next:"Kitsune" },
+    ]
+  },
+
+  q3_canine: {
+    number: "Which Kind of Dog",
+    text: "What's your canine spirit?",
+    flavor: "Loyal, fierce, or joyful — dogs run in many directions.",
+    options: [
+      { letter:"A", label:"Hyena-headed pragmatist — powerful bite, community bonds, direct honesty.",
+        sub:"I don't pretend. I say what I mean, and my teeth back it up.",
+        next:"Kholo" },
+      { letter:"B", label:"Flat-faced gentle dog-folk — pacifist, communal, quietly courageous.",
+        sub:"I'm not a fighter by nature. I fight when it matters. That makes it matter more.",
+        next:"Shoony" },
+      { letter:"C", label:"Jovial raccoon-dog shapeshifter — celebratory, warm, delightfully mischievous.",
+        sub:"Life should have more festivals. I'm doing my part.",
+        next:"Tanuki" },
+    ]
+  },
+
+  q3_primate: {
+    number: "Monkey or Rat",
+    text: "Primate or rodent?",
+    flavor: "Both small, clever, and community-minded. Different tools.",
+    options: [
+      { letter:"A", label:"Prehensile-tailed monkey-folk philosopher and natural acrobat.",
+        sub:"My tail does things when my hands are full. That's not a metaphor. It literally helps.",
+        next:"Vanara" },
+      { letter:"B", label:"Small clever rat-folk with a knack for trade and communal networks.",
+        sub:"My people know everybody. We share information. We collect interesting things.",
+        next:"Ratfolk" },
+    ]
+  },
+
+  q3_large: {
+    number: "The Large Beast",
+    text: "What kind of large beast walks your path?",
+    flavor: "All Large, all powerful — but each for entirely different reasons.",
+    options: [
+      { letter:"A", label:"Half-horse nomadic guardian of the open land.",
+        sub:"I run because it's who I am, not because something is chasing me.",
+        next:"Centaur" },
+      { letter:"B", label:"Bull-horned navigator, craftsperson, and solver of puzzles.",
+        sub:"They see the horns and assume brute. They're wrong, and I find that useful.",
+        next:"Minotaur" },
+      { letter:"C", label:"Titan-blooded giant with ethereal light woven through my skin.",
+        sub:"I glow. Literally. Magical threads run through me like veins of starlight.",
+        next:"Jotunborn" },
+      { letter:"D", label:"Carabao-headed lunar warrior with a soul-housing gem.",
+        sub:"My crescent horns and my head gem are sacred. My enemies find them painful.",
+        next:"Sarangay" },
+    ]
+  },
+
+  q3_awakened: {
+    number: "The Awakening",
+    text: "How fully did you leave your original nature behind?",
+    flavor: "Two ancestries. Both began as animals. The journey looks very different.",
+    options: [
+      { letter:"A", label:"I still carry my animal body and instincts — just thinking now.",
+        sub:"I'm new at this 'being a person' thing. My first nature is still right here.",
+        next:"AwAnim" },
+      { letter:"B", label:"I transcended into a new form and can shapeshift between identities.",
+        sub:"I cultivated power over centuries until I became something entirely new.",
+        next:"Yaoguai" },
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════
+  // BRANCH C — COLD-BLOODED / AQUATIC (9 ancestries)
+  // ══════════════════════════════════════════════════════
+  q2_cold: {
+    number: "Cold Blood",
+    text: "What's your cold-blooded or aquatic heritage?",
+    flavor: "Scales, venom, fins — the cold-blooded ancestries span a remarkable range.",
+    options: [
+      { letter:"A", label:"Lizard or frog — a scaled or amphibious reptilian ancestry.",
+        sub:"Ancient heritage. Excellent survival instincts. No warm blood required.",
+        next:"q3_lizardfrog" },
+      { letter:"B", label:"Serpentine — snake-like features, either devotion or venom.",
+        sub:"Ophidian grace. Fangs that mean something. A way of moving that unsettles people.",
+        next:"q3_serpent" },
+      { letter:"C", label:"Small and draconic — I serve a powerful patron and bear their mark.",
+        sub:"I'm small. My patron is not. Their power flows through my body.",
+        next:"Kobold" },
+      { letter:"D", label:"Spider — a sapient arachnid with a humanoid disguise.",
+        sub:"In my true form I have eight legs. I've built magic to hide that when needed.",
+        next:"Anadi" },
+      { letter:"E", label:"Aquatic — I belong in the water more than on land.",
+        sub:"Fins, gills, or the deep call of the ocean. Land is where I visit.",
+        next:"q3_aquatic" },
+    ]
+  },
+
+  q3_lizardfrog: {
+    number: "Lizard or Frog",
+    text: "Ancient stoic heir, or tiny cautious tree-frog?",
+    flavor: "Both are scaled. Both have survived. The worldview couldn't be more different.",
+    options: [
+      { letter:"A", label:"Ancient lizard-folk heir to empires older than elven memory.",
+        sub:"We were here first. We will be here last. Everything else is noise.",
+        next:"Lizardfolk" },
+      { letter:"B", label:"Tiny tree-frog folk — cautious and deliberate, then suddenly decisive.",
+        sub:"My colors help me hide. My spirit is larger than my body suggests.",
+        next:"Tripkee" },
+    ]
+  },
+
+  q3_serpent: {
+    number: "Fang and Scale",
+    text: "Divine serpent or venomous specialist?",
+    flavor: "Both are serpentine. One was made by a goddess. One makes their own poison.",
+    options: [
+      { letter:"A", label:"Serpent-headed, created by a goddess, patient and spiritually devoted.",
+        sub:"I was made with purpose. My fangs are part of that.",
+        next:"Nagaji" },
+      { letter:"B", label:"Golden-eyed ophidian beauty whose blood and saliva carry real venom.",
+        sub:"I can apply my own venom to a blade. I do this deliberately. It's just who I am.",
+        next:"Vishkanya" },
+    ]
+  },
+
+  q3_aquatic: {
+    number: "The Deep Water",
+    text: "What's your aquatic ancestry?",
+    flavor: "Three peoples who call the water home — for entirely different reasons.",
+    options: [
+      { letter:"A", label:"Azlanti descendants marked by alghollthu masters — a fallen empire's heirs.",
+        sub:"My pearlescent skin and violet eyes carry the weight of a history most have forgotten.",
+        next:"Azarketi" },
+      { letter:"B", label:"Colorful cooperative fish-folk who communicate through pheromones.",
+        sub:"My community is everything. We protect each other. I would know if you were lying.",
+        next:"Athamaru" },
+      { letter:"C", label:"Ocean-ruling aristocratic merfolk who treat magic as a practical tool.",
+        sub:"We rule every ocean on Golarion. The surface kingdoms are a recent development.",
+        next:"Merfolk" },
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════
+  // BRANCH D — AVIAN / DRACONIC (3 ancestries)
+  // ══════════════════════════════════════════════════════
+  q2_avian: {
+    number: "Wings and Feathers",
+    text: "What's your avian or draconic nature?",
+    flavor: "Three paths that share feathers, wings, or scales — and nothing else.",
+    options: [
+      { letter:"A", label:"Crow-beaked wanderer who collects blades and knowledge in equal measure.",
+        sub:"I've survived everywhere I've been. I always find something worth keeping.",
+        next:"Tengu" },
+      { letter:"B", label:"Reclusive feathered hunter with broad wings, devoted to clan and homeland.",
+        sub:"My tribe is everything. I fly. My talons are not decorative.",
+        next:"Strix" },
+      { letter:"C", label:"A tiny actual dragon — wings, claws, fire breath, the whole thing.",
+        sub:"I'm not dragon-blooded. I'm not dragon-adjacent. I am a dragon. A small one.",
+        next:"Dragonet" },
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════
+  // BRANCH E — NOT FLESH (8 ancestries)
+  // ══════════════════════════════════════════════════════
+  q2_made: {
+    number: "Not Flesh",
+    text: "What are you made of?",
+    flavor: "The not-flesh ancestries span an enormous range. Let's narrow it down.",
+    options: [
+      { letter:"A", label:"Metal, clockwork, or manufactured components — I was built.",
+        sub:"My body was made by someone. My soul is another matter.",
+        next:"q3_construct" },
+      { letter:"B", label:"Plant matter, living wood, or natural growth — I was grown.",
+        sub:"I'm organic, but not in the way most people mean.",
+        next:"q3_plant" },
+      { letter:"C", label:"Bone — I'm undead, but I still think, feel, and choose.",
+        sub:"I died, or was never fully alive, but my intellect survived.",
+        next:"Skeleton" },
+      { letter:"D", label:"My body was transformed by unnatural force into something unique.",
+        sub:"Magic, alchemy, or something worse reshaped me. Every fleshwarp is different.",
+        next:"Fleshwarp" },
+    ]
+  },
+
+  q3_construct: {
+    number: "The Made Ones",
+    text: "What kind of constructed being are you?",
+    flavor: "Built, not born — but each for a very different reason.",
+    options: [
+      { letter:"A", label:"Ancient Jistka war-construct with a transplanted mortal soul.",
+        sub:"I was built for war. My soul was placed inside me. I've outlived both my makers and my purpose.",
+        next:"Automaton" },
+      { letter:"B", label:"Synthetic body from a crashed starship, housing a living spirit.",
+        sub:"My body came from another world entirely. My soul just happened to end up in it.",
+        next:"Android" },
+      { letter:"C", label:"Tiny cloth-and-wicker figure with a spontaneous spark of unexplained life.",
+        sub:"Nobody made me to be alive. It just happened. I'm still figuring out what that means.",
+        next:"Poppet" },
+    ]
+  },
+
+  q3_plant: {
+    number: "What Grew",
+    text: "What kind of plant being are you?",
+    flavor: "Three very different ways to be made of growing things.",
+    options: [
+      { letter:"A", label:"An immortal nature spirit temporarily housed in a plant or fungal body.",
+        sub:"I'm not the body. The body is something I wear. When it's time, I'll wear a new one.",
+        next:"Leshy" },
+      { letter:"B", label:"A shard of cosmic aeon force that built a living wood exoskeleton.",
+        sub:"My true form is a globe of light. The wooden body is how I talk to people.",
+        next:"Conrasu" },
+      { letter:"C", label:"An ancient plant soul that produces a seed and transfers into a new body.",
+        sub:"Every twenty years I begin again. I lose the distant memories but keep the self.",
+        next:"Ghoran" },
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════
+  // BRANCH F — BEYOND (5 ancestries)
+  // ══════════════════════════════════════════════════════
+  q2_beyond: {
+    number: "From Beyond",
+    text: "What's the nature of your otherworldly heritage?",
+    flavor: "The planes, the First World, the Shadow — each leaves a different mark.",
+    options: [
+      { letter:"A", label:"Shadow — I came from or was shaped by the Shadow Plane.",
+        sub:"Darkness isn't empty where I'm from. It has texture, history, and power.",
+        next:"q3_shadow" },
+      { letter:"B", label:"Fey — I'm a tiny being from the First World, drawn to mortal magic.",
+        sub:"I'm small. I'm old. I'm genuinely magical in ways that classes can only approximate.",
+        next:"Sprite" },
+      { letter:"C", label:"Spirit — I'm a divine guardian who refused to leave when the gods departed.",
+        sub:"The gods left. I stayed. Someone had to protect the people and places they left behind.",
+        next:"Yaksha" },
+      { letter:"D", label:"Insectile — I devour ambient magic to live and develop unique abilities.",
+        sub:"I don't eat food. I eat magic. The Darklands has plenty.",
+        next:"Surki" },
+    ]
+  },
+
+  q3_shadow: {
+    number: "Two Shadows",
+    text: "Which shadow-touched ancestry?",
+    flavor: "Both come from shadow. One is an exile. One is a philosopher.",
+    options: [
+      { letter:"A", label:"Descended from Azlanti humans permanently changed by the Shadow Plane.",
+        sub:"My complexion is monochromatic. My shadow moves wrong. I've learned to use both.",
+        next:"Fetchling" },
+      { letter:"B", label:"A small Netherworld-born philosopher who can move their shadow independently.",
+        sub:"My shadow is mine to direct. I draw strength from darkness rather than fearing it.",
+        next:"Wayang" },
+    ]
+  },
+
+}; // end TREE
+
+// ═══════════════════════════════════════════════════════
+// ENGINE STATE
+// ═══════════════════════════════════════════════════════
+let questionPath = ['q0'];
+let answers      = {};
+let mechWeight   = 0.5;
+let flavWeight   = 0.5;
+
+function currentQId(){ return questionPath[questionPath.length - 1]; }
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+function startQuiz(){
+  questionPath = ['q0']; answers = {}; mechWeight = 0.5; flavWeight = 0.5;
+  document.getElementById('intro-screen').classList.remove('screen-active');
+  document.getElementById('quiz-screen').classList.add('screen-active');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const qId  = currentQId();
+  const q    = TREE[qId];
+  const depth = questionPath.length;
+
+  // Progress: max depth is 5 (q0→q1→q2→q3→resolve)
+  const pct = Math.round(((depth - 1) / 5) * 100);
+  document.getElementById('progress-text').textContent = q.number;
+  document.getElementById('progress-pct').textContent  = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+
+  // Breadcrumb
+  const crumbEl = document.getElementById('path-crumb');
+  if(depth <= 1){ crumbEl.textContent = ''; }
+  else {
+    const crumbs = questionPath.slice(0,-1).map(id => {
+      const ai = answers[id];
+      return ai !== undefined ? TREE[id].options[ai].label : null;
+    }).filter(Boolean);
+    crumbEl.innerHTML = crumbs.map((c,i) =>
+      `<span class="path-step">${c}</span>` +
+      (i < crumbs.length-1 ? '<span class="crumb-sep">›</span>' : '')
+    ).join('');
+  }
+
+  const area = document.getElementById('question-area');
+  area.innerHTML = '';
+  area.classList.remove('fade-slide');
+  void area.offsetWidth;
+  area.classList.add('fade-slide');
+
+  const qNum  = document.createElement('div'); qNum.className='question-number';  qNum.textContent=q.number;
+  const qText = document.createElement('div'); qText.className='question-text';   qText.textContent=q.text;
+  const qFlav = document.createElement('div'); qFlav.className='question-flavor'; qFlav.textContent=q.flavor;
+  const opts  = document.createElement('div'); opts.className='options';
+
+  q.options.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn' + (answers[qId] === idx ? ' selected' : '');
+    btn.innerHTML = `<span class="option-letter">${opt.letter}</span><span class="option-text"><span class="option-label">${opt.label}</span>${opt.sub ? `<span class="option-sub">${opt.sub}</span>` : ''}</span>`;
+    btn.addEventListener('click', () => selectAnswer(idx));
+    opts.appendChild(btn);
+  });
+
+  area.appendChild(qNum); area.appendChild(qText); area.appendChild(qFlav); area.appendChild(opts);
+  updateNav();
+}
+
+function selectAnswer(idx){
+  const qId = currentQId();
+  const q   = TREE[qId];
+  if(q.isWeighting){ const w=q.options[idx].weight; mechWeight=w.mech; flavWeight=w.flav; }
+  answers[qId] = idx;
+  document.querySelectorAll('.option-btn').forEach((b,i)=>b.classList.toggle('selected',i===idx));
+  updateNav();
+}
+
+function updateNav(){
+  const qId    = currentQId();
+  const q      = TREE[qId];
+  const hasAns = answers[qId] !== undefined;
+  let isTerminal = false;
+  if(hasAns){ const next = q.options[answers[qId]].next; isTerminal = !(next in TREE); }
+  document.getElementById('btn-back').disabled             = questionPath.length <= 1;
+  document.getElementById('btn-next').disabled             = !hasAns || isTerminal;
+  document.getElementById('btn-next').style.display        = isTerminal ? 'none' : '';
+  document.getElementById('btn-submit').style.display      = isTerminal ? ''     : 'none';
+  document.getElementById('btn-submit').disabled           = !hasAns;
+}
+
+function goNext(){
+  const qId    = currentQId();
+  const ansIdx = answers[qId];
+  if(ansIdx === undefined) return;
+  const next = TREE[qId].options[ansIdx].next;
+  if(next in TREE){ questionPath.push(next); renderQuestion(); }
+  else             { showResult(next); }
+}
+
+function goBack(){
+  if(questionPath.length > 1){ questionPath.pop(); renderQuestion(); }
+}
+
+// ═══════════════════════════════════════════════════════
+// RESULTS
+// ═══════════════════════════════════════════════════════
+function showResult(key){
+  document.getElementById('quiz-screen').classList.remove('screen-active');
+  const rs = document.getElementById('results-screen');
+  rs.style.display = 'block';
+
+  const d    = ANCESTRIES[key];
+  const name = ancName(key);
+  const why  = WHY[key] || 'This ancestry matched your path strongly.';
+
+  document.getElementById('results-title').textContent = `You are ${name}`;
+  document.getElementById('results-subtitle').textContent =
+    mechWeight > 0.6 ? 'Optimized for mechanical fit — your path through the tome ended here.' :
+    flavWeight > 0.6 ? 'Matched to your story and identity — your path through the tome ended here.' :
+    'Your path through the questions led here.';
+
+  const cardArea = document.getElementById('results-card');
+  cardArea.innerHTML = '';
+
+  const card = document.createElement('div');
+  card.className = 'result-card';
+  card.innerHTML = `
+    <div class="result-card-header">
+      <span class="result-icon">${d.icon}</span>
+      <span class="result-anc-name">${name}</span>
+      <div class="result-tags">
+        <span class="tag tag-mech">${d.mech}</span>
+        <span class="tag tag-flav">${d.flav}</span>
+      </div>
+    </div>
+    <div class="result-card-body">
+      <p class="result-why">${why}</p>
+      <div class="result-quick-facts">
+        <div class="quick-fact"><span class="quick-fact-label">Type</span>${d.type}</div>
+        <div class="quick-fact"><span class="quick-fact-label">Size</span>${d.size}</div>
+        <div class="quick-fact"><span class="quick-fact-label">Starting HP</span>${d.hp}</div>
+        <div class="quick-fact"><span class="quick-fact-label">Source</span>${d.source}</div>
+      </div>
+    </div>`;
+  cardArea.appendChild(card);
+
+  // Path taken
+  const pathSteps = questionPath.map(qId => {
+    const ai = answers[qId];
+    return ai !== undefined ? TREE[qId].options[ai].label : null;
+  }).filter(Boolean);
+
+  if(pathSteps.length > 0){
+    const pathEl = document.createElement('div');
+    pathEl.className = 'path-summary';
+    pathEl.innerHTML = `
+      <div class="path-summary-label">Your Path Through the Tome</div>
+      <div class="path-steps">
+        ${pathSteps.map((s,i) =>
+          `<span class="path-step">${s}</span>` +
+          (i < pathSteps.length-1 ? '<span class="path-arrow">→</span>' : '')
+        ).join('')}
+        <span class="path-arrow">→</span>
+        <span class="path-step" style="font-weight:600;color:var(--red);">${name}</span>
+      </div>`;
+    cardArea.appendChild(pathEl);
+  }
+
+  // All ancestries grid
+  const grid = document.getElementById('all-anc-grid');
+  grid.innerHTML = '';
+  Object.entries(ANCESTRIES).forEach(([k, ad]) => {
+    const n = ancName(k);
+    const isResult = k === key;
+    const mini = document.createElement('div');
+    mini.className = 'anc-mini-card';
+    if(isResult) mini.style.border = '1.5px solid var(--red)';
+    mini.innerHTML = `<div class="anc-mini-name">${ad.icon} ${n}${isResult?' ✦':''}</div><div class="anc-mini-type">${ad.type} · ${ad.size} · HP ${ad.hp}</div><div class="anc-mini-flav">${ad.flav}</div>`;
+    grid.appendChild(mini);
+  });
+}
+
+function toggleAll(){
+  const grid = document.getElementById('all-anc-grid');
+  const btn  = document.querySelector('.btn-toggle');
+  const v    = grid.classList.toggle('visible');
+  btn.textContent = v ? 'Hide All Ancestries ▴' : 'Explore All 50 Ancestries ▾';
+}
+
+function retakeQuiz(){
+  questionPath = ['q0']; answers = {}; mechWeight = 0.5; flavWeight = 0.5;
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').classList.add('screen-active');
+  renderQuestion();
+}
+</script>
+</body>
+</html>
