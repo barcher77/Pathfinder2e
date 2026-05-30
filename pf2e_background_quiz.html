@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Which Pathfinder 2e Background Are You?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1006;
+    --parchment: #f5edd6;
+    --parchment-dark: #e8d9b5;
+    --parchment-mid: #efe2c0;
+    --gold: #c8972a;
+    --gold-light: #e8b84b;
+    --gold-dark: #8a6518;
+    --red: #8b1a1a;
+    --red-light: #c02020;
+    --teal: #1a5a5a;
+    --shadow: rgba(26,16,6,0.35);
+    --shadow-deep: rgba(26,16,6,0.6);
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    background-color:#0e0a04;
+    background-image:
+      radial-gradient(ellipse at 20% 10%,rgba(200,151,42,0.08) 0%,transparent 50%),
+      radial-gradient(ellipse at 80% 90%,rgba(139,26,26,0.08) 0%,transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    min-height:100vh; font-family:'Crimson Pro',Georgia,serif; color:var(--ink);
+    display:flex; flex-direction:column; align-items:center; padding:2rem 1rem 4rem;
+  }
+  .frame { width:100%; max-width:820px; background:var(--parchment);
+    background-image:radial-gradient(ellipse at 50% 0%,rgba(232,184,75,0.18) 0%,transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='p'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23p)' opacity='0.06'/%3E%3C/svg%3E");
+    border-radius:4px;
+    box-shadow:0 0 0 2px var(--gold-dark),0 0 0 6px var(--ink),0 0 0 8px var(--gold-dark),0 20px 60px var(--shadow-deep);
+    position:relative; overflow:hidden; }
+  .frame::before,.frame::after{content:'✦';position:absolute;font-size:1.4rem;color:var(--gold);z-index:10;}
+  .frame::before{top:10px;left:14px;} .frame::after{top:10px;right:14px;}
+  .frame-inner{position:relative;}
+  .frame-inner::before,.frame-inner::after{content:'✦';position:absolute;font-size:1.4rem;color:var(--gold);z-index:10;bottom:10px;}
+  .frame-inner::before{left:14px;} .frame-inner::after{right:14px;}
+
+  .quiz-header{padding:2.5rem 2.5rem 1.5rem;text-align:center;border-bottom:2px solid var(--gold-dark);position:relative;}
+  .quiz-header::after{content:'';display:block;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin-top:1rem;}
+  .eyebrow{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.3em;color:var(--gold-dark);text-transform:uppercase;margin-bottom:0.75rem;}
+  h1{font-family:'Cinzel Decorative',serif;font-size:clamp(1.4rem,4vw,2.1rem);color:var(--red);line-height:1.25;text-shadow:1px 1px 0 rgba(255,255,255,0.4),2px 3px 6px var(--shadow);margin-bottom:0.6rem;}
+  .subtitle{font-family:'Crimson Pro',serif;font-style:italic;font-size:1.05rem;color:#5a4020;max-width:560px;margin:0 auto;line-height:1.5;}
+
+  .progress-bar-wrap{padding:1rem 2.5rem 0;}
+  .progress-label{display:flex;justify-content:space-between;font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--gold-dark);margin-bottom:0.4rem;}
+  .progress-track{height:6px;background:var(--parchment-dark);border-radius:3px;border:1px solid var(--gold-dark);overflow:hidden;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-dark),var(--gold-light));border-radius:3px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1);width:0%;}
+
+  .question-area{padding:2rem 2.5rem 1.5rem;}
+  .question-number{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.25em;color:var(--gold-dark);text-transform:uppercase;margin-bottom:0.5rem;}
+  .question-text{font-family:'Cinzel',serif;font-size:clamp(1rem,2.5vw,1.2rem);color:var(--ink);line-height:1.5;margin-bottom:0.4rem;font-weight:600;}
+  .question-flavor{font-style:italic;color:#6b4c20;font-size:0.95rem;margin-bottom:1.5rem;line-height:1.45;}
+
+  .options{display:flex;flex-direction:column;gap:0.65rem;}
+  .option-btn{display:flex;align-items:flex-start;gap:1rem;background:var(--parchment-mid);border:1.5px solid var(--gold-dark);border-radius:3px;padding:0.85rem 1.1rem;cursor:pointer;text-align:left;transition:all 0.18s ease;position:relative;overflow:hidden;font-family:inherit;}
+  .option-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,151,42,0.15),transparent);opacity:0;transition:opacity 0.18s ease;}
+  .option-btn:hover{border-color:var(--gold);background:var(--parchment-dark);transform:translateX(4px);box-shadow:-3px 0 0 var(--gold),2px 4px 12px var(--shadow);}
+  .option-btn:hover::before{opacity:1;}
+  .option-btn.selected{border-color:var(--red);background:#f0e0cc;transform:translateX(6px);box-shadow:-4px 0 0 var(--red),3px 5px 16px var(--shadow);}
+  .option-letter{font-family:'Cinzel',serif;font-weight:600;font-size:0.85rem;color:var(--gold-dark);min-width:1.4rem;padding-top:0.1rem;flex-shrink:0;}
+  .option-btn.selected .option-letter{color:var(--red);}
+  .option-text{font-size:0.98rem;line-height:1.45;color:var(--ink);}
+  .option-label{font-weight:600;display:block;margin-bottom:0.1rem;}
+  .option-sub{font-style:italic;color:#6b4c20;font-size:0.88rem;}
+
+  .nav-area{display:flex;justify-content:space-between;align-items:center;padding:1rem 2.5rem 2rem;border-top:1px solid var(--parchment-dark);margin-top:0.5rem;}
+  .btn{font-family:'Cinzel',serif;font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.65rem 1.6rem;border-radius:2px;cursor:pointer;transition:all 0.2s ease;border:none;}
+  .btn-back{background:transparent;border:1.5px solid var(--gold-dark);color:var(--gold-dark);}
+  .btn-back:hover{background:var(--parchment-dark);color:var(--ink);}
+  .btn-back:disabled{opacity:0.3;cursor:default;}
+  .btn-next{background:var(--red);color:var(--parchment);box-shadow:0 3px 10px rgba(139,26,26,0.35);}
+  .btn-next:hover{background:var(--red-light);transform:translateY(-1px);box-shadow:0 5px 16px rgba(139,26,26,0.45);}
+  .btn-next:disabled{background:#b0a090;box-shadow:none;cursor:default;transform:none;}
+  .btn-results{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:var(--ink);font-size:0.85rem;padding:0.75rem 2rem;box-shadow:0 3px 12px rgba(200,151,42,0.4);}
+  .btn-results:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(200,151,42,0.55);}
+  .btn-results:disabled{background:#b0a090;box-shadow:none;cursor:default;transform:none;}
+  .ornament{text-align:center;color:var(--gold);font-size:1.1rem;letter-spacing:0.5rem;padding:0.25rem 0;}
+
+  #intro-screen{padding:2.5rem;text-align:center;}
+  .intro-body{font-size:1.05rem;line-height:1.7;color:#4a3010;max-width:580px;margin:1rem auto 2rem;}
+  .intro-body em{color:var(--red);font-style:normal;font-weight:600;}
+
+  /* Results */
+  #results-screen{display:none;padding:2.5rem;}
+  .results-header{text-align:center;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:2px solid var(--gold-dark);}
+  .results-header::after{content:'';display:block;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin-top:1rem;}
+  .results-eyebrow{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.3em;color:var(--gold-dark);text-transform:uppercase;margin-bottom:0.5rem;}
+  .results-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.2rem,3.5vw,1.8rem);color:var(--red);margin-bottom:0.5rem;text-shadow:1px 1px 0 rgba(255,255,255,0.4);}
+  .results-subtitle{font-style:italic;color:#5a4020;font-size:1rem;}
+
+  .result-card{background:var(--parchment-mid);border:1.5px solid var(--gold-dark);border-radius:3px;margin-bottom:1.25rem;overflow:hidden;box-shadow:2px 4px 12px var(--shadow);opacity:0;transform:translateY(16px);animation:cardReveal 0.5s ease forwards;}
+  .result-card:nth-child(1){animation-delay:0.1s;} .result-card:nth-child(2){animation-delay:0.3s;} .result-card:nth-child(3){animation-delay:0.5s;}
+  @keyframes cardReveal{to{opacity:1;transform:translateY(0);}}
+  .result-card-header{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;border-bottom:1px solid var(--parchment-dark);}
+  .rank-badge{font-family:'Cinzel Decorative',serif;font-size:1.6rem;color:var(--gold);min-width:2rem;text-align:center;text-shadow:0 1px 4px var(--shadow);}
+  .rank-badge.rank-1{color:var(--gold-light);font-size:2rem;} .rank-badge.rank-2{color:#b0b0b0;} .rank-badge.rank-3{color:#a07040;}
+  .result-arc-name{font-family:'Cinzel',serif;font-size:1.3rem;font-weight:600;color:var(--red);flex:1;}
+  .result-tags{display:flex;gap:0.4rem;flex-wrap:wrap;justify-content:flex-end;}
+  .tag{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.5rem;border-radius:2px;border:1px solid;}
+  .tag-mech{border-color:var(--teal);color:var(--teal);background:rgba(26,90,90,0.07);}
+  .tag-flav{border-color:var(--red);color:var(--red);background:rgba(139,26,26,0.07);}
+
+  .result-card-body{padding:1rem 1.25rem;}
+  .result-why{font-size:1rem;line-height:1.6;color:var(--ink);margin-bottom:1rem;}
+  .result-why strong{color:var(--red);font-weight:600;}
+
+  /* Background lists inside result cards */
+  .bg-section-label{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:0.6rem;margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--parchment-dark);}
+  .bg-list{display:flex;flex-direction:column;gap:0.35rem;}
+  .bg-entry{display:flex;align-items:baseline;gap:0.5rem;font-size:0.9rem;line-height:1.4;}
+  .bg-name{font-family:'Cinzel',serif;font-size:0.82rem;font-weight:600;color:var(--red);white-space:nowrap;}
+  .bg-source{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-dark);white-space:nowrap;}
+  .bg-rare{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:#7a3000;border:1px solid #7a3000;padding:0 0.3em;border-radius:2px;white-space:nowrap;}
+  .bg-desc{font-style:italic;color:#6b4c20;font-size:0.85rem;}
+  .bg-entry-divider{display:flex;align-items:center;gap:0.3rem;flex-wrap:wrap;}
+
+  /* Expanded all-backgrounds section */
+  .all-bg-toggle{text-align:center;margin:2rem 0 1rem;}
+  .btn-toggle{background:transparent;border:1.5px solid var(--gold-dark);color:var(--gold-dark);font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.6rem 1.4rem;border-radius:2px;cursor:pointer;transition:all 0.18s;}
+  .btn-toggle:hover{background:var(--parchment-dark);color:var(--ink);}
+  #all-bg-grid{display:none;margin-top:1rem;}
+  #all-bg-grid.visible{display:block;}
+
+  .arc-group{margin-bottom:1.25rem;border:1px solid var(--gold-dark);border-radius:3px;overflow:hidden;}
+  .arc-group-header{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;background:var(--parchment-dark);cursor:pointer;user-select:none;}
+  .arc-group-header:hover{background:#ddd0a8;}
+  .arc-group-icon{font-size:1.1rem;}
+  .arc-group-name{font-family:'Cinzel',serif;font-size:0.9rem;font-weight:600;color:var(--red);flex:1;}
+  .arc-group-count{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.1em;color:var(--gold-dark);text-transform:uppercase;}
+  .arc-group-chevron{color:var(--gold-dark);font-size:0.8rem;transition:transform 0.2s;}
+  .arc-group.open .arc-group-chevron{transform:rotate(180deg);}
+  .arc-group-body{display:none;padding:0.75rem 1rem;background:var(--parchment-mid);}
+  .arc-group.open .arc-group-body{display:block;}
+  .arc-group-bg-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0.5rem 1.5rem;}
+  .arc-bg-item{font-size:0.85rem;line-height:1.4;padding:0.3rem 0;border-bottom:1px solid rgba(139,101,24,0.15);}
+  .arc-bg-item-name{font-family:'Cinzel',serif;font-size:0.8rem;font-weight:600;color:var(--red);}
+  .arc-bg-item-meta{font-size:0.75rem;color:var(--gold-dark);}
+  .arc-bg-item-desc{font-style:italic;color:#6b4c20;font-size:0.78rem;}
+  .arc-group.is-top{border-color:var(--red);}
+  .arc-group.is-top .arc-group-header{background:#f0e0cc;}
+
+  .retake-area{text-align:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--parchment-dark);}
+  .fade-slide{animation:fadeSlide 0.35s ease forwards;}
+  @keyframes fadeSlide{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  #quiz-screen{display:none;}
+  .screen-active{display:block !important;}
+  @media(max-width:600px){
+    .frame{border-radius:0;}
+    .question-area,.nav-area,#results-screen,#intro-screen{padding-left:1.25rem;padding-right:1.25rem;}
+    .progress-bar-wrap{padding-left:1.25rem;padding-right:1.25rem;}
+    .arc-group-bg-list{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="frame"><div class="frame-inner">
+
+<!-- INTRO -->
+<div id="intro-screen" class="screen-active">
+  <div class="quiz-header">
+    <div class="eyebrow">Pathfinder 2nd Edition</div>
+    <h1>Which Background<br>Are You?</h1>
+    <p class="subtitle">Twenty questions to find the life your character lived before adventure found them.</p>
+  </div>
+  <div class="ornament">— ✦ —</div>
+  <div style="padding:1.5rem 0 0.5rem;">
+    <p class="intro-body">
+      Your background is the story of who you were. This quiz covers <em>twenty background archetypes</em> — each one a cluster of thematically related backgrounds — so your result card will show you not just one background, but a full menu of options across multiple sourcebooks.
+      <br><br>
+      Spanning <em>over 150 general-use backgrounds</em> from Player Core, Player Core 2, Secrets of Magic, Guns & Gears, Book of the Dead, Dark Archive, Rage of Elements, and more — if it exists, it's in here.
+    </p>
+    <div style="text-align:center;">
+      <button class="btn btn-results" onclick="startQuiz()" style="font-size:0.9rem;padding:0.85rem 2.5rem;">Begin the Questionnaire</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz-screen">
+  <div class="quiz-header">
+    <div class="eyebrow">Pathfinder 2nd Edition</div>
+    <h1>Which Background<br>Are You?</h1>
+    <p class="subtitle">Answer each question as honestly as you can.</p>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-label">
+      <span id="progress-text">Question 0 of 20</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+  <div class="ornament" style="padding:0.5rem 0 0;">— ✦ —</div>
+  <div class="question-area" id="question-area"></div>
+  <div class="nav-area">
+    <button class="btn btn-back" id="btn-back" onclick="goBack()" disabled>← Back</button>
+    <button class="btn btn-next" id="btn-next" onclick="goNext()" disabled>Next →</button>
+    <button class="btn btn-results" id="btn-submit" onclick="showResults()" style="display:none;" disabled>See My Results ✦</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="results-screen">
+  <div class="results-header">
+    <div class="results-eyebrow">Your Results</div>
+    <div class="results-title">Your Story Before the Story</div>
+    <p class="results-subtitle" id="results-subtitle">Based on your answers, your background archetype is...</p>
+  </div>
+  <div id="results-cards"></div>
+  <div class="all-bg-toggle">
+    <button class="btn-toggle" onclick="toggleAll()">Browse All 150+ Backgrounds ▾</button>
+  </div>
+  <div id="all-bg-grid"></div>
+  <div class="retake-area">
+    <button class="btn btn-results" onclick="retakeQuiz()" style="font-size:0.85rem;">✦ Retake the Quiz</button>
+  </div>
+</div>
+
+</div></div>
+<script>
+// ═══════════════════════════════════════════════════════
+// ARCHETYPE DATA — each archetype holds curated backgrounds
+// ═══════════════════════════════════════════════════════
+const ARCHETYPES = {
+  Devout: {
+    icon:"🙏", name:"The Devout",
+    mech:"Religion + divine skill feats", flav:"Service to a higher calling",
+    why:"Your answers consistently point to a life <strong>shaped by faith</strong>. Whether you served in a temple, wandered preaching on street corners, practiced folk magic for your community, or devoted yourself to a hidden cult, <strong>belief was the lens through which you experienced everything</strong>. Your character carries that faith into adventure — and your skills reflect the years you spent in service to something larger than yourself.",
+    core:[
+      {n:"Acolyte",         src:"Player Core",       d:"Served in a temple or monastery — Religion + Student of the Canon"},
+      {n:"Pilgrim",         src:"Player Core 2",      d:"Walked a sacred road to a holy site — Religion + Pilgrim's Token"},
+      {n:"Cultist",         src:"Player Core",        d:"Served a hidden cult, gaining esoteric secrets — Occultism + Schooled in Secrets"},
+      {n:"Street Preacher", src:"Secrets of Magic",   d:"Spread unconventional faith in public squares — Religion + Dubious Knowledge"},
+      {n:"Wandering Preacher",src:"Guns & Gears",     d:"Itinerant faith-carrier after your church scattered — Religion + Pilgrim's Token"},
+      {n:"Root Worker",     src:"Player Core 2",      d:"Folk healer blending herbs and spiritual practice — Occultism + Root Magic"},
+    ],
+    also:[
+      {n:"Disciple of the Gear",src:"Guns & Gears",   d:"Religious devotion expressed through mechanical progress — Crafting + Quick Repair"},
+      {n:"Night Watch",    src:"Book of the Dead",    d:"Guarded communities or sacred sites from supernatural threats — Intimidation + Quick Coercion"},
+      {n:"Scion of Slayers",src:"Book of the Dead",   rare:true, d:"Hereditary undead-hunter lineage — innate divine disrupt undead cantrip"},
+    ]
+  },
+  Scholar: {
+    icon:"📚", name:"The Scholar",
+    mech:"Academic lore + Assurance or Recognize Spell", flav:"Knowledge pursued before all else",
+    why:"You were a student before you were an adventurer, and the <strong>hunger for knowledge</strong> that drove you through years of study hasn't left you. Whether you left an academy behind or are still enrolled between quests, your character has <strong>more answers at their fingertips</strong> than anyone else at the table — because you put them there, deliberately and carefully.",
+    core:[
+      {n:"Scholar",        src:"Player Core",         d:"Left the academy to experience what you only read about — Arcana/Nature/Occultism/Religion + Assurance"},
+      {n:"Student of Magic",src:"Secrets of Magic",   d:"Currently enrolled in a magical academy — same skills + Recognize Spell"},
+      {n:"Teacher",        src:"Player Core",         d:"Taught others; now seek real-world material — Performance/Society + Experienced Professional"},
+      {n:"Occult Librarian",src:"Secrets of Magic",   d:"Catalogued forbidden tomes before venturing out — Occultism + Schooled in Secrets"},
+      {n:"Magical Merchant",src:"Secrets of Magic",   d:"Appraised and sold magical items with expert knowledge — Crafting + Crafter's Appraisal"},
+    ],
+    also:[
+      {n:"Nexian Mystic",       src:"Lost Omens: World Guide", d:"Deep arcane study in the Impossible Lands — Arcana + Arcane Sense"},
+      {n:"Magaambya Academic",  src:"Lost Omens: World Guide", d:"Studied at the oldest magic school in the world — Arcana or Nature + Recognize Spell"},
+      {n:"Ustalavic Academic",  src:"Lost Omens: World Guide", d:"Gothic academic tradition — Crafting + Skill Training"},
+      {n:"Scholar of the Ancients",src:"Lost Omens: World Guide",d:"Specialist in Azlanti history — Arcana + Quick Identification"},
+    ]
+  },
+  Occultist: {
+    icon:"🔮", name:"The Occultist",
+    mech:"Occultism + Dubious Knowledge or Oddity Identification", flav:"Mysteries, omens, and forbidden knowledge",
+    why:"You read what others cannot — omens in the stars, truth in a shuffled deck, the shape of fate in tea leaves or scattered bones. Your character came to adventure <strong>through the uncanny</strong>, whether as a practicing diviner, a fake medium who knows too much, or someone who simply cannot stop noticing the things that don't fit. <strong>The world is stranger than it looks</strong>, and you've always known that.",
+    core:[
+      {n:"Fortune Teller",  src:"Player Core",        d:"Earned a living reading fate for others — Occultism + Oddity Identification"},
+      {n:"False Medium",    src:"Secrets of Magic",   d:"Faked spiritual contact using real occult knowledge — Occultism + Deceptive Worship"},
+      {n:"Root Worker",     src:"Player Core 2",      d:"Folk magic practitioner blending herbs and mysticism — Occultism + Root Magic"},
+      {n:"Occult Librarian",src:"Secrets of Magic",   d:"Spent years cataloguing forbidden and arcane tomes — Occultism + Schooled in Secrets"},
+      {n:"Hermit",          src:"Player Core",        d:"Lived in isolation developing unconventional knowledge — Nature or Occultism + Dubious Knowledge"},
+    ],
+    also:[
+      {n:"Cursed Family",    src:"Lost Omens: World Guide", d:"Generations of ill fortune made you an expert in curse lore — Occultism + Oddity Identification"},
+      {n:"Witch Wary",       src:"Lost Omens: World Guide", d:"Constant exposure to witchcraft made you highly attuned to it — Occultism + Oddity Identification"},
+      {n:"Osirionologist",   src:"Lost Omens: World Guide", d:"Student of ancient tombs, curses, and magical relics — Occultism + Oddity Identification"},
+      {n:"Doomcaller",       src:"Travel Guide",       rare:true, d:"You read doom in the stars and learned to inflict misfortune — Occultism + Stellar Misfortune"},
+      {n:"Astrological Augur",src:"Travel Guide",     rare:true, d:"Celestial interpretation grants you limited prophetic ability — Astrology Lore + cast augury weekly"},
+    ]
+  },
+  Artisan: {
+    icon:"🔨", name:"The Artisan",
+    mech:"Crafting + Specialty Crafting or Quick Repair", flav:"Made by hand, defined by craft",
+    why:"You made things. That sounds simple, but the kind of person who <strong>builds with their hands</strong> — who sees a block of stone or a bolt of cloth and knows what it wants to become — is a fundamentally different kind of thinker. Your character brings <strong>practical expertise and a maker's eye</strong> to every problem, and there's almost always something useful in their pack that they built themselves.",
+    core:[
+      {n:"Artisan",  src:"Player Core",         d:"Building or crafting apprentice with specialized trade expertise — Crafting + Specialty Crafting"},
+      {n:"Artist",   src:"Player Core",         d:"Creative passion driving your life — Crafting + Specialty Crafting"},
+      {n:"Tinker",   src:"Player Core",         d:"Minor inventions that are equally brilliant or disastrous — Crafting + Specialty Crafting"},
+      {n:"Toymaker", src:"Guns & Gears",        d:"Refined mechanical and artistic skill in equal measure — Crafting + Specialty Crafting"},
+      {n:"Printer",  src:"Guns & Gears",        d:"Printing press work; multiple languages, public opinion — Society + Multilingual"},
+      {n:"Alloysmith",src:"Rage of Elements",   d:"Mastery of exotic metal alloys — Crafting + Specialty Crafting"},
+    ],
+    also:[
+      {n:"Shory Seeker",       src:"Lost Omens: World Guide", d:"Studies ancient flying-city construction techniques — Crafting + Specialty Crafting"},
+      {n:"Merabite Prodigy",   src:"Lost Omens: World Guide", d:"Alchemical crafting tradition of the Golden Road — Crafting + Specialty Crafting"},
+      {n:"Musical Prodigy",    src:"Secrets of Magic",        d:"Artistic talent bordering on the supernatural — Performance + Virtuosic Performer"},
+      {n:"Fireworks Performer",src:"Guns & Gears",            d:"Technical explosive artistry — Performance + Fascinating Performance"},
+      {n:"Pyre Tender",        src:"Book of the Dead",        d:"Alchemical expertise in mortuary craft — Crafting + Alchemical Crafting"},
+    ]
+  },
+  Merchant: {
+    icon:"💰", name:"The Merchant",
+    mech:"Diplomacy + Bargain Hunter or Hobnobber", flav:"Commerce, negotiation, and the value of things",
+    why:"You learned early that almost everything has a price — including information, loyalty, and reputation. Your character navigates the world through <strong>negotiation, social intelligence, and an eye for value</strong> that others simply don't have. The adventuring life is just another form of business, and you've approached it accordingly.",
+    core:[
+      {n:"Merchant",       src:"Player Core",         d:"Market stall or traveling caravan — Diplomacy + Bargain Hunter"},
+      {n:"Barkeep",        src:"Player Core",         d:"Read people while pouring drinks — Diplomacy + Hobnobber"},
+      {n:"Magical Merchant",src:"Secrets of Magic",   d:"Appraised and sold magical wares — Crafting + Crafter's Appraisal"},
+      {n:"Emissary",       src:"Player Core",         d:"Diplomat and messenger who built alliances — Society + Multilingual"},
+      {n:"Clockfighter",   src:"Guns & Gears",        d:"Competed in or maintained clockwork combat exhibitions — Crafting + Experienced Professional"},
+    ],
+    also:[
+      {n:"Kalistrade Follower",src:"Lost Omens: World Guide", d:"Devout follower of the Prophecies of Kalistrade — Diplomacy + Bargain Hunter"},
+      {n:"Onyx Trader",       src:"Lost Omens: World Guide", d:"Skilled multi-lingual merchant — Society + Multilingual"},
+      {n:"Purveyor of the Bizarre",src:"Lost Omens: World Guide",d:"Specialist in unusual magical goods — Arcana + Quick Identification"},
+      {n:"Union Representative",src:"Highhelm",              d:"Negotiated labor disputes — Diplomacy + Contract Negotiator"},
+    ]
+  },
+  Scoundrel: {
+    icon:"🗝️", name:"The Scoundrel",
+    mech:"Stealth or Deception + Experienced Smuggler or Charming Liar", flav:"Wit, guile, and the wrong side of the law",
+    why:"The law was either your enemy or your playground — possibly both. Your character built their skills <strong>outside polite society</strong>: picking pockets, running cons, surviving prison, or finding creative interpretations of property rights. Whatever the specifics, you are <strong>adaptable, perceptive, and deeply familiar with how the world actually works</strong> rather than how it's supposed to.",
+    core:[
+      {n:"Criminal",     src:"Player Core",  d:"Organized guild or independent operation — Stealth + Experienced Smuggler"},
+      {n:"Charlatan",    src:"Player Core",  d:"Running cons and impersonating nobles — Deception + Charming Liar"},
+      {n:"Gambler",      src:"Player Core",  d:"Games of chance and reading opponents — Deception + Lie to Me"},
+      {n:"Prisoner",     src:"Player Core",  d:"Survived imprisonment or enslavement — Stealth + Experienced Smuggler"},
+      {n:"Street Urchin",src:"Player Core",  d:"Pickpocket who never knew where the next meal came from — Thievery + Pickpocket"},
+      {n:"Hounded Thief",src:"Guns & Gears", d:"Stole something priceless; been running since — Thievery + Pickpocket"},
+      {n:"Grave Robber", src:"Book of the Dead",d:"Knows where bodies are and what they're worth — Stealth + Experienced Smuggler"},
+    ],
+    also:[
+      {n:"Issian Partisan",    src:"Lost Omens: World Guide", d:"Revolutionary deceiver — Deception + Charming Liar"},
+      {n:"Bellflower Agent",   src:"Lost Omens: World Guide", d:"Halfling freedom-fighter smuggler — Stealth + Experienced Smuggler"},
+      {n:"Black Market Smuggler",src:"Lost Omens: World Guide",d:"Specialized underworld commerce — Stealth + Experienced Smuggler"},
+      {n:"Magical Misfit",     src:"Secrets of Magic",        d:"Misused magical talent mischievously — Arcana + Trick Magic Item"},
+    ]
+  },
+  Warrior: {
+    icon:"⚔️", name:"The Warrior",
+    mech:"Intimidation or Athletics + Warfare Lore", flav:"Combat, service, and martial discipline",
+    why:"You were a soldier, a guard, a gladiator, or a warrior by trade before adventure found you. Your character knows combat <strong>not as a last resort but as a vocation</strong> — the smell of a barracks, the weight of armor, the rhythm of training that never fully leaves your body. You bring <strong>discipline, tactical awareness, and battlefield experience</strong> to everything you do.",
+    core:[
+      {n:"Warrior",        src:"Player Core",  d:"Soldier, mercenary, or community defender — Intimidation + Intimidating Glare"},
+      {n:"Martial Disciple",src:"Player Core", d:"Monastery or military academy training — Acrobatics or Athletics + Warfare Lore"},
+      {n:"Guard",          src:"Player Core",  d:"Civic duty or paid protection — Intimidation + Quick Coercion"},
+      {n:"Gladiator",      src:"Player Core",  d:"Arena combat as performance art — Performance + Impressive Performance"},
+      {n:"Squire",         src:"Player Core 2",d:"Trained under a knight — Athletics + Armor Assist"},
+      {n:"Cannoneer",      src:"Guns & Gears", d:"Handled artillery and explosives — Athletics + Hefty Hauler"},
+      {n:"Field Medic",    src:"Player Core",  d:"Medical expertise under battlefield conditions — Medicine + Battle Medicine"},
+    ],
+    also:[
+      {n:"Molthuni Mercenary",src:"Lost Omens: World Guide", d:"Professional sell-sword — Athletics + Experienced Professional"},
+      {n:"Ulfen Raider",      src:"Lost Omens: World Guide", d:"Norse-inspired raider and sailor-warrior — Intimidation + Intimidating Glare"},
+      {n:"Belkzen Slayer",    src:"Lost Omens: World Guide", d:"Monster-hunting warrior of the Orcish Holds — Intimidation + Intimidating Glare"},
+      {n:"Insurgent",         src:"Player Core 2",           d:"Revolutionary guerrilla fighter — Deception + Lengthy Diversion"},
+      {n:"Thrill-Seeker",     src:"Firebrands",              d:"Adrenaline-addicted daredevil warrior — Athletics + Combat Climber"},
+    ]
+  },
+  Hunter: {
+    icon:"🏹", name:"The Hunter",
+    mech:"Survival + Experienced Tracker or Survey Wildlife", flav:"Pursuit, tracking, and wilderness combat",
+    why:"You are a specialist in <strong>finding things that don't want to be found</strong>. Whether your quarry was animals, criminals, or something worse, you developed an unmatched ability to read terrain, follow a trail, and close the distance quietly. Your character brings a <strong>hunter's patience and a tracker's eye</strong> to the adventuring life — and the wilderness is never quite as hostile to them as it is to others.",
+    core:[
+      {n:"Hunter",       src:"Player Core",  d:"Stalked and harvested wild game — Survival + Survey Wildlife"},
+      {n:"Scout",        src:"Player Core",  d:"Navigated wilderness for military or wanderlust — Survival + Forager"},
+      {n:"Bounty Hunter",src:"Player Core",  d:"Tracked down criminals for profit — Survival + Experienced Tracker"},
+      {n:"Outrider",     src:"Player Core 2",d:"Mounted messenger or cavalry scout — Nature + Express Rider"},
+      {n:"Deputy",       src:"Guns & Gears", d:"Temporary community lawkeeper; learned to track threats — Survival + Experienced Tracker"},
+      {n:"Spotter",      src:"Guns & Gears", d:"Assessed targets for sharpshooters — Stealth + Terrain Stalker"},
+    ],
+    also:[
+      {n:"Desert Tracker",    src:"Lost Omens: World Guide", d:"Expert in arid terrain tracking — Survival + Experienced Tracker"},
+      {n:"Nirmathi Guerrilla",src:"Lost Omens: World Guide", d:"Forest-fighting resistance tracker — Stealth + Terrain Stalker"},
+      {n:"Mantis Scion",      src:"Lost Omens: World Guide", d:"Descended from assassins; trained to hunt — Stealth + Assurance (Stealth)"},
+      {n:"Hired Killer",      src:"Guns & Gears",            d:"Built a career around finding and ending targets — Stealth + Terrain Stalker"},
+    ]
+  },
+  Healer: {
+    icon:"💊", name:"The Healer",
+    mech:"Medicine or Nature + Battle Medicine or Natural Medicine", flav:"Mending what is broken",
+    why:"You were the person people came to when things went wrong. Your character built their skills around <strong>the most fundamental act</strong> available to any adventurer — keeping people alive. Whether you worked in a proper surgery, a field camp, a back alley, or a rural community with only herbs and tradition, you carry <strong>the knowledge to undo damage</strong> that no sword or spell can match.",
+    core:[
+      {n:"Herbalist",      src:"Player Core",   d:"Healing properties of plants, formal or folk — Nature + Natural Medicine"},
+      {n:"Field Medic",    src:"Player Core",   d:"Emergency medical care under battlefield pressure — Medicine + Battle Medicine"},
+      {n:"Back-Alley Doctor",src:"Guns & Gears",d:"Patched up people who couldn't risk licensed healers — Medicine + Risky Surgery"},
+      {n:"Curandero",      src:"Book of the Dead",d:"Community healer using traditional methods — Medicine + Inoculation"},
+      {n:"Medicinal Clocksmith",src:"Guns & Gears",d:"Applied clockwork technology to medical practice — Medicine + Risky Surgery"},
+    ],
+    also:[
+      {n:"Secular Medic",    src:"Lost Omens: World Guide", d:"Non-magical medical practitioner — Medicine + Battle Medicine"},
+      {n:"Sarkorian Reclaimer",src:"Lost Omens: World Guide",d:"Healer rebuilding communities after demonic devastation — Medicine + Battle Medicine"},
+      {n:"Lastwall Survivor",src:"Lost Omens: World Guide",  d:"Hardened by undead warfare; expertise in keeping soldiers alive — Medicine + Battle Medicine"},
+      {n:"Midwife",          src:"Player Core",              d:"Brought life into the world in the most challenging conditions — Medicine + Battle Medicine"},
+    ]
+  },
+  Naturalist: {
+    icon:"🌿", name:"The Naturalist",
+    mech:"Nature or Survival + Train Animal or Forager", flav:"The living world, animals, and rural life",
+    why:"You understand things that most adventurers have to learn from books: <strong>which plants heal and which kill, what a wolf track says about the pack's mood, how weather moves across open ground</strong>. Your character spent formative years in close contact with the natural world — farming, tending animals, surviving in the wilderness, or communing with wild places — and carries that deep, practical knowledge into every expedition.",
+    core:[
+      {n:"Animal Whisperer",src:"Player Core",   d:"Felt a special connection to animals your entire life — Nature + Train Animal"},
+      {n:"Farmhand",        src:"Player Core",   d:"Tended crops until adventure pulled you away — Athletics + Assurance (Athletics)"},
+      {n:"Nomad",           src:"Player Core",   d:"Traveled constantly through wild terrain — Survival + Assurance (Survival)"},
+      {n:"Hermit",          src:"Player Core",   d:"Deep isolation developing unconventional knowledge — Nature or Occultism + Dubious Knowledge"},
+      {n:"Farmsteader",     src:"Guns & Gears",  d:"Farm failed; now building or seeking a new life — Survival + Forager"},
+      {n:"Plant Whisperer", src:"Secrets of Magic",d:"Communed with plants in ways that bordered on magical — Nature + Natural Medicine"},
+    ],
+    also:[
+      {n:"Mammoth Speaker",  src:"Lost Omens: World Guide", d:"Lived and worked with megafauna — Nature + Train Animal"},
+      {n:"Wildwood Local",   src:"Lost Omens: World Guide", d:"Deep forest inhabitant — Nature + Natural Medicine"},
+      {n:"Sodden Scavenger", src:"Lost Omens: World Guide", d:"Survived in a magically flooded swamp — Survival + Forager"},
+      {n:"Waste Walker",     src:"Guns & Gears",            d:"Grew up surviving in magically blasted terrain — Survival + Forager"},
+      {n:"Scavenger",        src:"Player Core 2",           d:"Survived on the margins of civilization by salvaging — Survival + Forager"},
+    ]
+  },
+  Performer: {
+    icon:"🎭", name:"The Performer",
+    mech:"Performance + Fascinating or Impressive Performance", flav:"Spectacle, art, and commanding attention",
+    why:"You live in the space between the performer and the crowd — the moment before an audience decides whether to cheer or throw things. Your character learned to <strong>hold attention, project emotion, read a room, and make an impression</strong> that lasts. Whether you worked stages, arenas, tavern corners, or city streets, you carry a performer's instincts into everything — and adventures have crowds too.",
+    core:[
+      {n:"Entertainer",     src:"Player Core",   d:"Actor, dancer, musician, or street magician — Performance + Fascinating Performance"},
+      {n:"Acrobat",         src:"Player Core",   d:"Physical stunts in circuses or on the streets — Acrobatics + Steady Balance"},
+      {n:"Gladiator",       src:"Player Core",   d:"Combat as performance art in the arena — Performance + Impressive Performance"},
+      {n:"Musical Prodigy", src:"Secrets of Magic",d:"Supernatural musical talent; chose adventure over court — Performance + Virtuosic Performer"},
+      {n:"Saloon Entertainer",src:"Guns & Gears",d:"Held rowdy frontier crowds by sheer force of presence — Performance + Virtuosic Performer"},
+      {n:"Fireworks Performer",src:"Guns & Gears",d:"Created explosive spectacle for celebrations — Performance + Fascinating Performance"},
+    ],
+    also:[
+      {n:"Varisian Wanderer",src:"Lost Omens: World Guide", d:"Nomadic storyteller-performer tradition — Performance + Fascinating Performance"},
+      {n:"Ward",             src:"Player Core 2",           d:"Raised in another's household; performing was your currency — Performance + Fascinating Performance"},
+      {n:"Clockfighter",     src:"Guns & Gears",            d:"Arena performer in clockwork combat exhibitions — Crafting + Experienced Professional"},
+    ]
+  },
+  Courtier: {
+    icon:"👑", name:"The Courtier",
+    mech:"Society + Courtly Graces or Multilingual", flav:"Society, politics, and navigating power",
+    why:"You grew up in — or worked your way into — the rooms where decisions are made. Your character understands <strong>hierarchy, protocol, the right words at the right moment, and the slow knife of political consequence</strong>. The adventuring life might seem chaotic by comparison, but the skills that survive court intrigue survive anything.",
+    core:[
+      {n:"Noble",      src:"Player Core",  d:"Grew up in privilege and obligation, navigating intrigue from childhood — Society + Courtly Graces"},
+      {n:"Emissary",   src:"Player Core",  d:"Diplomat and long-distance messenger — Society + Multilingual"},
+      {n:"Barrister",  src:"Player Core",  d:"Legal training and courtroom advocacy — Diplomacy + Group Impression"},
+      {n:"Servant",    src:"Player Core 2",d:"Domestic service; reading rooms and disappearing — Society + Read Lips"},
+      {n:"Tax Collector",src:"Player Core 2",d:"Collected taxes; learned coercive conversation — Intimidation + Quick Coercion"},
+      {n:"Fightbreaker",src:"Highhelm",    d:"Instinct for defusing violence before it erupts — Diplomacy + Group Impression"},
+    ],
+    also:[
+      {n:"Royalty",          src:"Player Core 2",           rare:true, d:"Member of a royal family — Society + Courtly Graces + special political influence"},
+      {n:"Kyonin Emissary",  src:"Lost Omens: World Guide", d:"Elven diplomatic tradition — Society + Multilingual"},
+      {n:"Taldan Schemer",   src:"Lost Omens: World Guide", d:"Intrigue-steeped political animal — Diplomacy + Hobnobber"},
+      {n:"Kalistrade Follower",src:"Lost Omens: World Guide",d:"Merchant-aristocrat following strict mercantile prophecy — Diplomacy + Bargain Hunter"},
+      {n:"Union Representative",src:"Highhelm",             d:"High-stakes labor negotiator — Diplomacy + Contract Negotiator"},
+    ]
+  },
+  Engineer: {
+    icon:"⚙️", name:"The Engineer",
+    mech:"Crafting + Quick Repair or Specialty Crafting", flav:"Mechanisms, gadgets, and technical mastery",
+    why:"You see the world as a series of systems to understand, improve, and occasionally explode. Your character approaches problems <strong>from an engineering mindset</strong> — there's a solution here, it just requires the right tools, the right sequence, and occasionally a strategic retreat to a safe distance. Whether your specialty was firearms, clockwork, signals, or sabotage, <strong>your hands and your mind work together</strong> in ways most people can't match.",
+    core:[
+      {n:"Tinker",           src:"Player Core",   d:"Minor inventions of variable reliability — Crafting + Specialty Crafting"},
+      {n:"Mechanic",         src:"Guns & Gears",  d:"Kept machines running; translates to keeping gear functional — Crafting + Quick Repair"},
+      {n:"Gunsmith",         src:"Guns & Gears",  d:"Repair, modify, and improve any firearm — Crafting + Quick Repair"},
+      {n:"Clockwork Researcher",src:"Guns & Gears",d:"Fascinated by clockwork technology — Society + Eye for Numbers"},
+      {n:"Junk Collector",   src:"Guns & Gears",  d:"Salvaged useful components from wreckage — Crafting + Crafter's Appraisal"},
+      {n:"Saboteur",         src:"Guns & Gears",  d:"Identified and exploited structural vulnerabilities — Thievery + Concealing Legerdemain"},
+      {n:"Codebreaker",      src:"Guns & Gears",  d:"Deciphered encrypted communications — Society + Glean Contents"},
+    ],
+    also:[
+      {n:"Wonder Taster",   src:"Lost Omens: World Guide", d:"Experimental alchemical crafting — Crafting + Alchemical Crafting"},
+      {n:"Cannoneer",       src:"Guns & Gears",            d:"Artillery and explosives specialist — Athletics + Hefty Hauler"},
+      {n:"Undertaker",      src:"Guns & Gears",            d:"Mortuary alchemical expertise — Medicine + Forensic Acumen"},
+      {n:"Printer",         src:"Guns & Gears",            d:"Printing press expertise; languages and public opinion — Society + Multilingual"},
+    ]
+  },
+  DeathWalker: {
+    icon:"💀", name:"The Death-Walker",
+    mech:"Undead Lore + death-themed skill feats", flav:"Mortality, the undead, and what lies beyond",
+    why:"Death was not abstract for you. Your character grew up <strong>adjacent to mortality</strong> in a way that shaped everything — tending bodies, fighting undead, studying necromancy, surviving loss on a massive scale, or simply living in a place where the dead didn't stay down. That familiarity doesn't make you comfortable with death. It makes you <strong>prepared</strong>.",
+    core:[
+      {n:"Necromancer's Apprentice",src:"Book of the Dead",d:"Trained under a necromancer — Arcana + Quick Identification"},
+      {n:"Night Watch",   src:"Book of the Dead",  d:"Guarded against supernatural threats in the dark — Intimidation + Quick Coercion"},
+      {n:"Haunted Citizen",src:"Book of the Dead", d:"Came from a region plagued by undead — Diplomacy + No Cause for Alarm"},
+      {n:"Pyre Tender",   src:"Book of the Dead",  d:"Maintained funeral rites and alchemical cremation — Crafting + Alchemical Crafting"},
+      {n:"Grave Robber",  src:"Book of the Dead",  d:"Knows exactly where bodies are buried — Stealth + Experienced Smuggler"},
+      {n:"Undertaker",    src:"Guns & Gears",       d:"Mortuary services drawn toward unusual deaths — Medicine + Forensic Acumen"},
+    ],
+    also:[
+      {n:"Lastwall Survivor",src:"Lost Omens: World Guide",  d:"Hardened survivor of undead warfare — Medicine + Battle Medicine"},
+      {n:"Geb Crusader",     src:"Lost Omens: World Guide",  d:"Fighting the undead nation of Geb — Religion + Student of the Canon"},
+      {n:"Scion of Slayers", src:"Book of the Dead", rare:true, d:"Hereditary undead-hunter lineage — divine disrupt undead cantrip"},
+      {n:"Tomb Born",        src:"Book of the Dead", rare:true, d:"Born near death; defiant final strike when reduced to 0 HP"},
+      {n:"Willing Host",     src:"Book of the Dead", rare:true, d:"Allows spirits to inhabit your body cooperatively"},
+      {n:"Revenant",         src:"Guns & Gears",     rare:true, d:"Returned from death; healed by void energy"},
+    ]
+  },
+  Sailor: {
+    icon:"⚓", name:"The Sailor",
+    mech:"Athletics + Underwater Marauder or Sailing Lore", flav:"The sea, exploration, and maritime life",
+    why:"You know what dry land feels like after six weeks at sea, and you know the particular silence of deep water at night. Your character was <strong>shaped by the ocean</strong> — its rhythms, its dangers, the tight community of a ship's crew, and the freedom that comes with having a horizon in every direction. The adventuring life is just a different kind of voyage.",
+    core:[
+      {n:"Sailor",          src:"Player Core",   d:"Merchant vessel, naval ship, or pirate craft — Athletics + Underwater Marauder"},
+      {n:"Undersea Enthusiast",src:"Lost Omens: World Guide",d:"Fascinated by underwater environments — Athletics + Underwater Marauder"},
+      {n:"Storm Survivor",  src:"Lost Omens: World Guide",   d:"Survived catastrophic weather at sea — Survival + Forager"},
+      {n:"Senghor Sailor",  src:"Lost Omens: World Guide",   d:"Crafting and sailing skills from Mwangi maritime tradition — Crafting + Quick Repair"},
+      {n:"Bonuwat Wavetouched",src:"Lost Omens: World Guide",d:"Ocean-touched Mwangi maritime background — Athletics + Underwater Marauder"},
+      {n:"Aspiring Free Captain",src:"Lost Omens: World Guide",d:"Dreaming of command on the open seas — Intimidation + Group Coercion"},
+    ],
+    also:[
+      {n:"Press-Ganged",   src:"Lost Omens: World Guide", d:"Forced into service; adapted and survived — Society + Experienced Professional"},
+      {n:"Sky Rider",      src:"Rage of Elements",        d:"Practiced aerial movement and navigation — Acrobatics + Cat Fall"},
+    ]
+  },
+  Laborer: {
+    icon:"💪", name:"The Laborer",
+    mech:"Athletics + Hefty Hauler or Assurance (Athletics)", flav:"Hard work, physical endurance, and common life",
+    why:"You built your body through <strong>years of difficult, unglamorous, necessary work</strong>. While others were studying or scheming, you were lifting, hauling, digging, or hammering — and you emerged with something they didn't: <strong>genuine physical capability and an unflinching work ethic</strong>. The adventuring life is hard, but you've known hard. This is just a different kind.",
+    core:[
+      {n:"Laborer",    src:"Player Core",   d:"Years of difficult physical work — Athletics + Hefty Hauler"},
+      {n:"Farmhand",   src:"Player Core",   d:"Tilled land and tended crops — Athletics + Assurance (Athletics)"},
+      {n:"Miner",      src:"Player Core",   d:"Extracted minerals from the earth's depths — Survival + Terrain Expertise (underground)"},
+      {n:"Sailor",     src:"Player Core",   d:"Physical endurance aboard ship — Athletics + Underwater Marauder"},
+      {n:"Cannoneer",  src:"Guns & Gears",  d:"Hauled and operated heavy artillery — Athletics + Hefty Hauler"},
+      {n:"Junker",     src:"Guns & Gears",  d:"Salvaged components from wrecked sites — Athletics + Hefty Hauler"},
+    ],
+    also:[
+      {n:"Lumber Consortium Laborer",src:"Lost Omens: World Guide",d:"Hard physical forest work — Athletics + Assurance (Athletics)"},
+      {n:"Fire Warden",    src:"Rage of Elements",        d:"Battled uncontrolled fires — Athletics + Breath Control"},
+      {n:"Farmsteader",    src:"Guns & Gears",            d:"Farm failed; striking out to find or build a new settlement — Survival + Forager"},
+      {n:"Shoanti Name-Bearer",src:"Lost Omens: World Guide",d:"Physical endurance tradition of the Shoanti — Athletics + Combat Climber"},
+    ]
+  },
+  Investigator: {
+    icon:"🔍", name:"The Investigator",
+    mech:"Society or Stealth + Streetwise or Glean Contents", flav:"Secrets, intelligence, and hidden truths",
+    why:"You understood from an early age that <strong>what people say and what is true are different things</strong>. Your character built their skills around finding the gap between those two things — whether through formal detective work, coded messages, infiltration, or simply asking the right questions of the right people. <strong>Nothing stays hidden forever</strong>, and you've made a career of making that happen sooner.",
+    core:[
+      {n:"Detective",    src:"Player Core",   d:"Formal inspector or independent sleuth — Society + Streetwise"},
+      {n:"Charlatan",    src:"Player Core",   d:"Con artist who learned to read everyone — Deception + Charming Liar"},
+      {n:"Codebreaker",  src:"Guns & Gears",  d:"Deciphered encrypted communications — Society + Glean Contents"},
+      {n:"Saboteur",     src:"Guns & Gears",  d:"Found and exploited structural vulnerabilities — Thievery + Concealing Legerdemain"},
+      {n:"Hired Killer", src:"Guns & Gears",  d:"Professional hunter of people — Stealth + Terrain Stalker"},
+      {n:"Spotter",      src:"Guns & Gears",  d:"Assessed targets and terrain for precision operatives — Stealth + Terrain Stalker"},
+    ],
+    also:[
+      {n:"Insurgent",          src:"Player Core 2",           d:"Revolutionary who mastered misdirection — Deception + Lengthy Diversion"},
+      {n:"Mantis Scion",       src:"Lost Omens: World Guide", d:"Assassin lineage with stealth training — Stealth + Assurance (Stealth)"},
+      {n:"Black Market Smuggler",src:"Lost Omens: World Guide",d:"Moved contraband through hidden channels — Stealth + Experienced Smuggler"},
+      {n:"Anti-Tech Activist", src:"Guns & Gears",            d:"Organized resistance against technological harm — Intimidation + Group Coercion"},
+    ]
+  },
+  Touched: {
+    icon:"✨", name:"The Touched",
+    mech:"Unusual innate abilities or strange skill interactions", flav:"Marked by something beyond the ordinary",
+    why:"Something happened to you that doesn't fit in anyone's taxonomy. You were <strong>experimented on, cursed, haunted, changed by proximity to forces that shouldn't touch mortals</strong>, or simply born wrong in a way that turned out to be useful. Your character carries the mark of that strangeness — sometimes as a power, sometimes as a burden, sometimes as both simultaneously. <em>Note: most of these backgrounds are Rare and require GM approval.</em>",
+    core:[
+      {n:"Magical Experiment",src:"Secrets of Magic", rare:true, d:"Permanently altered by magical experimentation — Constitution + choose Enhanced Senses, Resistant Skin, or Touch Telepathy"},
+      {n:"Haunted",           src:"Player Core 2",    rare:true, d:"An incorporeal entity clings to you — aid bonus with risk of frightened"},
+      {n:"Cursed",            src:"Player Core 2",    rare:true, d:"A curse lingers on you — Warding Sign reaction vs. magical effects"},
+      {n:"Feral Child",       src:"Player Core 2",    rare:true, d:"Raised among animals — low-light vision + imprecise scent 30 ft"},
+      {n:"Feybound",          src:"Player Core 2",    rare:true, d:"Fey bargain or claim — Fey's Fortune (roll twice once/day, with an anathema)"},
+      {n:"Magical Misfit",    src:"Secrets of Magic",             d:"Misused raw magical talent — Arcana + Trick Magic Item"},
+      {n:"Eidolon Contact",   src:"Secrets of Magic",             d:"Contacted a disembodied magical entity — magic tradition + Dubious Knowledge"},
+    ],
+    also:[
+      {n:"Energy Scarred",    src:"Secrets of Magic", rare:true, d:"Exposure to elemental energy left you resistant to it"},
+      {n:"Anti-Magical",      src:"Secrets of Magic", rare:true, d:"Magic simply doesn't stick to you — DC 3 flat check negates targeting spells"},
+      {n:"Seer of the Dead",  src:"Secrets of Magic", rare:true, d:"Can perceive and communicate with spirits of the deceased"},
+      {n:"Time Traveler",     src:"Secrets of Magic", rare:true, d:"Arrived from another era — Bend Time: become quickened once/day"},
+      {n:"Eclipseborn",       src:"Travel Guide",      rare:true, d:"Born during an eclipse; cast ill omen once/day"},
+      {n:"Mechanical Symbiosis",src:"Guns & Gears",   rare:true, d:"Clockwork entity fused with you — +1 aid bonus with risk of stunned"},
+      {n:"Empty Whispers",    src:"Dark Archive",      rare:true, d:"Can sense planar rifts and memory erasure"},
+    ]
+  },
+  Destined: {
+    icon:"🌟", name:"The Destined",
+    mech:"Innate divine abilities or fate-driven rerolls", flav:"Chosen, prophesied, or fated for greatness",
+    why:"Something out there decided you matter — a prophecy, a divine blessing, an accident of birth, a genie's whim, or a voice that won't stop speaking your name. Your character didn't necessarily choose this, but <strong>they carry the weight of it regardless</strong>. The adventuring life isn't a choice for you so much as an inevitability. <em>Note: most of these backgrounds are Rare and require GM approval.</em>",
+    core:[
+      {n:"Chosen One",     src:"Secrets of Magic", rare:true, d:"Marked by prophecy — Prophecy's Pawn: reroll a failed check, with later consequences"},
+      {n:"Blessed",        src:"Player Core 2",    rare:true, d:"A deity blessed you for unknown reasons — cast guidance at will"},
+      {n:"Royalty",        src:"Player Core 2",    rare:true, d:"Prominent member of a royal family — Society + Courtly Graces + special influence"},
+      {n:"Genie-Blessed",  src:"Secrets of Magic", rare:true, d:"A genie granted a boon — Wish for Luck: roll twice once/day"},
+      {n:"Returned",       src:"Player Core 2",    rare:true, d:"You died and came back — Diehard feat + Boneyard Lore"},
+      {n:"Otherworldly Mission",src:"Guns & Gears",rare:true, d:"A divine voice commands your actions — petition for guidance once/adventure"},
+    ],
+    also:[
+      {n:"Tall Tale",         src:"Guns & Gears",   rare:true, d:"Legends about you spread faster than you travel — Impressive Performance + Connections"},
+      {n:"Astrological Augur",src:"Travel Guide",   rare:true, d:"Reads probable futures in the stars — cast augury weekly"},
+      {n:"Amnesiac",          src:"Player Core 2",  rare:true, d:"Your past is a blank slate you discover in play — three free ability boosts with GM collaboration"},
+      {n:"Reborn Soul",       src:"Dark Archive",   rare:true, d:"Past-life memories resurface — two Lore skills from a previous existence"},
+    ]
+  },
+  Wanderer: {
+    icon:"🧭", name:"The Wanderer",
+    mech:"Survival + Forager or Assurance (Survival)", flav:"No fixed home, resilience, and the road itself",
+    why:"You never had a fixed address — or you lost the one you had. Your character's background is <strong>defined by movement, adaptation, and the particular wisdom that comes from having nothing to fall back on</strong>. The adventuring life didn't require any adjustment. You were already living it.",
+    core:[
+      {n:"Nomad",     src:"Player Core",   d:"Constant travel through wild terrain — Survival + Assurance (Survival)"},
+      {n:"Refugee",   src:"Player Core 2", d:"Fled homeland due to conflict or desperation — Society + Streetwise"},
+      {n:"Scavenger", src:"Player Core 2", d:"Survived on society's margins by salvaging — Survival + Forager"},
+      {n:"Hermit",    src:"Player Core",   d:"Deep isolation; deep unconventional knowledge — Nature or Occultism + Dubious Knowledge"},
+      {n:"Waste Walker",src:"Guns & Gears",d:"Survived in magically blasted desolate terrain — Survival + Forager"},
+      {n:"Farmsteader",src:"Guns & Gears", d:"Farm failed; striking out to build something new — Survival + Forager"},
+    ],
+    also:[
+      {n:"Varisian Wanderer",  src:"Lost Omens: World Guide", d:"Nomadic storytelling culture — Performance + Fascinating Performance"},
+      {n:"Goblinblood Orphan", src:"Lost Omens: World Guide", d:"Lost family to violence; learned to survive alone — Survival + Assurance (Survival)"},
+      {n:"Sarkorian Survivor", src:"Lost Omens: World Guide", d:"Survived demonic devastation of your homeland — Survival + Forager"},
+      {n:"Press-Ganged",       src:"Lost Omens: World Guide", d:"Forced into service; adapted and survived — Society + Experienced Professional"},
+      {n:"Storm Survivor",     src:"Lost Omens: World Guide", d:"Survived catastrophic weather; emerged resilient — Survival + Forager"},
+    ]
+  },
+};
+
+// ═══════════════════════════════════════════════════════
+// QUESTIONS
+// ═══════════════════════════════════════════════════════
+const QUESTIONS = [
+  // Q0 — Weighting
+  {
+    id:"q0", number:"Prologue",
+    text:"Before we begin — what matters most when choosing a background?",
+    flavor:"Your answer shapes how we weigh the results.",
+    isWeighting:true,
+    options:[
+      {letter:"A",label:"The mechanics — I want good skill feats and ability boosts.",sub:"Give me mechanical advantages that make my character stronger.",weight:{mech:0.70,flav:0.30}},
+      {letter:"B",label:"The story — I want an evocative identity for my character.",sub:"The skills don't matter if the narrative doesn't inspire me.",weight:{mech:0.30,flav:0.70}},
+      {letter:"C",label:"Both, equally.",sub:"I need to love the flavor AND the mechanical payoff.",weight:{mech:0.50,flav:0.50}},
+    ]
+  },
+
+  // Q1 — Broad life context
+  {
+    id:"q1",number:"Question 1 of 20",
+    text:"Before adventure found you, how would you describe your life?",
+    flavor:"The broad shape of your days before the world changed.",
+    options:[
+      {letter:"A",label:"Devoted — I served a higher calling, sacred or scholarly.",
+        sub:"Faith, learning, or service to something larger than myself defined my time.",
+        scores:{Devout:[3,3],Scholar:[2,2],Occultist:[1,2]}},
+      {letter:"B",label:"Working — I had a craft, trade, or job that defined my days.",
+        sub:"My hands and skills were my livelihood. I made things or made deals.",
+        scores:{Artisan:[3,2],Merchant:[2,2],Laborer:[2,2],Engineer:[2,2],Healer:[1,2]}},
+      {letter:"C",label:"Surviving — I lived outside society's margins, by necessity or choice.",
+        sub:"The comfortable life wasn't available to me, and I adapted.",
+        scores:{Scoundrel:[3,3],Wanderer:[3,3],Laborer:[2,1]}},
+      {letter:"D",label:"Serving — I was part of a larger structure that told me what to do.",
+        sub:"Military, noble household, guild, or institution. I had orders and followed them.",
+        scores:{Warrior:[3,2],Courtier:[2,2],Laborer:[2,1]}},
+      {letter:"E",label:"Exploring — I traveled, hunted, or chased the horizon.",
+        sub:"Movement was the point. I didn't stay anywhere long enough to call it home.",
+        scores:{Hunter:[3,3],Sailor:[3,2],Wanderer:[2,2],Naturalist:[2,2]}},
+      {letter:"F",label:"Performing or persuading — I worked through presence, not just skill.",
+        sub:"Entertainment, charm, social navigation, or manipulation was my currency.",
+        scores:{Performer:[3,3],Merchant:[1,2],Courtier:[1,2],Scoundrel:[1,2]}},
+    ]
+  },
+
+  // Q2 — Environment
+  {
+    id:"q2",number:"Question 2 of 20",
+    text:"Where did you feel most at home?",
+    flavor:"The landscape or setting that shaped your formative years.",
+    options:[
+      {letter:"A",label:"In a city — streets, markets, crowds, and politics.",
+        sub:"I know how cities work. I know the good alleys and the bad ones.",
+        scores:{Merchant:[2,2],Scoundrel:[2,2],Courtier:[2,2],Performer:[2,1],Investigator:[2,1]}},
+      {letter:"B",label:"In the countryside — farms, villages, small communities.",
+        sub:"I knew my neighbors and the land around me. Things were slower, harder, and closer.",
+        scores:{Naturalist:[2,2],Laborer:[2,2],Devout:[1,1],Healer:[1,1]}},
+      {letter:"C",label:"In the wilderness — forests, plains, mountains, or deep water.",
+        sub:"Nature wasn't backdrop for me. It was home.",
+        scores:{Hunter:[2,2],Naturalist:[2,2],Sailor:[2,2],Wanderer:[2,2]}},
+      {letter:"D",label:"In an institution — temple, academy, guild hall, or barracks.",
+        sub:"Structure and community defined my days. I had peers and a place.",
+        scores:{Devout:[2,2],Scholar:[2,2],Warrior:[2,2],Engineer:[1,2]}},
+      {letter:"E",label:"Underground, in shadow, or on the margins.",
+        sub:"Mines, sewers, back alleys, or networks no one talks about in daylight.",
+        scores:{Scoundrel:[2,2],Laborer:[2,1],DeathWalker:[2,2],Investigator:[1,2]}},
+      {letter:"F",label:"Nowhere fixed — I was always moving.",
+        sub:"Home was wherever I stopped for the night.",
+        scores:{Wanderer:[3,3],Sailor:[2,2],Performer:[1,2],Scoundrel:[1,1]}},
+    ]
+  },
+
+  // Q3 — Primary tool
+  {
+    id:"q3",number:"Question 3 of 20",
+    text:"What was the primary tool of your work?",
+    flavor:"The thing your hands reached for, day after day.",
+    options:[
+      {letter:"A",label:"Books, scrolls, quills, or instruments of study.",
+        sub:"Knowledge was the medium I worked in.",
+        scores:{Scholar:[3,2],Devout:[2,2],Occultist:[2,2],Investigator:[2,1]}},
+      {letter:"B",label:"Hammer, needle, wrench, chisel — I built things.",
+        sub:"My hands made things that lasted.",
+        scores:{Artisan:[3,2],Engineer:[3,2],Laborer:[2,1]}},
+      {letter:"C",label:"Sword, bow, or training weapon — combat was my livelihood.",
+        sub:"I was hired or trained for violence, or the threat of it.",
+        scores:{Warrior:[3,2],Hunter:[2,2]}},
+      {letter:"D",label:"Tongue, charm, and social grace — I worked through people.",
+        sub:"A well-placed word moved more than a well-aimed arrow.",
+        scores:{Merchant:[3,2],Courtier:[3,2],Performer:[2,2],Scoundrel:[1,2]}},
+      {letter:"E",label:"Knife, lockpick, disguise, or hidden blade.",
+        sub:"I moved in shadows and worked where no one was supposed to see.",
+        scores:{Scoundrel:[3,3],Investigator:[2,2],Hunter:[1,1]}},
+      {letter:"F",label:"Herbs, bandages, or spiritual practice — I mended what was broken.",
+        sub:"I was the person people came to when they were hurt.",
+        scores:{Healer:[3,3],Devout:[2,1],Naturalist:[2,2]}},
+    ]
+  },
+
+  // Q4 — Social class
+  {
+    id:"q4",number:"Question 4 of 20",
+    text:"What social class did your background come from?",
+    flavor:"Not who you are as an adventurer — who you were before.",
+    options:[
+      {letter:"A",label:"Noble, wealthy, or privileged — I had more than most.",
+        sub:"Comfort and expectation in equal measure. I left something behind.",
+        scores:{Courtier:[3,3],Merchant:[1,2]}},
+      {letter:"B",label:"Middle — skilled tradesperson, guild member, merchant.",
+        sub:"Comfortable but not wealthy. My skills were my security.",
+        scores:{Artisan:[2,2],Merchant:[2,2],Engineer:[2,2],Scholar:[1,1]}},
+      {letter:"C",label:"Poor — working class, labor, or just getting by.",
+        sub:"I knew scarcity. That knowledge still shapes how I think.",
+        scores:{Laborer:[3,3],Scoundrel:[2,1],Wanderer:[2,1]}},
+      {letter:"D",label:"Criminal or outcast — outside society's protections.",
+        sub:"The law wasn't for me. I found other arrangements.",
+        scores:{Scoundrel:[3,3],Wanderer:[2,2],DeathWalker:[1,1]}},
+      {letter:"E",label:"Religious or scholarly — class measured in knowledge or devotion.",
+        sub:"My status came from what I knew or who I served, not what I owned.",
+        scores:{Devout:[2,2],Scholar:[2,2],Occultist:[1,2]}},
+      {letter:"F",label:"Military or service — rank in an organization defined me.",
+        sub:"My position came from my role in a larger structure.",
+        scores:{Warrior:[2,2],Courtier:[1,2],Laborer:[1,1]}},
+    ]
+  },
+
+  // Q5 — Knowledge domain
+  {
+    id:"q5",number:"Question 5 of 20",
+    text:"What do you know that most people don't?",
+    flavor:"The specialized knowledge that lived in your head before adventure.",
+    options:[
+      {letter:"A",label:"Religious doctrine, sacred history, and divine mysteries.",
+        scores:{Devout:[3,2],Occultist:[1,2]}},
+      {letter:"B",label:"Academic lore — history, arcane theory, natural science.",
+        scores:{Scholar:[3,2],Occultist:[1,1]}},
+      {letter:"C",label:"The occult — omens, divination, curses, and forbidden texts.",
+        scores:{Occultist:[3,3],DeathWalker:[1,2]}},
+      {letter:"D",label:"How to make things — crafting, construction, mechanisms.",
+        scores:{Artisan:[3,2],Engineer:[3,2]}},
+      {letter:"E",label:"The underworld — how crime, smuggling, and vice actually work.",
+        scores:{Scoundrel:[3,2],Investigator:[2,2]}},
+      {letter:"F",label:"The living world — plants, animals, weather, survival.",
+        scores:{Naturalist:[3,2],Hunter:[2,2],Healer:[2,1]}},
+      {letter:"G",label:"People — social dynamics, pressure points, and what people want.",
+        scores:{Merchant:[2,2],Courtier:[2,2],Performer:[2,2],Investigator:[1,2]}},
+    ]
+  },
+
+  // Q6 — Magic relationship
+  {
+    id:"q6",number:"Question 6 of 20",
+    text:"What is your character's relationship to magic?",
+    flavor:"Not your class spells — the magic in your background and upbringing.",
+    options:[
+      {letter:"A",label:"I studied it seriously — magic is an academic discipline I pursued.",
+        sub:"I read the books, sat the tests, and learned systematically.",
+        scores:{Scholar:[3,2],Occultist:[1,2]}},
+      {letter:"B",label:"I lived alongside it — my faith or tradition involved divine magic.",
+        sub:"Magic was part of my spiritual practice, not a separate system.",
+        scores:{Devout:[3,2],Occultist:[1,1]}},
+      {letter:"C",label:"I feared or opposed it — my background put me against magical threats.",
+        sub:"Undead, curses, or uncontrolled magic were enemies I faced.",
+        scores:{DeathWalker:[3,2],Warrior:[1,1]}},
+      {letter:"D",label:"I dabbled at the edges — folk remedies, charms, fortune-telling.",
+        sub:"Not a proper practitioner, but more than a skeptic.",
+        scores:{Occultist:[2,3],Healer:[2,2],Naturalist:[1,2]}},
+      {letter:"E",label:"Something strange happened to me involving magic.",
+        sub:"I didn't seek this. Magic found me, and left a mark.",
+        scores:{Touched:[3,3],Destined:[2,2]}},
+      {letter:"F",label:"Magic was irrelevant to my work — I relied on practical skill.",
+        sub:"Spell slots don't fix machinery or track quarry.",
+        scores:{Engineer:[2,1],Laborer:[2,1],Hunter:[2,1],Warrior:[1,1]}},
+    ]
+  },
+
+  // Q7 — Physical vs mental
+  {
+    id:"q7",number:"Question 7 of 20",
+    text:"Your former life was primarily...",
+    flavor:"Where did you spend most of your effort?",
+    options:[
+      {letter:"A",label:"Physically demanding. My body was the instrument of my work.",
+        sub:"I lifted, hauled, dug, marched, or fought. I earned my strength.",
+        scores:{Laborer:[3,2],Warrior:[2,2],Sailor:[2,2],Hunter:[2,1]}},
+      {letter:"B",label:"Mentally intensive. My mind was constantly engaged.",
+        sub:"Reading, calculating, planning, investigating, or strategizing.",
+        scores:{Scholar:[3,2],Investigator:[2,2],Occultist:[2,1]}},
+      {letter:"C",label:"Socially demanding. I was always managing people and relationships.",
+        sub:"Reading rooms, navigating hierarchies, making impressions.",
+        scores:{Courtier:[3,2],Merchant:[2,2],Performer:[2,2]}},
+      {letter:"D",label:"Skilled labor — physical and technical in equal measure.",
+        sub:"Not brute force, but not just thinking either. Hands and mind together.",
+        scores:{Artisan:[3,2],Engineer:[3,2]}},
+      {letter:"E",label:"Unpredictable — different demands every day.",
+        sub:"I never knew what was coming next, and I adapted.",
+        scores:{Wanderer:[2,2],Scoundrel:[2,2],Hunter:[1,2]}},
+    ]
+  },
+
+  // Q8 — Relationship to death
+  {
+    id:"q8",number:"Question 8 of 20",
+    text:"What is your relationship to death and the undead?",
+    flavor:"Death is a constant in adventuring. What did your background teach you about it?",
+    options:[
+      {letter:"A",label:"Deeply familiar — I worked with death, fought undead, or tended the dying.",
+        sub:"I've seen enough of it that the shock is long gone.",
+        scores:{DeathWalker:[3,3],Healer:[2,1],Warrior:[1,1]}},
+      {letter:"B",label:"Spiritually meaningful — my faith has a clear teaching about death.",
+        sub:"I've thought deeply about what comes after. My beliefs are strong.",
+        scores:{Devout:[2,2],Occultist:[1,2],DeathWalker:[1,2]}},
+      {letter:"C",label:"Something happened to me involving death — I died, or nearly.",
+        sub:"The experience changed how I see everything.",
+        scores:{Destined:[3,3],Touched:[2,2]}},
+      {letter:"D",label:"Pragmatic — death is a fact, not a philosophy.",
+        sub:"People die. You either prepare for that or you don't.",
+        scores:{Warrior:[2,1],Hunter:[2,1],Healer:[1,1]}},
+      {letter:"E",label:"Abstract — death rarely touched my work.",
+        sub:"I'm not naive about it, but it wasn't a professional concern.",
+        scores:{Scholar:[1,1],Merchant:[1,1],Artisan:[1,1]}},
+    ]
+  },
+
+  // Q9 — Community role
+  {
+    id:"q9",number:"Question 9 of 20",
+    text:"What role did you play in your community?",
+    flavor:"What did people come to you for, or expect of you?",
+    options:[
+      {letter:"A",label:"Protector — I kept people safe, by force or vigilance.",
+        sub:"My job was to stand between threats and the people who couldn't fight back.",
+        scores:{Warrior:[3,3],Hunter:[2,1],Devout:[1,1]}},
+      {letter:"B",label:"Healer or caretaker — people came to me when they were hurt or lost.",
+        sub:"Mending, soothing, and sustaining were my contributions.",
+        scores:{Healer:[3,3],Devout:[2,1],Naturalist:[1,2]}},
+      {letter:"C",label:"Expert — I was the person who knew how things worked.",
+        sub:"Technical problems, lore questions, or specialized skills came to me.",
+        scores:{Scholar:[2,2],Artisan:[2,2],Engineer:[2,2]}},
+      {letter:"D",label:"Authority or intermediary — I navigated between people or institutions.",
+        sub:"Negotiations, legal matters, or managing social tensions.",
+        scores:{Courtier:[3,2],Merchant:[2,2],Investigator:[1,2]}},
+      {letter:"E",label:"Outcast or unknown — I wasn't really part of the community.",
+        sub:"I watched from the outside, worked alone, or was something they feared.",
+        scores:{Scoundrel:[2,2],Wanderer:[2,2],DeathWalker:[2,2],Touched:[2,2]}},
+      {letter:"F",label:"Entertainer or inspirer — I lifted spirits and provided meaning.",
+        sub:"People came to me not for solutions but for the feeling I gave them.",
+        scores:{Performer:[3,3],Devout:[1,1],Merchant:[1,1]}},
+    ]
+  },
+
+  // Q10 — What led to adventuring
+  {
+    id:"q10",number:"Question 10 of 20",
+    text:"What led you from your former life into adventuring?",
+    flavor:"The reason you left, or the reason you were pushed.",
+    options:[
+      {letter:"A",label:"Curiosity — I read about the world and had to go see it.",
+        sub:"The gap between what I knew and what I'd experienced became unbearable.",
+        scores:{Scholar:[3,3],Occultist:[2,2],Naturalist:[1,2]}},
+      {letter:"B",label:"Loss — something I valued was taken or destroyed.",
+        sub:"A home, a person, a community, a purpose. I couldn't stay after.",
+        scores:{Wanderer:[3,3],DeathWalker:[2,2],Warrior:[1,2]}},
+      {letter:"C",label:"Necessity — the alternative was worse.",
+        sub:"Running from debt, the law, an enemy, or a life that was killing me.",
+        scores:{Scoundrel:[2,3],Wanderer:[2,2],Laborer:[1,2]}},
+      {letter:"D",label:"Calling — something chose me, or someone sent me.",
+        sub:"A mission, a prophecy, a deity's nudge, or an order I couldn't refuse.",
+        scores:{Devout:[2,2],Destined:[3,3],Warrior:[1,1]}},
+      {letter:"E",label:"Opportunity — adventure offered something my old life couldn't.",
+        sub:"Better pay, real freedom, or the chance to become something more.",
+        scores:{Merchant:[2,2],Hunter:[2,2],Performer:[2,2]}},
+      {letter:"F",label:"Accident — I didn't choose this, it happened to me.",
+        sub:"Wrong place, wrong time, wrong decision. And here I am.",
+        scores:{Touched:[2,3],Wanderer:[2,2],Scoundrel:[1,2]}},
+    ]
+  },
+
+  // Q11 — Working alone vs group
+  {
+    id:"q11",number:"Question 11 of 20",
+    text:"Did your former life make you a team player or a solo operator?",
+    flavor:"How you work with others is baked in early.",
+    options:[
+      {letter:"A",label:"Team player — I was part of a unit, crew, guild, or congregation.",
+        sub:"My role was defined in relation to others. We succeeded or failed together.",
+        scores:{Warrior:[2,2],Sailor:[2,2],Devout:[2,1],Laborer:[2,1]}},
+      {letter:"B",label:"Solo — I worked alone and liked it that way.",
+        sub:"My judgment was the only one I had to trust.",
+        scores:{Hunter:[2,2],Scoundrel:[2,2],Wanderer:[2,2],Investigator:[2,2]}},
+      {letter:"C",label:"Client-facing — I served individuals, not institutions.",
+        sub:"I worked with people one at a time, reading each one carefully.",
+        scores:{Merchant:[2,2],Healer:[2,2],Performer:[2,2],Investigator:[1,2]}},
+      {letter:"D",label:"Hierarchical — I had superiors and subordinates and clear command.",
+        sub:"The structure was the point. Rank meant something.",
+        scores:{Warrior:[2,2],Courtier:[2,2]}},
+    ]
+  },
+
+  // Q12 — What you're proud of
+  {
+    id:"q12",number:"Question 12 of 20",
+    text:"What from your former life are you most proud of?",
+    flavor:"The thing you'd tell a stranger at a tavern if they asked.",
+    options:[
+      {letter:"A",label:"Something I built, made, or invented.",
+        sub:"It still exists. It works. I made that.",
+        scores:{Artisan:[3,3],Engineer:[3,3]}},
+      {letter:"B",label:"Someone I saved, healed, or helped.",
+        sub:"That person is alive or better off because of me.",
+        scores:{Healer:[3,3],Devout:[2,1],Warrior:[1,1]}},
+      {letter:"C",label:"A truth I uncovered or a mystery I solved.",
+        sub:"Something that would have stayed hidden if not for me.",
+        scores:{Investigator:[3,3],Scholar:[2,2],Occultist:[1,2]}},
+      {letter:"D",label:"A performance, a negotiation, or a moment I owned a room.",
+        sub:"Everyone was watching, and I made the most of it.",
+        scores:{Performer:[3,3],Merchant:[2,2],Courtier:[2,2]}},
+      {letter:"E",label:"Surviving something that should have killed me.",
+        sub:"I'm still here. That's the accomplishment.",
+        scores:{Wanderer:[3,3],Scoundrel:[2,2],Laborer:[2,1]}},
+      {letter:"F",label:"Something I discovered, tracked, or explored.",
+        sub:"I went somewhere or found something nobody else could.",
+        scores:{Hunter:[3,3],Sailor:[2,2],Naturalist:[2,2]}},
+    ]
+  },
+
+  // Q13 — Technology relationship
+  {
+    id:"q13",number:"Question 13 of 20",
+    text:"What is your relationship to technology and mechanisms?",
+    flavor:"Firearms, clockwork, and engineering are increasingly common in Golarion.",
+    options:[
+      {letter:"A",label:"I love it — mechanisms, gadgets, and engineering fascinate me.",
+        sub:"I take things apart to see how they work and put them back together better.",
+        scores:{Engineer:[3,3],Artisan:[2,1]}},
+      {letter:"B",label:"I use it practically — tools are tools.",
+        sub:"I'm not obsessed, but I know how to maintain and repair what I use.",
+        scores:{Laborer:[2,1],Warrior:[2,1],Sailor:[1,1]}},
+      {letter:"C",label:"I'm skeptical or opposed — technology creates as many problems as it solves.",
+        sub:"Machines replace people or threaten ways of life that worked.",
+        scores:{Naturalist:[2,2],Devout:[1,1]}},
+      {letter:"D",label:"I'm fascinated by the intersection of technology and the occult.",
+        sub:"Clockwork golems, mechanical spiritualism, the alchemy of industry.",
+        scores:{Occultist:[1,2],Engineer:[2,2],DeathWalker:[1,1]}},
+      {letter:"E",label:"Irrelevant to my work — I deal in people, knowledge, or nature.",
+        sub:"Mechanisms aren't my domain.",
+        scores:{Scholar:[1,1],Merchant:[1,1],Healer:[1,1]}},
+    ]
+  },
+
+  // Q14 — What you left behind
+  {
+    id:"q14",number:"Question 14 of 20",
+    text:"What did you leave behind when you became an adventurer?",
+    flavor:"Something real was given up. What was it?",
+    options:[
+      {letter:"A",label:"Safety and predictability — I had a stable life I walked away from.",
+        sub:"Every day was roughly the same. Then I chose chaos.",
+        scores:{Scholar:[2,2],Artisan:[2,2],Merchant:[1,2]}},
+      {letter:"B",label:"People — a family, a crew, a community.",
+        sub:"The relationships were real. I still think about them.",
+        scores:{Devout:[2,2],Sailor:[2,2],Warrior:[2,2]}},
+      {letter:"C",label:"Status — a title, a rank, a place in a hierarchy.",
+        sub:"I had standing. I gave it up or lost it.",
+        scores:{Courtier:[3,2],Warrior:[1,2]}},
+      {letter:"D",label:"Nothing — I had nothing worth leaving.",
+        sub:"Adventure was an upgrade in every direction.",
+        scores:{Scoundrel:[2,2],Wanderer:[2,2],Laborer:[2,1]}},
+      {letter:"E",label:"A secret or a burden I was glad to escape.",
+        sub:"Something followed me, or something I left there on purpose.",
+        scores:{Touched:[2,3],Destined:[2,2],Scoundrel:[1,2]}},
+    ]
+  },
+
+  // Q15 — Spiritual/philosophical
+  {
+    id:"q15",number:"Question 15 of 20",
+    text:"How does your character understand the world philosophically?",
+    flavor:"Not your class's approach — your personal orientation.",
+    options:[
+      {letter:"A",label:"Through faith — the world has meaning and divine purpose.",
+        sub:"Events aren't random. There's a plan, and I'm part of it.",
+        scores:{Devout:[3,3],Destined:[2,2]}},
+      {letter:"B",label:"Through knowledge — understanding the world is its own reward.",
+        sub:"If I know enough, I can navigate anything.",
+        scores:{Scholar:[3,3],Occultist:[1,2]}},
+      {letter:"C",label:"Through relationships — people are what matter.",
+        sub:"The world is the sum of its connections and obligations.",
+        scores:{Healer:[2,2],Courtier:[2,2],Merchant:[1,2],Devout:[1,1]}},
+      {letter:"D",label:"Through survival — what doesn't kill you teaches you.",
+        sub:"Experience is the only teacher worth listening to.",
+        scores:{Wanderer:[3,2],Scoundrel:[2,2],Laborer:[2,1]}},
+      {letter:"E",label:"Through mystery — the world is stranger than it appears.",
+        sub:"The visible surface is the smallest part of reality.",
+        scores:{Occultist:[3,3],Touched:[2,2],DeathWalker:[1,2]}},
+      {letter:"F",label:"Through craft — the act of making is the act of understanding.",
+        sub:"You know a thing by being able to build it.",
+        scores:{Artisan:[3,2],Engineer:[3,2]}},
+    ]
+  },
+
+  // Q16 — How people knew you
+  {
+    id:"q16",number:"Question 16 of 20",
+    text:"How did people in your community describe you?",
+    flavor:"Not how you saw yourself — how they talked about you when you weren't there.",
+    options:[
+      {letter:"A",label:"Reliable. When something needed doing, you got it done.",
+        sub:"Not flashy, not dramatic. Just dependable.",
+        scores:{Warrior:[2,2],Laborer:[2,2],Healer:[1,1]}},
+      {letter:"B",label:"Clever. Always had an angle, always had an answer.",
+        sub:"Sometimes that was a compliment. Sometimes not.",
+        scores:{Investigator:[2,2],Scoundrel:[2,2],Merchant:[2,1]}},
+      {letter:"C",label:"Strange. You saw things others didn't, or knew things you shouldn't.",
+        sub:"Unsettling, in a way that was hard to pin down.",
+        scores:{Occultist:[2,3],Touched:[2,3],DeathWalker:[1,2]}},
+      {letter:"D",label:"Talented. What you did, you did better than most.",
+        sub:"The skill itself was remarkable. People noticed.",
+        scores:{Artisan:[2,2],Performer:[2,2],Scholar:[2,2]}},
+      {letter:"E",label:"Intimidating or dangerous — people gave you room.",
+        sub:"Your reputation preceded you, for better or worse.",
+        scores:{Warrior:[2,2],Scoundrel:[2,2],DeathWalker:[1,2]}},
+      {letter:"F",label:"Warm and trusted. People confided in you.",
+        sub:"You were the one they came to when they needed help or comfort.",
+        scores:{Healer:[2,2],Devout:[2,2],Merchant:[1,2]}},
+    ]
+  },
+
+  // Q17 — Skill under pressure
+  {
+    id:"q17",number:"Question 17 of 20",
+    text:"When things go wrong, what skill do you reach for first?",
+    flavor:"The deep reflex, not the calculated choice.",
+    options:[
+      {letter:"A",label:"Knowledge — I recall something relevant and act on it.",
+        scores:{Scholar:[3,2],Occultist:[2,2],DeathWalker:[1,2]}},
+      {letter:"B",label:"Athletics or brute capability — I apply force.",
+        scores:{Warrior:[3,2],Laborer:[2,2],Sailor:[2,1]}},
+      {letter:"C",label:"Stealth or Thievery — I get out, disappear, or take what I need.",
+        scores:{Scoundrel:[3,2],Investigator:[2,2],Hunter:[1,1]}},
+      {letter:"D",label:"Survival — I read the terrain and find a way through.",
+        scores:{Hunter:[3,2],Naturalist:[2,2],Wanderer:[2,2]}},
+      {letter:"E",label:"Diplomacy or Deception — I talk my way through it.",
+        scores:{Merchant:[2,2],Courtier:[2,2],Performer:[2,2]}},
+      {letter:"F",label:"Medicine or Crafting — I fix something, whether flesh or object.",
+        scores:{Healer:[3,2],Artisan:[2,2],Engineer:[2,2]}},
+    ]
+  },
+
+  // Q18 — The unusual
+  {
+    id:"q18",number:"Question 18 of 20",
+    text:"Has something unusual marked your character beyond their trade?",
+    flavor:"Not everyone gets through their formative years unchanged by strangeness.",
+    options:[
+      {letter:"A",label:"I was marked by a curse, a magical experiment, or otherworldly contact.",
+        sub:"Something broke the rules of normal life in my vicinity, and I was in the way.",
+        scores:{Touched:[3,3],Occultist:[1,2]}},
+      {letter:"B",label:"I died, returned, or was blessed by a divine power.",
+        sub:"My relationship with mortality is more complicated than most people's.",
+        scores:{Destined:[3,3],DeathWalker:[2,2]}},
+      {letter:"C",label:"A prophecy or destiny seems to have attached itself to me.",
+        sub:"I didn't ask for this. But things keep happening that suggest it's real.",
+        scores:{Destined:[3,3],Devout:[1,2]}},
+      {letter:"D",label:"No — I'm defined by what I worked for, not what happened to me.",
+        sub:"My story is one of effort, skill, and choice. Not cosmic accidents.",
+        scores:{Artisan:[2,1],Warrior:[2,1],Scholar:[2,1],Merchant:[2,1]}},
+    ]
+  },
+
+  // Q19 — What you value most
+  {
+    id:"q19",number:"Question 19 of 20",
+    text:"What do you value most deeply?",
+    flavor:"When you imagine your character's non-negotiables, what comes up?",
+    options:[
+      {letter:"A",label:"Knowledge — understanding the world is the highest good.",
+        scores:{Scholar:[3,3],Occultist:[2,2]}},
+      {letter:"B",label:"Faith or devotion — my beliefs define who I am.",
+        scores:{Devout:[3,3],Destined:[1,2]}},
+      {letter:"C",label:"Freedom — no chains, no masters, the open road.",
+        scores:{Wanderer:[3,3],Scoundrel:[2,2],Sailor:[2,2]}},
+      {letter:"D",label:"Craft or excellence — doing something well for its own sake.",
+        scores:{Artisan:[3,3],Engineer:[2,2],Performer:[2,1]}},
+      {letter:"E",label:"People — community, loyalty, and the bonds that hold us together.",
+        scores:{Healer:[2,2],Devout:[2,1],Warrior:[2,1],Merchant:[1,2]}},
+      {letter:"F",label:"Truth — what's hidden should be found, and lies should be exposed.",
+        scores:{Investigator:[3,3],Scholar:[2,1],Occultist:[1,2]}},
+    ]
+  },
+
+  // Q20 — Final vibe
+  {
+    id:"q20",number:"Question 20 of 20",
+    text:"If your background were a single story, what kind of story would it be?",
+    flavor:"The last question. Trust your gut.",
+    options:[
+      {letter:"A",label:"📜 A Scholar's Journal — long nights, discovered secrets, and knowledge no one else pursued.",
+        scores:{Scholar:[2,3],Occultist:[2,3],Investigator:[1,2]}},
+      {letter:"B",label:"⚔️ A War Story — service, sacrifice, hardship, and the price of survival.",
+        scores:{Warrior:[2,3],Sailor:[2,2],Laborer:[1,2]}},
+      {letter:"C",label:"🌿 A Rural Life — seasons, animals, land, and the long slow work of living.",
+        scores:{Naturalist:[2,3],Healer:[1,2],Laborer:[1,2]}},
+      {letter:"D",label:"🎭 A Rags-to-Stage — rising from nothing to make something beautiful.",
+        scores:{Performer:[2,3],Scoundrel:[2,2],Wanderer:[1,2]}},
+      {letter:"E",label:"🙏 A Calling — faith, devotion, and doing what you were put here to do.",
+        scores:{Devout:[2,3],Destined:[2,3]}},
+      {letter:"F",label:"⚙️ A Workshop — building, tinkering, and making things that didn't exist before.",
+        scores:{Artisan:[2,3],Engineer:[2,3]}},
+      {letter:"G",label:"✨ A Strange Transformation — something happened, and you became someone different.",
+        scores:{Touched:[3,3],Destined:[2,2],Wanderer:[1,2]}},
+      {letter:"H",label:"💰 A Deal Well Made — commerce, negotiation, and the wisdom of getting what you want.",
+        scores:{Merchant:[2,3],Courtier:[2,2],Scoundrel:[1,2]}},
+    ]
+  },
+];
+
+// ═══════════════════════════════════════════════════════
+// ENGINE
+// ═══════════════════════════════════════════════════════
+let currentQ=0, answers={}, mechWeight=0.5, flavWeight=0.5;
+
+function startQuiz(){
+  document.getElementById('intro-screen').classList.remove('screen-active');
+  document.getElementById('quiz-screen').classList.add('screen-active');
+  currentQ=0; answers={}; mechWeight=0.5; flavWeight=0.5;
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q=QUESTIONS[currentQ];
+  const pct=Math.round((currentQ/QUESTIONS.length)*100);
+  document.getElementById('progress-text').textContent=q.number;
+  document.getElementById('progress-pct').textContent=pct+'%';
+  document.getElementById('progress-fill').style.width=pct+'%';
+  const area=document.getElementById('question-area');
+  area.innerHTML=''; area.classList.remove('fade-slide'); void area.offsetWidth; area.classList.add('fade-slide');
+  const qNum=document.createElement('div'); qNum.className='question-number'; qNum.textContent=q.number;
+  const qText=document.createElement('div'); qText.className='question-text'; qText.textContent=q.text;
+  const qFlav=document.createElement('div'); qFlav.className='question-flavor'; qFlav.textContent=q.flavor;
+  const opts=document.createElement('div'); opts.className='options';
+  q.options.forEach((opt,idx)=>{
+    const btn=document.createElement('button');
+    btn.className='option-btn'+(answers[q.id]===idx?' selected':'');
+    btn.innerHTML=`<span class="option-letter">${opt.letter}</span><span class="option-text"><span class="option-label">${opt.label}</span>${opt.sub?`<span class="option-sub">${opt.sub}</span>`:''}</span>`;
+    btn.addEventListener('click',()=>selectAnswer(idx));
+    opts.appendChild(btn);
+  });
+  area.appendChild(qNum); area.appendChild(qText); area.appendChild(qFlav); area.appendChild(opts);
+  updateNav();
+}
+
+function selectAnswer(idx){
+  const q=QUESTIONS[currentQ];
+  if(q.isWeighting){const w=q.options[idx].weight;mechWeight=w.mech;flavWeight=w.flav;}
+  answers[q.id]=idx;
+  document.querySelectorAll('.option-btn').forEach((b,i)=>b.classList.toggle('selected',i===idx));
+  updateNav();
+}
+
+function updateNav(){
+  const q=QUESTIONS[currentQ];
+  const isLast=currentQ===QUESTIONS.length-1;
+  const hasAns=answers[q.id]!==undefined;
+  document.getElementById('btn-back').disabled=currentQ===0;
+  document.getElementById('btn-next').disabled=!hasAns||isLast;
+  document.getElementById('btn-next').style.display=isLast?'none':'';
+  document.getElementById('btn-submit').style.display=isLast?'':'none';
+  document.getElementById('btn-submit').disabled=!hasAns;
+}
+
+function goNext(){
+  if(currentQ<QUESTIONS.length-1&&answers[QUESTIONS[currentQ].id]!==undefined){currentQ++;renderQuestion();}
+}
+function goBack(){if(currentQ>0){currentQ--;renderQuestion();}}
+
+// SCORING
+function computeScores(){
+  const mS={},fS={};
+  Object.keys(ARCHETYPES).forEach(k=>{mS[k]=0;fS[k]=0;});
+  QUESTIONS.forEach(q=>{
+    if(q.isWeighting)return;
+    const ai=answers[q.id]; if(ai===undefined)return;
+    const opt=q.options[ai]; if(!opt.scores)return;
+    Object.entries(opt.scores).forEach(([k,pts])=>{
+      if(mS[k]!==undefined){mS[k]+=pts[0];fS[k]+=pts[1];}
+    });
+  });
+  const fin={};
+  Object.keys(ARCHETYPES).forEach(k=>{fin[k]=mS[k]*mechWeight+fS[k]*flavWeight;});
+  return Object.entries(fin).sort((a,b)=>b[1]-a[1]).map(e=>e[0]);
+}
+
+// RESULTS
+function showResults(){
+  document.getElementById('quiz-screen').classList.remove('screen-active');
+  const rs=document.getElementById('results-screen');
+  rs.style.display='block'; rs.classList.add('fade-slide');
+
+  const ranked=computeScores();
+  const top3=ranked.slice(0,3);
+
+  let sub="Based on your answers, your background archetype is...";
+  if(mechWeight>0.6)sub="Optimizing for mechanical fit — your top background archetypes are...";
+  else if(flavWeight>0.6)sub="Matching your story and identity — your top background archetypes are...";
+  document.getElementById('results-subtitle').textContent=sub;
+
+  const medals=['🥇','🥈','🥉'];
+  const cardsArea=document.getElementById('results-cards');
+  cardsArea.innerHTML='';
+
+  top3.forEach((key,i)=>{
+    const a=ARCHETYPES[key];
+    const card=document.createElement('div');
+    card.className='result-card';
+
+    // Build background list HTML
+    function bgListHtml(bgs){
+      return bgs.map(bg=>`
+        <div class="bg-entry">
+          <span class="bg-entry-divider">
+            <span class="bg-name">${bg.n}</span>
+            <span class="bg-source">${bg.src}</span>
+            ${bg.rare?'<span class="bg-rare">Rare</span>':''}
+          </span>
+          <span class="bg-desc">${bg.d}</span>
+        </div>`).join('');
+    }
+
+    card.innerHTML=`
+      <div class="result-card-header">
+        <span class="rank-badge rank-${i+1}">${medals[i]}</span>
+        <span class="result-arc-name">${a.icon} ${a.name}</span>
+        <div class="result-tags">
+          <span class="tag tag-mech">${a.mech}</span>
+          <span class="tag tag-flav">${a.flav}</span>
+        </div>
+      </div>
+      <div class="result-card-body">
+        <p class="result-why">${a.why}</p>
+        <div class="bg-section-label">Core Backgrounds — widely available</div>
+        <div class="bg-list">${bgListHtml(a.core)}</div>
+        <div class="bg-section-label">Also Consider</div>
+        <div class="bg-list">${bgListHtml(a.also)}</div>
+      </div>`;
+    cardsArea.appendChild(card);
+  });
+
+  // Build full all-backgrounds grid by archetype
+  const grid=document.getElementById('all-bg-grid');
+  grid.innerHTML='';
+  Object.entries(ARCHETYPES).forEach(([key,a])=>{
+    const isTop=top3.includes(key);
+    const group=document.createElement('div');
+    group.className='arc-group'+(isTop?' is-top':'');
+    const allBgs=[...a.core,...a.also];
+    group.innerHTML=`
+      <div class="arc-group-header" onclick="toggleGroup(this.parentElement)">
+        <span class="arc-group-icon">${a.icon}</span>
+        <span class="arc-group-name">${a.name}${isTop?' ✦':''}</span>
+        <span class="arc-group-count">${allBgs.length} backgrounds</span>
+        <span class="arc-group-chevron">▾</span>
+      </div>
+      <div class="arc-group-body">
+        <div class="arc-group-bg-list">
+          ${allBgs.map(bg=>`
+            <div class="arc-bg-item">
+              <div class="arc-bg-item-name">${bg.n}${bg.rare?' <span style="font-size:0.62rem;color:#7a3000;border:1px solid #7a3000;padding:0 0.25em;border-radius:2px;">Rare</span>':''}</div>
+              <div class="arc-bg-item-meta">${bg.src}</div>
+              <div class="arc-bg-item-desc">${bg.d}</div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+    grid.appendChild(group);
+  });
+}
+
+function toggleGroup(el){el.classList.toggle('open');}
+
+function toggleAll(){
+  const grid=document.getElementById('all-bg-grid');
+  const btn=document.querySelector('.btn-toggle');
+  const v=grid.classList.toggle('visible');
+  btn.textContent=v?'Hide All Backgrounds ▴':'Browse All 150+ Backgrounds ▾';
+}
+
+function retakeQuiz(){
+  currentQ=0;answers={};mechWeight=0.5;flavWeight=0.5;
+  document.getElementById('results-screen').style.display='none';
+  document.getElementById('quiz-screen').classList.add('screen-active');
+  renderQuestion();
+}
+</script>
+</body>
+</html>
